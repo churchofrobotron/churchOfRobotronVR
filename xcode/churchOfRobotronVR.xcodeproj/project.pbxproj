@@ -22,6 +22,7 @@
 		B5A06177E8CE460ABF56C2C4 /* churchOfRobotronVRApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 26EA8A53E4BA45FEAF93A7D1 /* churchOfRobotronVRApp.cpp */; };
 		C3D02ED133594C6E8DFEEFE3 /* syphonServerDirectory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3D2BDA65831143EF826CC36C /* syphonServerDirectory.mm */; };
 		C815BBDB1845A4A3006F1272 /* robotronScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C815BBD91845A4A3006F1272 /* robotronScreen.cpp */; };
+		C815BBDE1845BB53006F1272 /* FPSCamUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C815BBDC1845BB53006F1272 /* FPSCamUI.cpp */; };
 		F581D8F0B3E643C69B14F7A9 /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40ED6454F9314346BFB93B51 /* Syphon.framework */; };
 		FC23FACB63774E3BA4D68BB3 /* Syphon.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40ED6454F9314346BFB93B51 /* Syphon.framework */; };
 /* End PBXBuildFile section */
@@ -80,6 +81,8 @@
 		C815BBD01845A450006F1272 /* Syphon.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Syphon.xcodeproj; path = "../../external/Syphon-Framework/Syphon.xcodeproj"; sourceTree = "<group>"; };
 		C815BBD91845A4A3006F1272 /* robotronScreen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = robotronScreen.cpp; path = ../src/robotronScreen.cpp; sourceTree = "<group>"; };
 		C815BBDA1845A4A3006F1272 /* robotronScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = robotronScreen.h; path = ../src/robotronScreen.h; sourceTree = "<group>"; };
+		C815BBDC1845BB53006F1272 /* FPSCamUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FPSCamUI.cpp; path = ../src/FPSCamUI.cpp; sourceTree = "<group>"; };
+		C815BBDD1845BB53006F1272 /* FPSCamUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FPSCamUI.h; path = ../src/FPSCamUI.h; sourceTree = "<group>"; };
 		D7166B18371C4A6EABD6FE2B /* syphonServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = syphonServer.h; path = "../../external/Cinder/blocks/Cinder-Syphon/src/syphonServer.h"; sourceTree = "<group>"; };
 		DD6A2C3C88FD49B29F65F5FC /* SyphonNameboundClient.m */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = SyphonNameboundClient.m; path = "../../external/Cinder/blocks/Cinder-Syphon/lib/SyphonNameboundClient.m"; sourceTree = "<group>"; };
 		E1659BFF4141408395F42DF4 /* syphonServer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = syphonServer.mm; path = "../../external/Cinder/blocks/Cinder-Syphon/src/syphonServer.mm"; sourceTree = "<group>"; };
@@ -122,6 +125,8 @@
 				26EA8A53E4BA45FEAF93A7D1 /* churchOfRobotronVRApp.cpp */,
 				C815BBD91845A4A3006F1272 /* robotronScreen.cpp */,
 				C815BBDA1845A4A3006F1272 /* robotronScreen.h */,
+				C815BBDC1845BB53006F1272 /* FPSCamUI.cpp */,
+				C815BBDD1845BB53006F1272 /* FPSCamUI.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -325,6 +330,7 @@
 				2BDFD124738E4520AF158C89 /* syphonClient.mm in Sources */,
 				C815BBDB1845A4A3006F1272 /* robotronScreen.cpp in Sources */,
 				5A6A7C2E58314599BAF21337 /* syphonServer.mm in Sources */,
+				C815BBDE1845BB53006F1272 /* FPSCamUI.cpp in Sources */,
 				C3D02ED133594C6E8DFEEFE3 /* syphonServerDirectory.mm in Sources */,
 				9D6E446C129E497CA2385A9A /* SyphonNameboundClient.m in Sources */,
 			);
