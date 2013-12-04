@@ -22,7 +22,7 @@ public:
   void update( bool yContraint = false, float y = 0.0f );
   
 	const ci::CameraPersp& getCamera() const { return mCurrentCam; }
-	void setCurrentCam( const ci::CameraPersp &aCurrentCam ) { mCurrentCam = aCurrentCam; }
+	void setCurrentCam( const ci::CameraPersp &aCurrentCam );
   
   void setSpeed( float speed ){ mSpeed = speed; }
   float getSpeed(){ return mSpeed; }

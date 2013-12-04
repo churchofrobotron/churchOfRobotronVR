@@ -37,6 +37,12 @@ FpsCamUI::~FpsCamUI()
     unregisterEvents();
 }
 
+void FpsCamUI::setCurrentCam( const ci::CameraPersp &aCurrentCam )
+{
+  mCurrentCam = aCurrentCam;
+  mOrientation = mCurrentCam.getOrientation();
+  mOrientationTo = mCurrentCam.getOrientation();
+}
 
 void FpsCamUI::forward(){ mPositionVelocity += mCurrentCam.getViewDirection() * mSpeed; }
 void FpsCamUI::back(){ mPositionVelocity -= mCurrentCam.getViewDirection() * mSpeed; }
