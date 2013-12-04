@@ -24,7 +24,6 @@ public:
 private:
   RobotronScreen mScreen;
   FpsCamUI mCamera;
-  Arcball mArcBall;
 };
 
 void churchOfRobotronVRApp::setup()
@@ -33,26 +32,25 @@ void churchOfRobotronVRApp::setup()
   CameraPersp cam;
   cam.lookAt(Vec3f::zero(), Vec3f::yAxis(), Vec3f::zAxis());
   mCamera.setCurrentCam(cam);
+  mCamera.registerEvents();
+  mCamera.setSpeed(0.001);
 }
 
 void churchOfRobotronVRApp::mouseDown(MouseEvent event)
 {
-	mArcBall.mouseDown(event.getPos());
 }
 
 void churchOfRobotronVRApp::mouseDrag(MouseEvent event)
 {
-	mArcBall.mouseDrag(event.getPos());
 }
 
 void churchOfRobotronVRApp::update()
 {
+  mCamera.update();
 }
 
 void churchOfRobotronVRApp::resize()
 {
-  mArcBall.setWindowSize(ci::Vec2f(getWindowWidth()/2.0f, getWindowHeight()/2.0f));
-	mArcBall.setRadius(getWindowHeight() / 2.0f);
 }
 
 void churchOfRobotronVRApp::draw()

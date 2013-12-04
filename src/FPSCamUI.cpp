@@ -143,8 +143,8 @@ bool FpsCamUI::mouseDrag( ci::app::MouseEvent event ){
 }
 
 bool FpsCamUI::mouseUp( ci::app::MouseEvent event ){
-  // mMouseDown = false;
-  // AppBasic::get()->showCursor();
+  mMouseDown = false;
+  AppBasic::get()->showCursor();
   return false;
 }
 bool FpsCamUI::mouseMove( ci::app::MouseEvent event )
@@ -167,6 +167,7 @@ bool FpsCamUI::keyDown( KeyEvent event )
   else if( code == 'z' ) mLowerIsDown = true;
   return false;
 }
+
 bool FpsCamUI::keyUp( KeyEvent event )
 {
   int code = event.getCode();
@@ -179,16 +180,15 @@ bool FpsCamUI::keyUp( KeyEvent event )
   return false;
 }
 
-
 void FpsCamUI::registerEvents()
 {
-  // TODO
-  /*mEventsCallbacks.push_back( AppBasic::get()->registerMouseDown<FpsCamUI>( this, &FpsCamUI::mouseDown ) );
-   mEventsCallbacks.push_back( AppBasic::get()->registerMouseDrag<FpsCamUI>( this, &FpsCamUI::mouseDrag ) );
-   mEventsCallbacks.push_back( AppBasic::get()->registerMouseUp<FpsCamUI>( this, &FpsCamUI::mouseUp ) );
-   mEventsCallbacks.push_back( AppBasic::get()->registerMouseMove<FpsCamUI>( this, &FpsCamUI::mouseMove ) );
-   mEventsCallbacks.push_back( AppBasic::get()->registerKeyDown<FpsCamUI>( this, &FpsCamUI::keyDown ) );
-   mEventsCallbacks.push_back( AppBasic::get()->registerKeyUp<FpsCamUI>( this, &FpsCamUI::keyUp ) );*/
+  ci::app::WindowRef w = getWindow();
+  w->getSignalMouseDown().connect(std::bind(&FpsCamUI::mouseDown, this, std::placeholders::_1));
+  w->getSignalMouseDrag().connect(std::bind(&FpsCamUI::mouseDrag, this, std::placeholders::_1));
+  w->getSignalMouseUp().connect(std::bind(&FpsCamUI::mouseUp, this, std::placeholders::_1));
+  w->getSignalMouseMove().connect(std::bind(&FpsCamUI::mouseMove, this, std::placeholders::_1));
+  w->getSignalKeyDown().connect(std::bind(&FpsCamUI::keyDown, this, std::placeholders::_1));
+  w->getSignalKeyUp().connect(std::bind(&FpsCamUI::keyUp, this, std::placeholders::_1));
 }
 void FpsCamUI::unregisterEvents()
 {

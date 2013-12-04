@@ -1,4 +1,3 @@
-
 //
 //  Camera.h
 //  Landscape
@@ -6,9 +5,7 @@
 //  Created by Simon Geilfus on 21/11/12.
 //
 //
-
 #pragma once
-
 
 #include "cinder/app/AppBasic.h"
 #include "cinder/Camera.h"
