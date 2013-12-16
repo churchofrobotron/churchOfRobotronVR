@@ -18,10 +18,10 @@ void drawTexRectBillboard( ci::gl::Texture* tex, GLfloat w, GLfloat h, const Vec
 	glVertexPointer( 3, GL_FLOAT, 0, &verts[0].x );
 	glEnableClientState( GL_TEXTURE_COORD_ARRAY );
 	const GLfloat texCoords[8] = {
-    0, tex->isFlipped() ? h : 0,
     0, tex->isFlipped() ? 0 : h,
-    w, tex->isFlipped() ? h : 0,
-    w, tex->isFlipped() ? 0 : h };
+    0, tex->isFlipped() ? h : 0,
+    w, tex->isFlipped() ? 0 : h,
+    w, tex->isFlipped() ? h : 0 };
 	glTexCoordPointer( 2, GL_FLOAT, 0, texCoords );
   
 	float sinA = math<float>::sin( toRadians( rotationDegrees ) );

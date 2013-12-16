@@ -21,6 +21,8 @@ MovieObject::MovieObject(const cinder::fs::path& path)
 void MovieObject::update()
 {
   mTexture = mMovie.getTexture();
+  if (mTexture)
+    mTexture.setFlipped(true);
 }
 
 void MovieObject::render()
@@ -30,4 +32,3 @@ void MovieObject::render()
                          Vec3f(0.0, 32.0, 0.0f), Vec2f(20.0f, 20.0f), 0.0f,
                          Vec3f::xAxis(), Vec3f::zAxis());
 }
-
