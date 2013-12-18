@@ -49,6 +49,7 @@ void churchOfRobotronVRApp::setup()
 //  format.setSamples( 8 );
   
   mOculusFbo = gl::Fbo( 1600, 1000, format );
+  mDistortionHelper   = ovr::DistortionHelper::create();
   
   mScreen.init();
   CameraPersp cam;
@@ -69,7 +70,6 @@ void churchOfRobotronVRApp::oculusInit()
   
   // Init OVR
   mOculusVR           = ovr::Device::create();
-  mDistortionHelper   = ovr::DistortionHelper::create();
   
   // Create Stereo Camera
 //  mStereoCamera = CameraStereoHMD( 640, 800, mOculusVR ? mOculusVR->getFov() : 125, mOculusVR ? mOculusVR->getEyeToScreenDistance() : 10, 10000.0f );
@@ -114,10 +114,6 @@ void churchOfRobotronVRApp::resize()
 
 void churchOfRobotronVRApp::draw()
 {
-  gl::disable(GL_TEXTURE);
-  gl::disable(GL_TEXTURE_2D);
-  gl::disable(GL_TEXTURE_RECTANGLE_ARB);
-
   bool normalRender = false;
   if (normalRender)
   {
@@ -162,12 +158,9 @@ void churchOfRobotronVRApp::draw()
 
     gl::color(Color::white());
     
-//    mOculusFbo.getTexture().enableAndBind();
-//    gl::drawSolidRect(getWindowBounds());
-    mOculusFbo.getTexture().setFlipped(true);
-    gl::draw(mOculusFbo.getTexture());
     // Send the Side by Side texture to our distortion correction shader
-//    mDistortionHelper->render( mOculusFbo.getTexture(), getWindowBounds() );
+    mOculusFbo.getTexture().setFlipped(true);
+    mDistortionHelper->render( mOculusFbo.getTexture(), getWindowBounds() );
     
     // Draw FPS
   }
