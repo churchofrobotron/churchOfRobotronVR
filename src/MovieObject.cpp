@@ -20,6 +20,7 @@ MovieObject::MovieObject(const cinder::fs::path& path)
 
 void MovieObject::update()
 {
+  //
   mTexture = mMovie.getTexture();
   if (mTexture)
     mTexture.setFlipped(true);

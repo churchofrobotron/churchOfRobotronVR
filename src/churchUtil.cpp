@@ -12,6 +12,9 @@ using namespace cinder;
 
 void drawTexRectBillboard( ci::gl::Texture* tex, GLfloat w, GLfloat h, const Vec3f &pos, const Vec2f &scale, float rotationDegrees, const Vec3f &bbRight, const Vec3f &bbUp )
 {
+  gl::SaveTextureBindState saveBind(tex->getTarget());
+  gl::BoolState saveEnabledState( tex->getTarget() );
+  
   tex->enableAndBind();
 	glEnableClientState( GL_VERTEX_ARRAY );
 	Vec3f verts[4];
