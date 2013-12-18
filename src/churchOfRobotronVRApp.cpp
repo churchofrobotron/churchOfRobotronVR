@@ -50,6 +50,15 @@ void churchOfRobotronVRApp::setup()
   
   mOculusFbo = gl::Fbo( 1600, 1000, format );
   mDistortionHelper   = ovr::DistortionHelper::create();
+  // Create Stereo Camera
+  //  mStereoCamera = CameraStereoHMD( 640, 800, mOculusVR ? mOculusVR->getFov() : 125, mOculusVR ? mOculusVR->getEyeToScreenDistance() : 10, 10000.0f );
+  mStereoCamera.lookAt(Vec3f::zero(), Vec3f::yAxis(), Vec3f::zAxis());
+//  mStereoCamera.setEyePoint( Vec3f(0,-1,0) ); //Vec3f::zero());
+//  mStereoCamera.lookAt(Vec3f::zero());
+//  mStereoCamera.setWorldUp( Vec3f::zAxis());
+  
+  // Make the stereo a bit stronger
+  mStereoCamera.setEyeSeparation( 1.5f );
   
   mScreen.init();
   CameraPersp cam;
@@ -70,16 +79,6 @@ void churchOfRobotronVRApp::oculusInit()
   
   // Init OVR
   mOculusVR           = ovr::Device::create();
-  
-  // Create Stereo Camera
-//  mStereoCamera = CameraStereoHMD( 640, 800, mOculusVR ? mOculusVR->getFov() : 125, mOculusVR ? mOculusVR->getEyeToScreenDistance() : 10, 10000.0f );
-  mStereoCamera.lookAt(Vec3f::zero(), Vec3f::yAxis(), Vec3f::zAxis());
-//  mStereoCamera.setEyePoint( Vec3f(0,-1,0) ); //Vec3f::zero());
-//  mStereoCamera.lookAt(Vec3f::zero());
-//  mStereoCamera.setWorldUp( Vec3f::zAxis());
-  
-  // Make the stereo a bit stronger
-  mStereoCamera.setEyeSeparation( 1.5f );
 }
 
 void churchOfRobotronVRApp::mouseDown(MouseEvent event)
@@ -103,7 +102,7 @@ void churchOfRobotronVRApp::update()
 //  } else {
 //    mCamera.update();
 //  }
-  mCamera.update();
+//  mCamera.update();
   
   mSermon->update();
 }
@@ -137,16 +136,15 @@ void churchOfRobotronVRApp::draw()
       gl::clear( ColorA( 1.0f, 0.0f, 1.0f, 1.0f ) );
       
       // Render Left Eye
-      //mStereoCamera.enableStereoLeft();
       gl::setViewport( Area( Vec2f( 0.0f, 0.0f ), Vec2f( mOculusFbo.getWidth() / 2.0f, mOculusFbo.getHeight() ) ) );
-      gl::setMatrices(mCamera.getCamera());
-      
+      mStereoCamera.enableStereoLeft();
+      gl::setMatrices(mStereoCamera);
       renderScene();
       
       // Render Right Eye
-      //mStereoCamera.enableStereoRight();
       gl::setViewport( Area( Vec2f( mOculusFbo.getWidth() / 2.0f, 0.0f ), Vec2f( mOculusFbo.getWidth(), mOculusFbo.getHeight() ) ) );
-      gl::setMatrices(mCamera.getCamera());
+      mStereoCamera.enableStereoRight();
+      gl::setMatrices(mStereoCamera);
       renderScene();
     }
     
@@ -162,7 +160,7 @@ void churchOfRobotronVRApp::draw()
     mOculusFbo.getTexture().setFlipped(true);
     mDistortionHelper->render( mOculusFbo.getTexture(), getWindowBounds() );
     
-    // Draw FPS
+    // TODO: Draw FPS
   }
 }
 
