@@ -14,12 +14,27 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+struct WindowData
+{
+  enum RenderType
+  {
+    rtNormal,
+    rtOculus
+  };
+  
+  WindowData()
+  : mRenderType(rtNormal)
+  {
+  }
+
+  RenderType mRenderType;
+};
 
 class churchOfRobotronVRApp : public AppNative {
 public:
+  void prepareSettings( Settings* settings );
 	void setup();
-	void mouseDown( MouseEvent event );
-	void mouseDrag( MouseEvent event );
+	void keyDown( KeyEvent event );
 
 	void update();
 	void draw();
@@ -29,6 +44,7 @@ private:
   ovr::DistortionHelperRef    mDistortionHelper;
   CameraStereoHMD             mStereoCamera;
   gl::Fbo                     mOculusFbo;
+  std::weak_ptr<cinder::app::Window> mOculusWindow;
   
   RobotronScreen mScreen;
   FpsCamUI mCamera;
@@ -36,7 +52,13 @@ private:
   
   void oculusInit();
   void renderScene();
+  void checkWindows();
 };
+
+void churchOfRobotronVRApp::prepareSettings( Settings* settings )
+{
+	settings->setTitle( "Church of Robotron" );
+}
 
 void churchOfRobotronVRApp::setup()
 {
@@ -67,7 +89,7 @@ void churchOfRobotronVRApp::setup()
   
   mSermon = make_shared<MovieObject>("/Users/bzztbomb/projects/churchOfRobotron/videos/church_of_robotron_sermon-__doctrine_of_error_640x472.mp4");
   
-  setWindowSize( 1280, 800 );
+  getWindow()->setUserData( new WindowData );
 }
 
 void churchOfRobotronVRApp::oculusInit()
@@ -78,26 +100,25 @@ void churchOfRobotronVRApp::oculusInit()
   mOculusVR           = ovr::Device::create();
 }
 
-void churchOfRobotronVRApp::mouseDown(MouseEvent event)
+void churchOfRobotronVRApp::keyDown( KeyEvent event )
 {
-}
-
-void churchOfRobotronVRApp::mouseDrag(MouseEvent event)
-{
+  if (event.isAltDown())
+  {
+    switch (event.getCode())
+    {
+      case KeyEvent::KEY_w:
+        checkWindows();
+        break;
+    }
+  }
 }
 
 void churchOfRobotronVRApp::update()
 {
-  // Extrat Oculus Orientation and Update Camera
-  Quatf orientation;
-  
   if( mOculusVR )
   {
-    orientation = mOculusVR->getOrientation();
-//    mStereoCamera.setOrientation( orientation * Quatf( Vec3f( 0, 1, 0 ), M_PI ) );
+    Quatf orientation = mOculusVR->getOrientation();
     mStereoCamera.setOrientation( orientation * Quatf( Vec3f::xAxis(), M_PI / 2.0f) );
-  } else {
-    mCamera.update();
   }
   
   mCamera.update();
@@ -110,15 +131,21 @@ void churchOfRobotronVRApp::resize()
 
 void churchOfRobotronVRApp::draw()
 {
-  bool normalRender = false;
-  if (normalRender)
+  WindowData* wd = getWindow()->getUserData<WindowData>();
+  if (wd->mRenderType == WindowData::rtNormal)
   {
     // clear out the window with black
+    gl::pushMatrices();
     gl::clear( Color( 0, 0, 0 ) );
-    gl::setMatrices(mCamera.getCamera());
+    if (mOculusVR)
+    {
+      mStereoCamera.enableStereoLeft();
+      gl::setMatrices(mStereoCamera);
+    } else {
+      gl::setMatrices(mCamera.getCamera());
+    }
     
     renderScene();
-    
     gl::popMatrices();
   } else {
     // clear out the window with black
@@ -165,6 +192,38 @@ void churchOfRobotronVRApp::renderScene()
 {
   mSermon->render();
   mScreen.draw();
+}
+
+void churchOfRobotronVRApp::checkWindows()
+{
+  auto ow = mOculusWindow.lock();
+  if (ow)
+    return;
+
+  auto& displays = Display::getDisplays();
+  for (auto i : displays)
+  {
+    if (i != Display::getMainDisplay())
+    {
+      if ((i->getWidth() == 1280) && (i->getHeight() == 800))
+      {
+        console() << "Create VR Window!" << std::endl;
+        FullScreenOptions fo;
+        fo.secondaryDisplayBlanking(false);
+        
+        Window::Format format;
+        format.setFullScreen(true, fo);
+        format.setDisplay(i);
+        
+        mOculusWindow = createWindow(format);
+        auto new_ow = mOculusWindow.lock();
+        WindowData* wd = new WindowData;
+        wd->mRenderType = WindowData::rtOculus;
+        new_ow->setUserData( wd );
+        return;
+      }
+    }
+  }
 }
 
 CINDER_APP_NATIVE( churchOfRobotronVRApp, RendererGl )
