@@ -93,9 +93,7 @@ void churchOfRobotronVRApp::setup()
 }
 
 void churchOfRobotronVRApp::oculusInit()
-{
-  OVR::System::Init( OVR::Log::ConfigureDefaultLog( OVR::LogMask_All ) );
-  
+{  
   // Init OVR
   mOculusVR           = ovr::Device::create();
 }
@@ -157,7 +155,7 @@ void churchOfRobotronVRApp::draw()
       mOculusFbo.bindFramebuffer();
       
       // Clear
-      gl::clear( ColorA( 1.0f, 0.0f, 1.0f, 1.0f ) );
+      gl::clear( ColorA( 0.0f, 0.0f, 0.0f, 1.0f ) );
       
       // Render Left Eye
       gl::setViewport( Area( Vec2f( 0.0f, 0.0f ), Vec2f( mOculusFbo.getWidth() / 2.0f, mOculusFbo.getHeight() ) ) );
