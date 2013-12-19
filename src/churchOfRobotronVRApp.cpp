@@ -40,7 +40,7 @@ private:
 
 void churchOfRobotronVRApp::setup()
 {
- // oculusInit();
+  oculusInit();
   
   // Create Render Target a bit bigger to compensate the distortion quality loss
   gl::Fbo::Format format;
@@ -58,7 +58,7 @@ void churchOfRobotronVRApp::setup()
 //  mStereoCamera.setWorldUp( Vec3f::zAxis());
   
   // Make the stereo a bit stronger
-  mStereoCamera.setEyeSeparation( 1.5f );
+  mStereoCamera.setEyeSeparation( 0.15f );
   
   mScreen.init();
   CameraPersp cam;
@@ -94,16 +94,16 @@ void churchOfRobotronVRApp::update()
   // Extrat Oculus Orientation and Update Camera
   Quatf orientation;
   
-//  if( mOculusVR )
-//  {
-//    orientation = mOculusVR->getOrientation();
-////    mStereoCamera.setOrientation( orientation * Quatf( Vec3f( 0, 1, 0 ), M_PI ) );
-//    mStereoCamera.setOrientation( orientation * Quatf( Vec3f::zAxis(), M_PI ) );
-//  } else {
-//    mCamera.update();
-//  }
-//  mCamera.update();
+  if( mOculusVR )
+  {
+    orientation = mOculusVR->getOrientation();
+//    mStereoCamera.setOrientation( orientation * Quatf( Vec3f( 0, 1, 0 ), M_PI ) );
+    mStereoCamera.setOrientation( orientation * Quatf( Vec3f::xAxis(), M_PI / 2.0f) );
+  } else {
+    mCamera.update();
+  }
   
+  mCamera.update();
   mSermon->update();
 }
 
