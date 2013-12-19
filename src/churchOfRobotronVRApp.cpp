@@ -46,19 +46,16 @@ void churchOfRobotronVRApp::setup()
   gl::Fbo::Format format;
   format.enableColorBuffer();
   format.enableDepthBuffer();
-//  format.setSamples( 8 );
+  format.setSamples( 8 );
   
   mOculusFbo = gl::Fbo( 1600, 1000, format );
   mDistortionHelper   = ovr::DistortionHelper::create();
   // Create Stereo Camera
-  //  mStereoCamera = CameraStereoHMD( 640, 800, mOculusVR ? mOculusVR->getFov() : 125, mOculusVR ? mOculusVR->getEyeToScreenDistance() : 10, 10000.0f );
+  mStereoCamera.setFov(mOculusVR ? mOculusVR->getFov() : 125.0f);
   mStereoCamera.lookAt(Vec3f::zero(), Vec3f::yAxis(), Vec3f::zAxis());
-//  mStereoCamera.setEyePoint( Vec3f(0,-1,0) ); //Vec3f::zero());
-//  mStereoCamera.lookAt(Vec3f::zero());
-//  mStereoCamera.setWorldUp( Vec3f::zAxis());
   
   // Make the stereo a bit stronger
-  mStereoCamera.setEyeSeparation( 0.15f );
+  mStereoCamera.setEyeSeparation( 0.25f );
   
   mScreen.init();
   CameraPersp cam;
