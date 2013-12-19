@@ -107,6 +107,20 @@ void churchOfRobotronVRApp::keyDown( KeyEvent event )
       case KeyEvent::KEY_w:
         checkWindows();
         break;
+      case KeyEvent::KEY_t:
+        {
+          WindowData* wd = getWindow()->getUserData<WindowData>();
+          wd->mRenderType = (wd->mRenderType == WindowData::rtNormal) ?
+            WindowData::rtOculus : WindowData::rtNormal;
+        }
+        break;
+      case KeyEvent::KEY_f:
+        {
+          FullScreenOptions fo;
+          fo.secondaryDisplayBlanking(false);
+          setFullScreen( !isFullScreen(), fo );
+        }
+        break;
     }
   }
 }
