@@ -4,11 +4,12 @@
 #include "cinder/gl/Fbo.h"
 
 #include "FPSCamUI.h"
+#include "OculusVR.h"
+#include "CameraStereoHMD.h"
 
 #include "robotronScreen.h"
 #include "MovieObject.h"
-#include "OculusVR.h"
-#include "CameraStereoHMD.h"
+#include "leaderboard.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -49,6 +50,7 @@ private:
   RobotronScreen mScreen;
   FpsCamUI mCamera;
   MovieObjectPtr mSermon;
+  Leaderboard mLeaderboard;
   
   void oculusInit();
   void renderScene();
@@ -80,6 +82,8 @@ void churchOfRobotronVRApp::setup()
   mStereoCamera.setEyeSeparation( 0.25f );
   
   mScreen.init();
+  mLeaderboard.init();
+  
   CameraPersp cam;
   cam.lookAt(Vec3f::zero(), Vec3f::yAxis(), Vec3f::zAxis());
   
@@ -90,6 +94,7 @@ void churchOfRobotronVRApp::setup()
   mSermon = make_shared<MovieObject>("/Users/bzztbomb/projects/churchOfRobotron/videos/church_of_robotron_sermon-__doctrine_of_error_640x472.mp4");
   
   getWindow()->setUserData( new WindowData );
+  
 }
 
 void churchOfRobotronVRApp::oculusInit()
@@ -204,6 +209,7 @@ void churchOfRobotronVRApp::renderScene()
 {
   mSermon->render();
   mScreen.draw();
+  mLeaderboard.draw();
 }
 
 void churchOfRobotronVRApp::checkWindows()

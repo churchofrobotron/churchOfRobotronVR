@@ -24,6 +24,7 @@
 		C815BBDB1845A4A3006F1272 /* robotronScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C815BBD91845A4A3006F1272 /* robotronScreen.cpp */; };
 		C815BBDE1845BB53006F1272 /* FPSCamUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C815BBDC1845BB53006F1272 /* FPSCamUI.cpp */; };
 		C81B34EE184EE9FB0021E7E7 /* MovieObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */; };
+		C85695C81886393E001D55C0 /* leaderboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C85695C61886393E001D55C0 /* leaderboard.cpp */; };
 		C88B32831858251E008AFECC /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C88B32821858251E008AFECC /* QuickTime.framework */; };
 		C8CEFF0E185E70BC0021817B /* churchUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8CEFF0C185E70BC0021817B /* churchUtil.cpp */; };
 		C8CEFF16185E805E0021817B /* CameraStereoHMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8CEFF12185E805E0021817B /* CameraStereoHMD.cpp */; };
@@ -123,6 +124,8 @@
 		C815BBDD1845BB53006F1272 /* FPSCamUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FPSCamUI.h; path = ../src/FPSCamUI.h; sourceTree = "<group>"; };
 		C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MovieObject.cpp; path = ../src/MovieObject.cpp; sourceTree = "<group>"; };
 		C81B34ED184EE9FB0021E7E7 /* MovieObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieObject.h; path = ../src/MovieObject.h; sourceTree = "<group>"; };
+		C85695C61886393E001D55C0 /* leaderboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = leaderboard.cpp; path = ../src/leaderboard.cpp; sourceTree = "<group>"; };
+		C85695C71886393E001D55C0 /* leaderboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = leaderboard.h; path = ../src/leaderboard.h; sourceTree = "<group>"; };
 		C88B32821858251E008AFECC /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		C8CEFF0C185E70BC0021817B /* churchUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = churchUtil.cpp; path = ../src/churchUtil.cpp; sourceTree = "<group>"; };
 		C8CEFF0D185E70BC0021817B /* churchUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = churchUtil.h; path = ../src/churchUtil.h; sourceTree = "<group>"; };
@@ -257,6 +260,8 @@
 				C81B34ED184EE9FB0021E7E7 /* MovieObject.h */,
 				C8CEFF0C185E70BC0021817B /* churchUtil.cpp */,
 				C8CEFF0D185E70BC0021817B /* churchUtil.h */,
+				C85695C61886393E001D55C0 /* leaderboard.cpp */,
+				C85695C71886393E001D55C0 /* leaderboard.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -594,6 +599,7 @@
 				C8CEFF9D185E86380021817B /* OVR_ThreadCommandQueue.cpp in Sources */,
 				C8CEFF8F185E86380021817B /* OVR_JSON.cpp in Sources */,
 				C8CEFF7F185E86380021817B /* OVR_FileFILE.cpp in Sources */,
+				C85695C81886393E001D55C0 /* leaderboard.cpp in Sources */,
 				C8CEFF95185E86380021817B /* OVR_OSX_DeviceManager.cpp in Sources */,
 				C8CEFF81185E86380021817B /* OVR_Math.cpp in Sources */,
 				C8CEFF8D185E86380021817B /* OVR_DeviceHandle.cpp in Sources */,
