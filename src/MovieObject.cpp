@@ -29,7 +29,7 @@ void MovieObject::update()
 void MovieObject::render()
 {
   if (mTexture)
-    drawTexRectBillboard(&mTexture, mTexture.getWidth(), mTexture.getHeight(),
+    cor::drawTexRectBillboard(&mTexture, mTexture.getWidth(), mTexture.getHeight(),
                          Vec3f(0.0, 32.0, 0.0f), Vec2f(20.0f, 20.0f), 0.0f,
                          Vec3f::xAxis(), Vec3f::zAxis());
 }

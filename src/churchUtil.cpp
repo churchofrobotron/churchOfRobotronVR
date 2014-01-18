@@ -8,6 +8,13 @@
 
 #include "churchUtil.h"
 
+#include "cinder/font.h"
+#include "cinder/text.h"
+
+#include "MeshHelper.h"
+
+namespace cor {
+
 using namespace cinder;
 
 void drawTexRectBillboard( ci::gl::Texture* tex, GLfloat w, GLfloat h, const Vec3f &pos, const Vec2f &scale, float rotationDegrees, const Vec3f &bbRight, const Vec3f &bbUp )
@@ -39,4 +46,47 @@ void drawTexRectBillboard( ci::gl::Texture* tex, GLfloat w, GLfloat h, const Vec
   
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
+}
+
+// Move to churchUtil at some point.
+cinder::TriMesh textToMesh(const std::string& str)
+{
+  const float xSize = 0.125;
+  const float ySize = xSize;
+  const float cubeSize = 0.666; // of xSize
+  
+  TriMesh cube = MeshHelper::createCube();
+  
+  TextLayout tl;
+  tl.setFont(Font("Data70EF", 32));
+  tl.setColor(Color::white());
+  tl.addLine(str);
+  Surface s = tl.render(true, true);
+  TriMesh mesh;
+  for (int y = 0; y < s.getHeight(); y++)
+  {
+    for (int x = 0; x < s.getWidth(); x++)
+    {
+      uint8_t* red = s.getData(Vec2i(x, y));
+      int value = *red > 0 ? 1 : 0;
+      if (value)
+      {
+        size_t lastIndex = mesh.getNumIndices();
+        Vec3f offset(x * xSize, 0.0, (s.getHeight() - y) * ySize);
+        for (auto v : cube.getVertices())
+          mesh.appendVertex((v * xSize * cubeSize) + offset);
+        mesh.appendNormals(&cube.getNormals()[0], cube.getNormals().size());
+        const auto& indices = cube.getIndices();
+        for (int i = 0; i < indices.size(); i+=3)
+        {
+          mesh.appendTriangle(indices[i+0] + lastIndex,
+                               indices[i+1] + lastIndex,
+                               indices[i+2] + lastIndex);
+        }
+      }
+    }
+  }
+  return mesh;
+}
+  
 }

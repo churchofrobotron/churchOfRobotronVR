@@ -26,7 +26,7 @@ void RobotronScreen::draw()
   gl::TextureRef tex = mClient.getTexture();
   Vec3f up(Vec3f::zAxis());
   up.rotateX(M_PI / 1.5f);
-  drawTexRectBillboard(tex.get(), tex->getWidth(), tex->getHeight(),
+  cor::drawTexRectBillboard(tex.get(), tex->getWidth(), tex->getHeight(),
                        Vec3f(0.0, 1.0f, -0.50f),
                        Vec2f(0.75f, 0.75f), 0.0f,
                        Vec3f::xAxis(), up);

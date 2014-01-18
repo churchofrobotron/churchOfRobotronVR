@@ -20,6 +20,8 @@ public:
 private:
   cinder::gl::Texture mTexture;
   cinder::TriMesh mMesh;
+  
+  cinder::TriMesh textToMesh(const std::string& str);
 };
 
 #endif /* defined(__churchOfRobotronVR__leaderboard__) */
