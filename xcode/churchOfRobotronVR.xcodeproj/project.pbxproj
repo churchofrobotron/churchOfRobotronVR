@@ -25,6 +25,7 @@
 		C815BBDE1845BB53006F1272 /* FPSCamUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C815BBDC1845BB53006F1272 /* FPSCamUI.cpp */; };
 		C81B34EE184EE9FB0021E7E7 /* MovieObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */; };
 		C85695C81886393E001D55C0 /* leaderboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C85695C61886393E001D55C0 /* leaderboard.cpp */; };
+		C85695CE18865870001D55C0 /* MeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C85695CC18865870001D55C0 /* MeshHelper.cpp */; };
 		C88B32831858251E008AFECC /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C88B32821858251E008AFECC /* QuickTime.framework */; };
 		C8CEFF0E185E70BC0021817B /* churchUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8CEFF0C185E70BC0021817B /* churchUtil.cpp */; };
 		C8CEFF16185E805E0021817B /* CameraStereoHMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8CEFF12185E805E0021817B /* CameraStereoHMD.cpp */; };
@@ -126,6 +127,8 @@
 		C81B34ED184EE9FB0021E7E7 /* MovieObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieObject.h; path = ../src/MovieObject.h; sourceTree = "<group>"; };
 		C85695C61886393E001D55C0 /* leaderboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = leaderboard.cpp; path = ../src/leaderboard.cpp; sourceTree = "<group>"; };
 		C85695C71886393E001D55C0 /* leaderboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = leaderboard.h; path = ../src/leaderboard.h; sourceTree = "<group>"; };
+		C85695CC18865870001D55C0 /* MeshHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshHelper.cpp; sourceTree = "<group>"; };
+		C85695CD18865870001D55C0 /* MeshHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshHelper.h; sourceTree = "<group>"; };
 		C88B32821858251E008AFECC /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		C8CEFF0C185E70BC0021817B /* churchUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = churchUtil.cpp; path = ../src/churchUtil.cpp; sourceTree = "<group>"; };
 		C8CEFF0D185E70BC0021817B /* churchUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = churchUtil.h; path = ../src/churchUtil.h; sourceTree = "<group>"; };
@@ -242,6 +245,7 @@
 		01B97315FEAEA392516A2CEA /* Blocks */ = {
 			isa = PBXGroup;
 			children = (
+				C85695CB18865870001D55C0 /* MeshHelper */,
 				C8CEFF10185E803C0021817B /* Occulus */,
 				204446B2D9664B9B8EB08EF0 /* Syphon */,
 			);
@@ -381,6 +385,16 @@
 				C815BBD61845A450006F1272 /* Syphon.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C85695CB18865870001D55C0 /* MeshHelper */ = {
+			isa = PBXGroup;
+			children = (
+				C85695CC18865870001D55C0 /* MeshHelper.cpp */,
+				C85695CD18865870001D55C0 /* MeshHelper.h */,
+			);
+			name = MeshHelper;
+			path = "../../external/Cinder/blocks/Cinder-MeshHelper/src";
 			sourceTree = "<group>";
 		};
 		C8CEFF10185E803C0021817B /* Occulus */ = {
@@ -619,6 +633,7 @@
 				C8CEFF98185E86380021817B /* OVR_OSX_SensorDevice.cpp in Sources */,
 				C8CEFF99185E86380021817B /* OVR_Profile.cpp in Sources */,
 				C8CEFF9B185E86380021817B /* OVR_SensorFusion.cpp in Sources */,
+				C85695CE18865870001D55C0 /* MeshHelper.cpp in Sources */,
 				C8CEFFA4185E86380021817B /* Util_Render_Stereo.cpp in Sources */,
 				C81B34EE184EE9FB0021E7E7 /* MovieObject.cpp in Sources */,
 				C8CEFF8B185E86380021817B /* OVR_Timer.cpp in Sources */,

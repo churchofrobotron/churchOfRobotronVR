@@ -10,6 +10,7 @@
 #define __churchOfRobotronVR__leaderboard__
 
 #include "cinder/gl/Texture.h"
+#include "cinder/TriMesh.h"
 
 class Leaderboard
 {
@@ -18,6 +19,7 @@ public:
   void draw();
 private:
   cinder::gl::Texture mTexture;
+  cinder::TriMesh mMesh;
 };
 
 #endif /* defined(__churchOfRobotronVR__leaderboard__) */

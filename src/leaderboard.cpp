@@ -11,29 +11,53 @@
 #include "cinder/gl/gl.h"
 #include "cinder/font.h"
 
+#include "MeshHelper.h"
+
 #include "churchUtil.h"
 
 using namespace cinder;
 
 void Leaderboard::init()
 {
+  TriMesh cube = MeshHelper::createCube();
+  
   TextLayout tl;
-  tl.setFont(Font("Data70EF", 128));
+  tl.setFont(Font("Data70EF", 32));
   tl.setColor(Color::white());
   tl.addLine("BTR");
-  mTexture = tl.render(true, true);
+  Surface s = tl.render(true, true);
+  mMesh.clear();
+  float xSize = 0.125f;
+  float ySize = 0.125f;
+  for (int y = 0; y < s.getHeight(); y++)
+  {
+    for (int x = 0; x < s.getWidth(); x++)
+    {
+      uint8_t* red = s.getData(Vec2i(x, y));
+      int value = *red > 0 ? 1 : 0;
+      if (value)
+      {
+        size_t lastIndex = mMesh.getNumIndices();
+        Vec3f offset(x * xSize, 0.0, (s.getHeight() - y) * ySize);
+        for (auto v : cube.getVertices())
+          mMesh.appendVertex((v * xSize * 0.75) + offset);
+        mMesh.appendNormals(&cube.getNormals()[0], cube.getNormals().size());
+        const auto& indices = cube.getIndices();
+        for (int i = 0; i < indices.size(); i+=3)
+        {
+          mMesh.appendTriangle(indices[i+0] + lastIndex,
+                               indices[i+1] + lastIndex,
+                               indices[i+2] + lastIndex);
+        }
+      }
+    }
+  }
 }
 
 void Leaderboard::draw()
 {
-  Vec3f up(Vec3f::zAxis());
-  up.rotateX(M_PI / 1.5f);
-  mTexture.enableAndBind();
-  mTexture.setFlipped(false);
-  gl::drawBillboard(
-//  drawTexRectBillboard(&mTexture, mTexture.getWidth(), mTexture.getHeight(),
-                       Vec3f(0.0, 1.0f, -0.50f),
-                       Vec2f(0.75f, 0.75f), 0.0f,
-                       Vec3f::xAxis(), up);
-  mTexture.unbind();
+  gl::pushMatrices();
+  gl::translate(Vec3f(-6.0f, 18.0f, -3.0));
+  gl::draw(mMesh);
+  gl::popMatrices();
 }
