@@ -12,6 +12,7 @@
 #include "cinder/gl/Texture.h"
 #include "cinder/TriMesh.h"
 #include "cinder/Timer.h"
+#include "cinder/qtime/QuickTime.h"
 
 class Leaderboard
 {
@@ -27,11 +28,14 @@ private:
     std::string gif;
   };
   std::deque<Score> mScores;
-  int mCurrIndex;
+  int mScoreIndex;
+  cinder::gl::Texture mTexture;
+  cinder::qtime::MovieGl mMovie;
   cinder::Timer mTimer;
   cinder::TriMesh mMesh;
   
   void loadScores();
+  void loadNextScore();
 };
 
 #endif /* defined(__churchOfRobotronVR__leaderboard__) */

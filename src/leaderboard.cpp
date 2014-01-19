@@ -16,10 +16,14 @@
 using namespace cinder;
 using namespace cinder::app;
 
+namespace  {
+  const std::string basePath = "/Users/bzztbomb/projects/churchOfRobotron/scores/end/";
+}
+
 void Leaderboard::init()
 {
-  mMesh = cor::textToMesh("C O R");
   loadScores();
+  loadNextScore();
   mTimer.start();
 }
 
@@ -29,18 +33,21 @@ void Leaderboard::update()
   {
     mTimer.stop();
     mTimer.start();
-    
-    mCurrIndex++;
-    if (mCurrIndex >= mScores.size())
-      mCurrIndex = 0;
-    
-    const Score& score = mScores[mCurrIndex];
-    mMesh = cor::textToMesh(score.initials + " " + score.score);
+
+    loadNextScore();
   }
+  mTexture = mMovie.getTexture();
+  if (mTexture)
+    mTexture.setFlipped(true);
 }
 
 void Leaderboard::draw()
 {
+  if (mTexture)
+    cor::drawTexRectBillboard(&mTexture, mTexture.getWidth(), mTexture.getHeight(),
+                              Vec3f(0.0, 22.0, 0.0f), Vec2f(5.0f, 5.0f), 0.0f,
+                              Vec3f::xAxis(), -Vec3f::zAxis());
+
   gl::pushMatrices();
   gl::translate(Vec3f(-6.0f, 18.0f, -3.0));
   gl::draw(mMesh);
@@ -49,7 +56,7 @@ void Leaderboard::draw()
 
 void Leaderboard::loadScores()
 {
-  std::ifstream scores("/Users/bzztbomb/projects/churchOfRobotron/scores/end/leaderboard.txt");
+  std::ifstream scores(basePath + "leaderboard.txt");
   // Oh the slopoverflow!
   std::string line;
   while (!scores.eof())
@@ -80,5 +87,20 @@ void Leaderboard::loadScores()
       }
     }
   }
-  mCurrIndex = 0; // Maybe we shouldn't do this?
+  mScoreIndex = 0; // Maybe we shouldn't do this?
+}
+
+
+void Leaderboard::loadNextScore()
+{
+  mScoreIndex++;
+  if (mScoreIndex >= mScores.size())
+    mScoreIndex = 0;
+  
+  const Score& score = mScores[mScoreIndex];
+  mMesh = cor::textToMesh(score.initials + " " + score.score);
+  mTexture.reset();
+  mMovie = qtime::MovieGl(basePath + score.gif);
+  mMovie.setLoop();
+  mMovie.play();
 }
