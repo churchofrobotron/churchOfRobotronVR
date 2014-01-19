@@ -140,6 +140,7 @@ void churchOfRobotronVRApp::update()
   
   mCamera.update();
   mSermon->update();
+  mLeaderboard.update();
 }
 
 void churchOfRobotronVRApp::resize()

@@ -51,7 +51,7 @@ void drawTexRectBillboard( ci::gl::Texture* tex, GLfloat w, GLfloat h, const Vec
 // Move to churchUtil at some point.
 cinder::TriMesh textToMesh(const std::string& str)
 {
-  const float xSize = 0.125;
+  const float xSize = 0.0666;
   const float ySize = xSize;
   const float cubeSize = 0.666; // of xSize
   

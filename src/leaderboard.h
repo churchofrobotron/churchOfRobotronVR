@@ -11,17 +11,27 @@
 
 #include "cinder/gl/Texture.h"
 #include "cinder/TriMesh.h"
+#include "cinder/Timer.h"
 
 class Leaderboard
 {
 public:
   void init();
-  void draw();
+  void update();
+  void draw();  
 private:
-  cinder::gl::Texture mTexture;
+  struct Score
+  {
+    std::string initials;
+    std::string score;
+    std::string gif;
+  };
+  std::deque<Score> mScores;
+  int mCurrIndex;
+  cinder::Timer mTimer;
   cinder::TriMesh mMesh;
   
-  cinder::TriMesh textToMesh(const std::string& str);
+  void loadScores();
 };
 
 #endif /* defined(__churchOfRobotronVR__leaderboard__) */
