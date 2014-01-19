@@ -66,7 +66,7 @@ void FpsCamUI::update( bool yContraint, float y )
     mTimeElapsed = AppBasic::get()->getElapsedSeconds() - mLastTime;
     
     Vec2f mouseMovement = ( getWindowCenter() - mMousePos ) * 0.005f;
-    mOrientationTo = Quatf( mouseMovement.y, 0.0f, 0.0f ) * mCurrentCam.getOrientation() * Quatf( 0.0f, mouseMovement.x, 0.0f );
+    mOrientationTo = Quatf( mouseMovement.y, 0.0f, 0.0f ) * mCurrentCam.getOrientation() * Quatf( 0.0f, 0.0f, mouseMovement.x );
     
     if( mTimeElapsed > 0.0005 ){
 #if defined( CINDER_MAC )
