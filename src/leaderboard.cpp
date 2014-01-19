@@ -43,6 +43,12 @@ void Leaderboard::update()
 
 void Leaderboard::draw()
 {
+  gl::pushMatrices();
+  Quatf rotY(Vec3f(0.0, 0.0, 1.0), M_PI / 6);
+  gl::rotate(rotY);
+
+  gl::translate(Vec3f(-2.0f, 0.0f, 0.0));
+  
   if (mTexture)
     cor::drawTexRectBillboard(&mTexture, mTexture.getWidth(), mTexture.getHeight(),
                               Vec3f(0.0, 22.0, 0.0f), Vec2f(5.0f, 5.0f), 0.0f,
@@ -51,6 +57,7 @@ void Leaderboard::draw()
   gl::pushMatrices();
   gl::translate(Vec3f(-6.0f, 18.0f, -3.0));
   gl::draw(mMesh);
+  gl::popMatrices();
   gl::popMatrices();
 }
 
