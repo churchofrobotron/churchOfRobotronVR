@@ -55,7 +55,7 @@ void Leaderboard::draw()
                               Vec3f::xAxis(), -Vec3f::zAxis());
 
   gl::pushMatrices();
-  gl::translate(Vec3f(-6.0f, 18.0f, -3.0));
+  gl::translate(Vec3f(-2.5f, 18.0f, -6.0));
   gl::draw(mMesh);
   gl::popMatrices();
   gl::popMatrices();
@@ -105,7 +105,10 @@ void Leaderboard::loadNextScore()
     mScoreIndex = 0;
   
   const Score& score = mScores[mScoreIndex];
-  mMesh = cor::textToMesh(score.initials + " " + score.score);
+  std::vector<std::string> text;
+  text.push_back(score.initials);
+  text.push_back(score.score);
+  mMesh = cor::textToMesh(text);
   mTexture.reset();
   mMovie = qtime::MovieGl(basePath + score.gif);
   mMovie.setLoop();

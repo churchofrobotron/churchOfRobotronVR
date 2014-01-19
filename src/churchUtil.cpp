@@ -49,7 +49,7 @@ void drawTexRectBillboard( ci::gl::Texture* tex, GLfloat w, GLfloat h, const Vec
 }
 
 // Move to churchUtil at some point.
-cinder::TriMesh textToMesh(const std::string& str)
+  cinder::TriMesh textToMesh(const std::vector<std::string>& str)
 {
   const float xSize = 0.0666;
   const float ySize = xSize;
@@ -60,7 +60,8 @@ cinder::TriMesh textToMesh(const std::string& str)
   TextLayout tl;
   tl.setFont(Font("Data70EF", 32));
   tl.setColor(Color::white());
-  tl.addLine(str);
+  for (auto s : str)
+    tl.addCenteredLine(s);
   Surface s = tl.render(true, true);
   TriMesh mesh;
   for (int y = 0; y < s.getHeight(); y++)
