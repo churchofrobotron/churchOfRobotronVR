@@ -24,6 +24,7 @@
 		C815BBDB1845A4A3006F1272 /* robotronScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C815BBD91845A4A3006F1272 /* robotronScreen.cpp */; };
 		C815BBDE1845BB53006F1272 /* FPSCamUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C815BBDC1845BB53006F1272 /* FPSCamUI.cpp */; };
 		C81B34EE184EE9FB0021E7E7 /* MovieObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */; };
+		C84CE69F188C4A5D00C95CFA /* environment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C84CE69D188C4A5D00C95CFA /* environment.cpp */; };
 		C85695C81886393E001D55C0 /* leaderboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C85695C61886393E001D55C0 /* leaderboard.cpp */; };
 		C85695CE18865870001D55C0 /* MeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C85695CC18865870001D55C0 /* MeshHelper.cpp */; };
 		C88B32831858251E008AFECC /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C88B32821858251E008AFECC /* QuickTime.framework */; };
@@ -125,6 +126,8 @@
 		C815BBDD1845BB53006F1272 /* FPSCamUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FPSCamUI.h; path = ../src/FPSCamUI.h; sourceTree = "<group>"; };
 		C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MovieObject.cpp; path = ../src/MovieObject.cpp; sourceTree = "<group>"; };
 		C81B34ED184EE9FB0021E7E7 /* MovieObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieObject.h; path = ../src/MovieObject.h; sourceTree = "<group>"; };
+		C84CE69D188C4A5D00C95CFA /* environment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = environment.cpp; path = ../src/environment.cpp; sourceTree = "<group>"; };
+		C84CE69E188C4A5D00C95CFA /* environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = environment.h; path = ../src/environment.h; sourceTree = "<group>"; };
 		C85695C61886393E001D55C0 /* leaderboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = leaderboard.cpp; path = ../src/leaderboard.cpp; sourceTree = "<group>"; };
 		C85695C71886393E001D55C0 /* leaderboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = leaderboard.h; path = ../src/leaderboard.h; sourceTree = "<group>"; };
 		C85695CC18865870001D55C0 /* MeshHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshHelper.cpp; sourceTree = "<group>"; };
@@ -266,6 +269,8 @@
 				C8CEFF0D185E70BC0021817B /* churchUtil.h */,
 				C85695C61886393E001D55C0 /* leaderboard.cpp */,
 				C85695C71886393E001D55C0 /* leaderboard.h */,
+				C84CE69D188C4A5D00C95CFA /* environment.cpp */,
+				C84CE69E188C4A5D00C95CFA /* environment.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -599,6 +604,7 @@
 				B5A06177E8CE460ABF56C2C4 /* churchOfRobotronVRApp.cpp in Sources */,
 				C8CEFF80185E86380021817B /* OVR_Log.cpp in Sources */,
 				C8CEFF84185E86380021817B /* OVR_String.cpp in Sources */,
+				C84CE69F188C4A5D00C95CFA /* environment.cpp in Sources */,
 				C8CEFF82185E86380021817B /* OVR_RefCount.cpp in Sources */,
 				2BDFD124738E4520AF158C89 /* syphonClient.mm in Sources */,
 				C815BBDB1845A4A3006F1272 /* robotronScreen.cpp in Sources */,

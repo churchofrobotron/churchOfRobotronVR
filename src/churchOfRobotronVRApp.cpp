@@ -10,6 +10,7 @@
 #include "robotronScreen.h"
 #include "MovieObject.h"
 #include "leaderboard.h"
+#include "environment.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -46,7 +47,8 @@ private:
   CameraStereoHMD             mStereoCamera;
   gl::Fbo                     mOculusFbo;
   std::weak_ptr<cinder::app::Window> mOculusWindow;
-  
+
+  Environment mEnvironment;
   RobotronScreen mScreen;
   FpsCamUI mCamera;
   MovieObjectPtr mSermon;
@@ -80,7 +82,7 @@ void churchOfRobotronVRApp::setup()
   
   // Make the stereo a bit stronger
   mStereoCamera.setEyeSeparation( 0.25f );
-  
+  mEnvironment.init();
   mScreen.init();
   mLeaderboard.init();
   
@@ -139,6 +141,7 @@ void churchOfRobotronVRApp::update()
   }
   
   mCamera.update();
+  mEnvironment.update();
   mSermon->update();
   mLeaderboard.update();
 }
@@ -208,6 +211,7 @@ void churchOfRobotronVRApp::draw()
 
 void churchOfRobotronVRApp::renderScene()
 {
+  mEnvironment.draw();
   mSermon->render();
   mScreen.draw();
   mLeaderboard.draw();
