@@ -51,7 +51,7 @@ private:
   Environment mEnvironment;
   RobotronScreen mScreen;
   FpsCamUI mCamera;
-  MovieObjectPtr mSermon;
+  MovieObject mSermon;
   Leaderboard mLeaderboard;
   
   void oculusInit();
@@ -105,8 +105,7 @@ void churchOfRobotronVRApp::setup()
   for (auto& i : sermons)
     i = sermonBase + i;
   
-  mSermon = make_shared<MovieObject>();
-  mSermon->setMovieList(sermons);
+  mSermon.setMovieList(sermons);
   
   getWindow()->setUserData( new WindowData );
   
@@ -155,7 +154,7 @@ void churchOfRobotronVRApp::update()
   
   mCamera.update();
   mEnvironment.update();
-  mSermon->update();
+  mSermon.update();
   mLeaderboard.update();
 }
 
@@ -225,7 +224,7 @@ void churchOfRobotronVRApp::draw()
 void churchOfRobotronVRApp::renderScene()
 {
   mEnvironment.draw();
-  mSermon->render();
+  mSermon.render();
   mScreen.draw();
   mLeaderboard.draw();
 }
