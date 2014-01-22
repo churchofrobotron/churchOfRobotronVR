@@ -93,7 +93,20 @@ void churchOfRobotronVRApp::setup()
   mCamera.registerEvents();
   mCamera.setSpeed(0.001);
   
-  mSermon = make_shared<MovieObject>("/Users/bzztbomb/projects/churchOfRobotron/videos/church_of_robotron_sermon-__doctrine_of_error_640x472.mp4");
+  const std::string sermonBase = "/Users/bzztbomb/projects/churchOfRobotron/videos/";
+  std::vector<string> sermons =
+  {
+    "church_of_robotron_sermon-__doctrine_of_error_640x472.mp4",
+    "church_of_robotron_sermon-_doctrine_of_futility_640x472.mp4",
+    "church_of_robotron_sermon-_eight_ways_640x472.mp4",
+    "church_of_robotron_sermon-_the_ninth_position_640x472.mp4",
+    "church_of_robotron_sermon-_what_are_the_robotrons_640x472.mp4"
+  };
+  for (auto& i : sermons)
+    i = sermonBase + i;
+  
+  mSermon = make_shared<MovieObject>();
+  mSermon->setMovieList(sermons);
   
   getWindow()->setUserData( new WindowData );
   

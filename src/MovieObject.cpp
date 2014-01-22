@@ -11,16 +11,25 @@
 
 using namespace ci;
 
-MovieObject::MovieObject(const cinder::fs::path& path)
+MovieObject::MovieObject()
+: mPosition(0.0f, 32.0f, 0.0f)
+, mScale(20.0f, 20.0f)
+, mRight(Vec3f::xAxis())
+, mUp(Vec3f::zAxis())
+, mCurrentMovie(-1)
 {
-  mMovie = qtime::MovieGl(path);
-  mMovie.setLoop();
-  mMovie.play();
+}
+
+void MovieObject::setMovieList(const std::vector<std::string>& movies)
+{
+  mMovies = movies;
 }
 
 void MovieObject::update()
 {
-  //
+  if (!mMovie || mMovie.isDone())
+    loadCurrentMovie();
+
   mTexture = mMovie.getTexture();
   if (mTexture)
     mTexture.setFlipped(true);
@@ -30,6 +39,18 @@ void MovieObject::render()
 {
   if (mTexture)
     cor::drawTexRectBillboard(&mTexture, mTexture.getWidth(), mTexture.getHeight(),
-                         Vec3f(0.0, 32.0, 0.0f), Vec2f(20.0f, 20.0f), 0.0f,
-                         Vec3f::xAxis(), Vec3f::zAxis());
+                              mPosition, mScale, 0.0f,
+                              mRight, mUp);
+}
+
+void MovieObject::loadCurrentMovie()
+{
+  mTexture.reset();
+  if (mMovies.size() == 0)
+    return;
+  mCurrentMovie++;
+  if (mCurrentMovie > mMovies.size())
+    mCurrentMovie = 0;
+  mMovie = qtime::MovieGl(mMovies[mCurrentMovie]);
+  mMovie.play();
 }
