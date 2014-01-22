@@ -17,6 +17,7 @@ MovieObject::MovieObject()
 , mRight(Vec3f::xAxis())
 , mUp(Vec3f::zAxis())
 , mCurrentMovie(-1)
+, mMute(false)
 {
 }
 
@@ -52,5 +53,7 @@ void MovieObject::loadCurrentMovie()
   if (mCurrentMovie > mMovies.size())
     mCurrentMovie = 0;
   mMovie = qtime::MovieGl(mMovies[mCurrentMovie]);
+  if (mMute)
+    mMovie.setVolume(0.0);
   mMovie.play();
 }

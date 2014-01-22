@@ -21,9 +21,10 @@ public:
   void render();
   void update();
   
-  void setPosition(const cinder::Vec3f& pos);
-  void setScale(const cinder::Vec2f& scale);
-  void setRightUp(const cinder::Vec3f& r, const cinder::Vec3f& u);
+  void setPosition(const cinder::Vec3f& pos) { mPosition = pos; }
+  void setScale(const cinder::Vec2f& scale) { mScale = scale; }
+  void setRightUp(const cinder::Vec3f& r, const cinder::Vec3f& u) { mRight = r; mUp = u; }
+  void setMute(bool mute) { mMute = mute; }
 private:
   std::vector<std::string> mMovies;
   int mCurrentMovie;
@@ -34,6 +35,8 @@ private:
   cinder::Vec2f mScale;
   cinder::Vec3f mRight;
   cinder::Vec3f mUp;
+               
+  bool mMute;
   
   void loadCurrentMovie();
 };

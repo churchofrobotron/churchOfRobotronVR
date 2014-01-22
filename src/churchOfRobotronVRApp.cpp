@@ -53,6 +53,7 @@ private:
   FpsCamUI mCamera;
   MovieObject mSermon;
   Leaderboard mLeaderboard;
+  MovieObject mRandoms;
   
   void oculusInit();
   void renderScene();
@@ -96,16 +97,27 @@ void churchOfRobotronVRApp::setup()
   const std::string sermonBase = "/Users/bzztbomb/projects/churchOfRobotron/videos/";
   std::vector<string> sermons =
   {
-    "church_of_robotron_sermon-__doctrine_of_error_640x472.mp4",
-    "church_of_robotron_sermon-_doctrine_of_futility_640x472.mp4",
-    "church_of_robotron_sermon-_eight_ways_640x472.mp4",
-    "church_of_robotron_sermon-_the_ninth_position_640x472.mp4",
-    "church_of_robotron_sermon-_what_are_the_robotrons_640x472.mp4"
+    sermonBase + "church_of_robotron_sermon-__doctrine_of_error_640x472.mp4",
+    sermonBase + "church_of_robotron_sermon-_doctrine_of_futility_640x472.mp4",
+    sermonBase + "church_of_robotron_sermon-_eight_ways_640x472.mp4",
+    sermonBase + "church_of_robotron_sermon-_the_ninth_position_640x472.mp4",
+    sermonBase + "church_of_robotron_sermon-_what_are_the_robotrons_640x472.mp4"
   };
-  for (auto& i : sermons)
-    i = sermonBase + i;
   
   mSermon.setMovieList(sermons);
+  
+  std::string downloads = "/Users/bzztbomb/Downloads/";
+  std::vector<string> randoms =
+  {
+    downloads + "Glitch-logo-02.mp4",
+    sermonBase + "116645203.mp4"
+  };
+  
+  mRandoms.setPosition(Vec3f(32.0, 24.0, 0.0));
+  float rot = 2.5; ///1.5;
+  mRandoms.setRightUp(Vec3f(sin(rot), cos(rot), 0), Vec3f(0,0,1));
+  mRandoms.setMovieList(randoms);
+  mRandoms.setMute(true);
   
   getWindow()->setUserData( new WindowData );
   
@@ -155,6 +167,7 @@ void churchOfRobotronVRApp::update()
   mCamera.update();
   mEnvironment.update();
   mSermon.update();
+  mRandoms.update();
   mLeaderboard.update();
 }
 
@@ -225,6 +238,7 @@ void churchOfRobotronVRApp::renderScene()
 {
   mEnvironment.draw();
   mSermon.render();
+  mRandoms.render();
   mScreen.draw();
   mLeaderboard.draw();
 }
