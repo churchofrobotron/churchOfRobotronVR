@@ -12,6 +12,7 @@
 #include "MovieObject.h"
 #include "leaderboard.h"
 #include "environment.h"
+#include "PixelModel.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -59,6 +60,7 @@ private:
   MovieObject mSermon;
   Leaderboard mLeaderboard;
   MovieObject mRandoms;
+  PixelModel mModel;
   
   void oculusInit();
   void renderScene();
@@ -129,6 +131,8 @@ void churchOfRobotronVRApp::setup()
   mRandoms.setMovieList(randoms);
   mRandoms.setMute(true);
   
+  mModel.init(&mParams);
+  
   getWindow()->setUserData( new WindowData );
   
 }
@@ -187,6 +191,7 @@ void churchOfRobotronVRApp::update()
   mSermon.update();
   mRandoms.update();
   mLeaderboard.update();
+  mModel.update();
 }
 
 void churchOfRobotronVRApp::resize()
@@ -261,6 +266,7 @@ void churchOfRobotronVRApp::renderScene()
   mRandoms.render();
   mScreen.draw();
   mLeaderboard.draw();
+  mModel.draw();
 }
 
 void churchOfRobotronVRApp::checkWindows()

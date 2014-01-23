@@ -24,6 +24,7 @@
 		C815BBDB1845A4A3006F1272 /* robotronScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C815BBD91845A4A3006F1272 /* robotronScreen.cpp */; };
 		C815BBDE1845BB53006F1272 /* FPSCamUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C815BBDC1845BB53006F1272 /* FPSCamUI.cpp */; };
 		C81B34EE184EE9FB0021E7E7 /* MovieObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */; };
+		C845A6E11890E02400B02812 /* PixelModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C845A6DF1890E02400B02812 /* PixelModel.cpp */; };
 		C84CE69F188C4A5D00C95CFA /* environment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C84CE69D188C4A5D00C95CFA /* environment.cpp */; };
 		C85695C81886393E001D55C0 /* leaderboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C85695C61886393E001D55C0 /* leaderboard.cpp */; };
 		C85695CE18865870001D55C0 /* MeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C85695CC18865870001D55C0 /* MeshHelper.cpp */; };
@@ -126,6 +127,8 @@
 		C815BBDD1845BB53006F1272 /* FPSCamUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FPSCamUI.h; path = ../src/FPSCamUI.h; sourceTree = "<group>"; };
 		C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MovieObject.cpp; path = ../src/MovieObject.cpp; sourceTree = "<group>"; };
 		C81B34ED184EE9FB0021E7E7 /* MovieObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieObject.h; path = ../src/MovieObject.h; sourceTree = "<group>"; };
+		C845A6DF1890E02400B02812 /* PixelModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PixelModel.cpp; path = ../src/PixelModel.cpp; sourceTree = "<group>"; };
+		C845A6E01890E02400B02812 /* PixelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelModel.h; path = ../src/PixelModel.h; sourceTree = "<group>"; };
 		C84CE69D188C4A5D00C95CFA /* environment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = environment.cpp; path = ../src/environment.cpp; sourceTree = "<group>"; };
 		C84CE69E188C4A5D00C95CFA /* environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = environment.h; path = ../src/environment.h; sourceTree = "<group>"; };
 		C85695C61886393E001D55C0 /* leaderboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = leaderboard.cpp; path = ../src/leaderboard.cpp; sourceTree = "<group>"; };
@@ -271,6 +274,8 @@
 				C85695C71886393E001D55C0 /* leaderboard.h */,
 				C84CE69D188C4A5D00C95CFA /* environment.cpp */,
 				C84CE69E188C4A5D00C95CFA /* environment.h */,
+				C845A6DF1890E02400B02812 /* PixelModel.cpp */,
+				C845A6E01890E02400B02812 /* PixelModel.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -644,6 +649,7 @@
 				C81B34EE184EE9FB0021E7E7 /* MovieObject.cpp in Sources */,
 				C8CEFF8B185E86380021817B /* OVR_Timer.cpp in Sources */,
 				C8CEFF17185E805E0021817B /* OculusVR.cpp in Sources */,
+				C845A6E11890E02400B02812 /* PixelModel.cpp in Sources */,
 				C8CEFF7C185E86380021817B /* OVR_Allocator.cpp in Sources */,
 				C8CEFF97185E86380021817B /* OVR_OSX_HMDDevice.cpp in Sources */,
 				C8CEFF96185E86380021817B /* OVR_OSX_HIDDevice.cpp in Sources */,

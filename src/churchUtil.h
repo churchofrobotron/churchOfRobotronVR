@@ -18,6 +18,8 @@ void drawTexRectBillboard( ci::gl::Texture* tex, GLfloat w, GLfloat h, const ci:
 
 cinder::TriMesh textToMesh(const std::vector<std::string>& str);
   
+cinder::TriMesh spriteToMesh(const cinder::Surface8u& s);
+  
 }
 
 #endif /* defined(__churchOfRobotronVR__churchUtil__) */

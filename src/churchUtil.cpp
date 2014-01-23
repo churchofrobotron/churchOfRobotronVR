@@ -49,7 +49,7 @@ void drawTexRectBillboard( ci::gl::Texture* tex, GLfloat w, GLfloat h, const Vec
 }
 
 // Move to churchUtil at some point.
-  cinder::TriMesh textToMesh(const std::vector<std::string>& str)
+cinder::TriMesh textToMesh(const std::vector<std::string>& str)
 {
   const float xSize = 0.0666;
   const float ySize = xSize;
@@ -83,6 +83,48 @@ void drawTexRectBillboard( ci::gl::Texture* tex, GLfloat w, GLfloat h, const Vec
           mesh.appendTriangle(indices[i+0] + lastIndex,
                                indices[i+1] + lastIndex,
                                indices[i+2] + lastIndex);
+        }
+      }
+    }
+  }
+  return mesh;
+}
+  
+cinder::TriMesh spriteToMesh(const cinder::Surface8u& s)
+{
+  const float xSize = 0.5f;
+  const float ySize = xSize;
+  const float cubeSize = 0.666; // of xSize
+  
+  TriMesh cube = MeshHelper::createCube();
+  
+  TriMesh mesh;
+  for (int y = 0; y < s.getHeight(); y++)
+  {
+    for (int x = 0; x < s.getWidth(); x++)
+    {
+      const uint8_t* pixel = s.getData(Vec2i(x, y));
+      const uint8_t red = *pixel;
+      const uint8_t green = *(pixel+1);
+      const uint8_t blue = *(pixel+2);
+      int value = (red+green+blue > 0) ? 1 : 0;
+      if (value)
+      {
+        Color c(red, green, blue);
+        size_t lastIndex = mesh.getNumIndices();
+        Vec3f offset(x * xSize, 0.0, (s.getHeight() - y) * ySize);
+        for (auto v : cube.getVertices())
+        {
+          mesh.appendVertex((v * xSize * cubeSize) + offset);
+          mesh.appendColorRgb(c);
+        }
+        mesh.appendNormals(&cube.getNormals()[0], cube.getNormals().size());
+        const auto& indices = cube.getIndices();
+        for (int i = 0; i < indices.size(); i+=3)
+        {
+          mesh.appendTriangle(indices[i+0] + lastIndex,
+                              indices[i+1] + lastIndex,
+                              indices[i+2] + lastIndex);
         }
       }
     }
