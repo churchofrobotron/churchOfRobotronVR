@@ -2,6 +2,7 @@
 #include "cinder/Camera.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/Fbo.h"
+#include "cinder/params/Params.h"
 
 #include "FPSCamUI.h"
 #include "OculusVR.h"
@@ -48,9 +49,13 @@ private:
   gl::Fbo                     mOculusFbo;
   std::weak_ptr<cinder::app::Window> mOculusWindow;
 
+  params::InterfaceGl mParams;
+  bool mShowParams;
+  
+  FpsCamUI mCamera;
+  
   Environment mEnvironment;
   RobotronScreen mScreen;
-  FpsCamUI mCamera;
   MovieObject mSermon;
   Leaderboard mLeaderboard;
   MovieObject mRandoms;
@@ -69,6 +74,9 @@ void churchOfRobotronVRApp::setup()
 {
   oculusInit();
   
+  mShowParams = false;
+  
+  mParams = params::InterfaceGl( "Church of Robotron", Vec2i( 225, 200 ) );
   // Create Render Target a bit bigger to compensate the distortion quality loss
   gl::Fbo::Format format;
   format.enableColorBuffer();
@@ -152,6 +160,14 @@ void churchOfRobotronVRApp::keyDown( KeyEvent event )
           setFullScreen( !isFullScreen(), fo );
         }
         break;
+      case KeyEvent::KEY_p:
+        {
+          if (mParams.isVisible())
+            mParams.hide();
+          else
+            mParams.show();
+        }
+        break;
     }
   }
 }
@@ -192,7 +208,9 @@ void churchOfRobotronVRApp::draw()
     }
     
     renderScene();
+    
     gl::popMatrices();
+    mParams.draw();
   } else {
     // clear out the window with black
     gl::clear( Color( 0, 0, 0 ) );
