@@ -77,6 +77,8 @@ void churchOfRobotronVRApp::setup()
   mShowParams = false;
   
   mParams = params::InterfaceGl( "Church of Robotron", Vec2i( 225, 200 ) );
+  mParams.hide();
+  
   // Create Render Target a bit bigger to compensate the distortion quality loss
   gl::Fbo::Format format;
   format.enableColorBuffer();
