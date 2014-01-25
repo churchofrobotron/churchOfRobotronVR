@@ -117,6 +117,7 @@ void churchOfRobotronVRApp::setup()
   };
   
   mSermon.setMovieList(sermons);
+  mSermon.setMute(true);
   
   std::string downloads = "/Users/bzztbomb/Downloads/";
   std::vector<string> randoms =
@@ -262,11 +263,15 @@ void churchOfRobotronVRApp::draw()
 void churchOfRobotronVRApp::renderScene()
 {
   mEnvironment.draw();
+  gl::enableDepthRead();
+  gl::enableDepthWrite();
   mSermon.render();
   mRandoms.render();
   mScreen.draw();
   mLeaderboard.draw();
   mModel.draw();
+  gl::enableDepthRead(false);
+  gl::enableDepthWrite(false);
 }
 
 void churchOfRobotronVRApp::checkWindows()
