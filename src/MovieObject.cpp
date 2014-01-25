@@ -50,7 +50,7 @@ void MovieObject::loadCurrentMovie()
   if (mMovies.size() == 0)
     return;
   mCurrentMovie++;
-  if (mCurrentMovie > mMovies.size())
+  if (mCurrentMovie >= mMovies.size())
     mCurrentMovie = 0;
   mMovie = qtime::MovieGl(mMovies[mCurrentMovie]);
   if (mMute)
