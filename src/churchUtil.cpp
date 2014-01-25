@@ -92,7 +92,7 @@ cinder::TriMesh textToMesh(const std::vector<std::string>& str)
   
 cinder::TriMesh spriteToMesh(const cinder::Surface8u& s)
 {
-  const float xSize = 0.5f;
+  const float xSize = 0.65f;
   const float ySize = xSize;
   const float cubeSize = 0.666; // of xSize
   
