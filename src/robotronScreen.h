@@ -10,6 +10,8 @@
 #define __churchOfRobotronVR__robotronScreen__
 
 #include "syphonClient.h"
+#include "cinder/TriMesh.h"
+#include "cinder/gl/GlslProg.h"
 
 class RobotronScreen
 {
@@ -17,7 +19,17 @@ public:
   void init();
   void draw();
 private:
+  // Common
   syphonClient mClient;
+  
+  // Just draw texture
+  void drawSimple();
+  
+  // Animated cubes
+  cinder::gl::GlslProg mCubeShader;
+  cinder::TriMesh mCubeMesh;  
+  void initCubes();
+  void drawCubes();
 };
 
 

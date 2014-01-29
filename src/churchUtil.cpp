@@ -47,7 +47,7 @@ void drawTexRectBillboard( ci::gl::Texture* tex, GLfloat w, GLfloat h, const Vec
 	glDisableClientState( GL_VERTEX_ARRAY );
 	glDisableClientState( GL_TEXTURE_COORD_ARRAY );
 }
-
+  
 // Move to churchUtil at some point.
 cinder::TriMesh textToMesh(const std::vector<std::string>& str)
 {
@@ -72,18 +72,8 @@ cinder::TriMesh textToMesh(const std::vector<std::string>& str)
       int value = *red > 0 ? 1 : 0;
       if (value)
       {
-        size_t lastIndex = mesh.getNumIndices();
         Vec3f offset(x * xSize, 0.0, (s.getHeight() - y) * ySize);
-        for (auto v : cube.getVertices())
-          mesh.appendVertex((v * xSize * cubeSize) + offset);
-        mesh.appendNormals(&cube.getNormals()[0], cube.getNormals().size());
-        const auto& indices = cube.getIndices();
-        for (int i = 0; i < indices.size(); i+=3)
-        {
-          mesh.appendTriangle(indices[i+0] + lastIndex,
-                               indices[i+1] + lastIndex,
-                               indices[i+2] + lastIndex);
-        }
+        appendMesh(mesh, cube, xSize * cubeSize, offset, Color::white());
       }
     }
   }
@@ -111,25 +101,54 @@ cinder::TriMesh spriteToMesh(const cinder::Surface8u& s)
       if (value)
       {
         Color8u c(red, green, blue);
-        size_t lastIndex = mesh.getNumIndices();
         Vec3f offset(x * xSize, 0.0, (s.getHeight() - y) * ySize);
-        for (auto v : cube.getVertices())
-        {
-          mesh.appendVertex((v * xSize * cubeSize) + offset);
-          mesh.appendColorRgb(c);
-        }
-        mesh.appendNormals(&cube.getNormals()[0], cube.getNormals().size());
-        const auto& indices = cube.getIndices();
-        for (int i = 0; i < indices.size(); i+=3)
-        {
-          mesh.appendTriangle(indices[i+0] + lastIndex,
-                              indices[i+1] + lastIndex,
-                              indices[i+2] + lastIndex);
-        }
+        appendMesh(mesh, cube, xSize * cubeSize, offset, c);
       }
     }
   }
   return mesh;
 }
+ 
+void appendMesh(cinder::TriMesh& dest, const cinder::TriMesh& src, float scaleFactor, cinder::Vec3f offset, cinder::Color c)
+{
+  size_t lastIndex = dest.getNumIndices();
+  for (auto v : src.getVertices())
+  {
+    dest.appendVertex((v * scaleFactor) + offset);
+    dest.appendColorRgb(c);
+  }
+  dest.appendNormals(&src.getNormals()[0], src.getNormals().size());
+  const auto& indices = src.getIndices();
+  for (int i = 0; i < indices.size(); i+=3)
+  {
+    dest.appendTriangle(indices[i+0] + lastIndex,
+                        indices[i+1] + lastIndex,
+                        indices[i+2] + lastIndex);
+  }
+}
+  
+void appendMeshWithTexCoords(cinder::TriMesh& dest, const cinder::TriMesh& src,
+                             float meshScaleFactor, cinder::Vec3f meshOffset,
+                             float tcScaleFactor, cinder::Vec2f tcOffset)
+{
+  size_t lastIndex = dest.getNumIndices();
+  for (auto v : src.getVertices())
+  {
+    dest.appendVertex((v * meshScaleFactor) + meshOffset);
+  }
+  for (auto t : src.getTexCoords())
+  {
+    dest.appendTexCoord((t * tcScaleFactor) + tcOffset);
+  }
+  dest.appendNormals(&src.getNormals()[0], src.getNormals().size());
+  const auto& indices = src.getIndices();
+  for (int i = 0; i < indices.size(); i+=3)
+  {
+    dest.appendTriangle(indices[i+0] + lastIndex,
+                        indices[i+1] + lastIndex,
+                        indices[i+2] + lastIndex);
+  }
+}
+
   
 }

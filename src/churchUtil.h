@@ -20,6 +20,11 @@ cinder::TriMesh textToMesh(const std::vector<std::string>& str);
   
 cinder::TriMesh spriteToMesh(const cinder::Surface8u& s);
   
+void appendMesh(cinder::TriMesh& dest, const cinder::TriMesh& src, float scaleFactor, cinder::Vec3f offset, cinder::Color c);
+
+void appendMeshWithTexCoords(cinder::TriMesh& dest, const cinder::TriMesh& src,
+                             float meshScaleFactor, cinder::Vec3f meshOffset,
+                             float tcScaleFactor, cinder::Vec2f tcOffset);
 }
 
 #endif /* defined(__churchOfRobotronVR__churchUtil__) */

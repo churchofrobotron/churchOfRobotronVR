@@ -25,6 +25,7 @@
 		C815BBDE1845BB53006F1272 /* FPSCamUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C815BBDC1845BB53006F1272 /* FPSCamUI.cpp */; };
 		C8182F251898BAB4003ACDA3 /* Grunt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8182F231898BAB4003ACDA3 /* Grunt.cpp */; };
 		C8182F281898BB10003ACDA3 /* Enforcer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8182F261898BB10003ACDA3 /* Enforcer.cpp */; };
+		C8182F2C1898D135003ACDA3 /* LiveAssetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8182F2A1898D135003ACDA3 /* LiveAssetManager.cpp */; };
 		C81B34EE184EE9FB0021E7E7 /* MovieObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */; };
 		C845A6E11890E02400B02812 /* PixelModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C845A6DF1890E02400B02812 /* PixelModel.cpp */; };
 		C84CE69F188C4A5D00C95CFA /* environment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C84CE69D188C4A5D00C95CFA /* environment.cpp */; };
@@ -131,6 +132,8 @@
 		C8182F241898BAB4003ACDA3 /* Grunt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Grunt.h; path = ../src/Grunt.h; sourceTree = "<group>"; };
 		C8182F261898BB10003ACDA3 /* Enforcer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Enforcer.cpp; path = ../src/Enforcer.cpp; sourceTree = "<group>"; };
 		C8182F271898BB10003ACDA3 /* Enforcer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Enforcer.h; path = ../src/Enforcer.h; sourceTree = "<group>"; };
+		C8182F2A1898D135003ACDA3 /* LiveAssetManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LiveAssetManager.cpp; path = ../src/LiveAssetManager.cpp; sourceTree = "<group>"; };
+		C8182F2B1898D135003ACDA3 /* LiveAssetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveAssetManager.h; path = ../src/LiveAssetManager.h; sourceTree = "<group>"; };
 		C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MovieObject.cpp; path = ../src/MovieObject.cpp; sourceTree = "<group>"; };
 		C81B34ED184EE9FB0021E7E7 /* MovieObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieObject.h; path = ../src/MovieObject.h; sourceTree = "<group>"; };
 		C845A6DF1890E02400B02812 /* PixelModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PixelModel.cpp; path = ../src/PixelModel.cpp; sourceTree = "<group>"; };
@@ -267,6 +270,8 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C8182F2A1898D135003ACDA3 /* LiveAssetManager.cpp */,
+				C8182F2B1898D135003ACDA3 /* LiveAssetManager.h */,
 				C8182F231898BAB4003ACDA3 /* Grunt.cpp */,
 				C8182F241898BAB4003ACDA3 /* Grunt.h */,
 				26EA8A53E4BA45FEAF93A7D1 /* churchOfRobotronVRApp.cpp */,
@@ -628,6 +633,7 @@
 				C8CEFF89185E86380021817B /* OVR_ThreadsPthread.cpp in Sources */,
 				C8182F251898BAB4003ACDA3 /* Grunt.cpp in Sources */,
 				C8CEFF88185E86380021817B /* OVR_System.cpp in Sources */,
+				C8182F2C1898D135003ACDA3 /* LiveAssetManager.cpp in Sources */,
 				C8182F281898BB10003ACDA3 /* Enforcer.cpp in Sources */,
 				C8CEFF16185E805E0021817B /* CameraStereoHMD.cpp in Sources */,
 				C8CEFFA3185E86380021817B /* Util_LatencyTest.cpp in Sources */,
