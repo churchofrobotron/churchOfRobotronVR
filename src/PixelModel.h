@@ -15,14 +15,16 @@
 class PixelModel
 {
 public:
-  void init(cinder::params::InterfaceGl* params);
-  void update();
-  void draw();
+  virtual void init(cinder::params::InterfaceGl* params);
+  virtual void update();
+  virtual void draw();
 private:
   std::deque<cinder::TriMesh> mFrames;
   int mCurrFrame;
   cinder::Timer mTimer;
+protected:
   cinder::Vec3f mPosition;
+  bool mAnimate;
 };
 
 #endif /* defined(__churchOfRobotronVR__PixelModel__) */

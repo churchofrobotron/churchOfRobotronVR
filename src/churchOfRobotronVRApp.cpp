@@ -12,7 +12,7 @@
 #include "MovieObject.h"
 #include "leaderboard.h"
 #include "environment.h"
-#include "PixelModel.h"
+#include "Grunt.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -60,7 +60,7 @@ private:
   MovieObject mSermon;
   Leaderboard mLeaderboard;
   MovieObject mRandoms;
-  PixelModel mModel;
+  Grunt mModel;
   
   void oculusInit();
   void renderScene();

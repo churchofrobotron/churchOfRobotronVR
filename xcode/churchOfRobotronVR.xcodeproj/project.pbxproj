@@ -28,6 +28,7 @@
 		C84CE69F188C4A5D00C95CFA /* environment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C84CE69D188C4A5D00C95CFA /* environment.cpp */; };
 		C85695C81886393E001D55C0 /* leaderboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C85695C61886393E001D55C0 /* leaderboard.cpp */; };
 		C85695CE18865870001D55C0 /* MeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C85695CC18865870001D55C0 /* MeshHelper.cpp */; };
+		C85D299A18944C220017BE35 /* Grunt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C85D299818944C220017BE35 /* Grunt.cpp */; };
 		C88B32831858251E008AFECC /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C88B32821858251E008AFECC /* QuickTime.framework */; };
 		C8CEFF0E185E70BC0021817B /* churchUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8CEFF0C185E70BC0021817B /* churchUtil.cpp */; };
 		C8CEFF16185E805E0021817B /* CameraStereoHMD.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8CEFF12185E805E0021817B /* CameraStereoHMD.cpp */; };
@@ -135,6 +136,8 @@
 		C85695C71886393E001D55C0 /* leaderboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = leaderboard.h; path = ../src/leaderboard.h; sourceTree = "<group>"; };
 		C85695CC18865870001D55C0 /* MeshHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshHelper.cpp; sourceTree = "<group>"; };
 		C85695CD18865870001D55C0 /* MeshHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshHelper.h; sourceTree = "<group>"; };
+		C85D299818944C220017BE35 /* Grunt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Grunt.cpp; sourceTree = "<group>"; };
+		C85D299918944C220017BE35 /* Grunt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Grunt.h; sourceTree = "<group>"; };
 		C88B32821858251E008AFECC /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = System/Library/Frameworks/QuickTime.framework; sourceTree = SDKROOT; };
 		C8CEFF0C185E70BC0021817B /* churchUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = churchUtil.cpp; path = ../src/churchUtil.cpp; sourceTree = "<group>"; };
 		C8CEFF0D185E70BC0021817B /* churchUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = churchUtil.h; path = ../src/churchUtil.h; sourceTree = "<group>"; };
@@ -276,6 +279,8 @@
 				C84CE69E188C4A5D00C95CFA /* environment.h */,
 				C845A6DF1890E02400B02812 /* PixelModel.cpp */,
 				C845A6E01890E02400B02812 /* PixelModel.h */,
+				C85D299818944C220017BE35 /* Grunt.cpp */,
+				C85D299918944C220017BE35 /* Grunt.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -616,6 +621,7 @@
 				C8CEFF0E185E70BC0021817B /* churchUtil.cpp in Sources */,
 				C8CEFF7D185E86380021817B /* OVR_Atomic.cpp in Sources */,
 				C8CEFF89185E86380021817B /* OVR_ThreadsPthread.cpp in Sources */,
+				C85D299A18944C220017BE35 /* Grunt.cpp in Sources */,
 				C8CEFF88185E86380021817B /* OVR_System.cpp in Sources */,
 				C8CEFF16185E805E0021817B /* CameraStereoHMD.cpp in Sources */,
 				C8CEFFA3185E86380021817B /* Util_LatencyTest.cpp in Sources */,

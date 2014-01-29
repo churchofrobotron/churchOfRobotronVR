@@ -34,14 +34,16 @@ void PixelModel::init(cinder::params::InterfaceGl* params)
   mPosition = Vec3f(0.0f, 14.0f, -5.0f);
   params->addSeparator("PixelModel");
   params->addParam("Position", &mPosition);
+  params->addParam("Animate", &mAnimate);
   
   mCurrFrame = 0;
+  mAnimate = true;
   mTimer.start();
 }
 
 void PixelModel::update()
 {
-  const float fps = 2.0f;
+  const float fps = 4.0f;
   const float spf = 1.0 / fps;
   
   int totalFrames = mTimer.getSeconds() / spf;
