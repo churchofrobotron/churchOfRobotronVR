@@ -107,10 +107,10 @@ cinder::TriMesh spriteToMesh(const cinder::Surface8u& s)
       const uint8_t red = *pixel;
       const uint8_t green = *(pixel+1);
       const uint8_t blue = *(pixel+2);
-      int value = (red+green+blue > 0) ? 1 : 0;
+      int value = (red+green+blue > 4) ? 1 : 0;
       if (value)
       {
-        Color c(red, green, blue);
+        Color8u c(red, green, blue);
         size_t lastIndex = mesh.getNumIndices();
         Vec3f offset(x * xSize, 0.0, (s.getHeight() - y) * ySize);
         for (auto v : cube.getVertices())

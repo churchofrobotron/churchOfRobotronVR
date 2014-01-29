@@ -76,6 +76,7 @@ void Environment::initSkyMesh()
   float maxv = 10000.0f;
   float yVal = 10.0;
   Color groundColor(0.5, 0.5, 0.7);
+  groundColor *= 0.5f;
   
   mSkyMesh.appendVertex(Vec3f(minv, minv, yVal));
   mSkyMesh.appendColorRgb(groundColor);
