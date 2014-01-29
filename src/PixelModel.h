@@ -18,13 +18,15 @@ public:
   virtual void init(cinder::params::InterfaceGl* params);
   virtual void update();
   virtual void draw();
+protected:
+  cinder::Vec3f mPosition;
+  bool mAnimate;
+
+  void loadFrames(const std::vector<cinder::Area>& frames);
 private:
   std::deque<cinder::TriMesh> mFrames;
   int mCurrFrame;
   cinder::Timer mTimer;
-protected:
-  cinder::Vec3f mPosition;
-  bool mAnimate;
 };
 
 #endif /* defined(__churchOfRobotronVR__PixelModel__) */

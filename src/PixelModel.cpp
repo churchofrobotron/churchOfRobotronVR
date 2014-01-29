@@ -17,35 +17,33 @@ using namespace ci::app;
 
 void PixelModel::init(cinder::params::InterfaceGl* params)
 {
-  Surface8u allSprites = loadImage(loadAsset("robotron_sprites.png"));
-  
-  std::vector<Area> grunts =
-  {
-    Area(2, 18, 2+9, 18+13),
-    Area(14, 18, 14+9, 18+12)
-  };
-  
-  for (auto grunt : grunts)
-  {
-    Surface8u s = allSprites.clone(grunt);
-    mFrames.push_back(cor::spriteToMesh(s));
-  }
-  
   mPosition = Vec3f(0.0f, 14.0f, -5.0f);
   params->addSeparator("PixelModel");
   params->addParam("Position", &mPosition);
   params->addParam("Animate", &mAnimate);
-  
+
   mCurrFrame = 0;
   mAnimate = true;
   mTimer.start();
 }
 
+void PixelModel::loadFrames(const std::vector<cinder::Area>& frames)
+{
+  Surface8u allSprites = loadImage(loadAsset("robotron_sprites.png"));
+
+  for (auto f : frames)
+  {
+    Surface8u s = allSprites.clone(f);
+    mFrames.push_back(cor::spriteToMesh(s));
+  }
+}
+
+
 void PixelModel::update()
 {
   const float fps = 4.0f;
   const float spf = 1.0 / fps;
-  
+
   int totalFrames = mTimer.getSeconds() / spf;
   mCurrFrame = totalFrames % mFrames.size();
 }

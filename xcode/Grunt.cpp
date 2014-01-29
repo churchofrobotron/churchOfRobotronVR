@@ -16,6 +16,13 @@ void Grunt::init(cinder::params::InterfaceGl* params)
   mSpeed = 0.1f;
   params->addParam("Speed", &mSpeed);
   mState = msEast;
+
+  std::vector<Area> grunts =
+  {
+    Area(2, 18, 2+9, 18+13),
+    Area(14, 18, 14+9, 18+12)
+  };
+  loadFrames(grunts);
 }
 
 void Grunt::update()
