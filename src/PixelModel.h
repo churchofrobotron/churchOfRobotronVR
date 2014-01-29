@@ -15,10 +15,16 @@
 class PixelModel
 {
 public:
+  PixelModel(const std::string& prefix)
+  {
+    mParamPrefix = prefix;
+  }
+  
   virtual void init(cinder::params::InterfaceGl* params);
   virtual void update();
   virtual void draw();
 protected:
+  std::string mParamPrefix;
   cinder::Vec3f mPosition;
   bool mAnimate;
 

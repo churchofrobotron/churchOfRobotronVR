@@ -18,9 +18,9 @@ using namespace ci::app;
 void PixelModel::init(cinder::params::InterfaceGl* params)
 {
   mPosition = Vec3f(0.0f, 14.0f, -5.0f);
-  params->addSeparator("PixelModel");
-  params->addParam("Position", &mPosition);
-  params->addParam("Animate", &mAnimate);
+  params->addSeparator(mParamPrefix);
+  params->addParam(mParamPrefix + ": Position", &mPosition);
+  params->addParam(mParamPrefix + ": Animate", &mAnimate);
 
   mCurrFrame = 0;
   mAnimate = true;
@@ -41,6 +41,9 @@ void PixelModel::loadFrames(const std::vector<cinder::Area>& frames)
 
 void PixelModel::update()
 {
+  if (!mFrames.size())
+    return;
+  
   const float fps = 4.0f;
   const float spf = 1.0 / fps;
 

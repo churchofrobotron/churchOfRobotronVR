@@ -14,6 +14,7 @@
 class Grunt : public PixelModel
 {
 public:
+  Grunt();
   virtual void init(cinder::params::InterfaceGl* params);
   virtual void update();
 protected:

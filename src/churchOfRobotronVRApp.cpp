@@ -13,6 +13,7 @@
 #include "leaderboard.h"
 #include "environment.h"
 #include "Grunt.h"
+#include "Enforcer.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -61,6 +62,7 @@ private:
   Leaderboard mLeaderboard;
   MovieObject mRandoms;
   Grunt mModel;
+  Enforcer mEnforcer;
   
   void oculusInit();
   void renderScene();
@@ -133,6 +135,7 @@ void churchOfRobotronVRApp::setup()
   mRandoms.setMute(true);
   
   mModel.init(&mParams);
+  mEnforcer.init(&mParams);
   
   getWindow()->setUserData( new WindowData );
   
@@ -193,6 +196,7 @@ void churchOfRobotronVRApp::update()
   mRandoms.update();
   mLeaderboard.update();
   mModel.update();
+  mEnforcer.update();
 }
 
 void churchOfRobotronVRApp::resize()
@@ -270,6 +274,7 @@ void churchOfRobotronVRApp::renderScene()
   mScreen.draw();
   mLeaderboard.draw();
   mModel.draw();
+  mEnforcer.draw();
   gl::enableDepthRead(false);
   gl::enableDepthWrite(false);
 }

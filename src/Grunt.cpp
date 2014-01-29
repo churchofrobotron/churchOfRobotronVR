@@ -10,11 +10,17 @@
 
 using namespace ci;
 
+Grunt::Grunt()
+: PixelModel("Grunt")
+{
+  
+}
+
 void Grunt::init(cinder::params::InterfaceGl* params)
 {
   PixelModel::init(params);
   mSpeed = 0.1f;
-  params->addParam("Speed", &mSpeed);
+  params->addParam(mParamPrefix + ": Speed", &mSpeed);
   mState = msEast;
 
   std::vector<Area> grunts =
