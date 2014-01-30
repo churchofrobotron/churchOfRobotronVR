@@ -21,12 +21,17 @@ namespace {
   const int boardHeight = 240;
 }
 
-void RobotronScreen::init()
+void RobotronScreen::init(cinder::params::InterfaceGl* params)
 {
   mClient.setup();
   mClient.set("Robotron2084", "mamerobotron64");
   
   initCubes();
+
+  mRotate = Quatf(cinder::Vec3f(-1.0f, 0.0f, 0.0f), M_PI / 4.0f);
+  
+  params->addSeparator("RobotronScreen");
+  params->addParam("RobotronScreen:  Rotate", &mRotate);
 }
 
 void RobotronScreen::draw()
@@ -53,7 +58,7 @@ void RobotronScreen::initCubes()
 {
   TriMesh cube = MeshHelper::createCube();
   
-  float cellSize = 0.005f;
+  float cellSize = 0.0025f;
   float cubeSize = cellSize * 0.76f;
   float yStart = -(boardHeight / 2.0f) * cellSize;
   float xStart = -(boardWidth / 2.0f) * cellSize;
@@ -91,6 +96,7 @@ void RobotronScreen::drawCubes()
   gl::color(Color::white());
   gl::pushMatrices();
   gl::translate(Vec3f(0.0, 1.0f, -0.50f));
+  gl::rotate(mRotate);
   
   mClient.bind();
   gl::TextureRef tex = mClient.getTexture();

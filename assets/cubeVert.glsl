@@ -13,7 +13,7 @@ void main()
 
   float intensity = dot(pixelColor.xyz, vec3(0.2989, 0.5870, 0.1140));
   //float offset = intensity * -0.05;
-  float offset = intensity > 4.0/255.0 ? ((-0.03 * intensity) + -0.04) : 0.0;
+  float offset = intensity > 4.0/255.0 ? ((-0.015 * intensity) + -0.04) : 0.0;
 
   pixelColor *= NdotL;
 

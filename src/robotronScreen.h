@@ -12,11 +12,13 @@
 #include "syphonClient.h"
 #include "cinder/TriMesh.h"
 #include "cinder/gl/GlslProg.h"
+#include "cinder/params/Params.h"
+#include "cinder/Quaternion.h"
 
 class RobotronScreen
 {
 public:
-  void init();
+  void init(cinder::params::InterfaceGl* params);
   void draw();
 private:
   // Common
@@ -27,7 +29,9 @@ private:
   
   // Animated cubes
   cinder::gl::GlslProg mCubeShader;
-  cinder::TriMesh mCubeMesh;  
+  cinder::TriMesh mCubeMesh;
+  cinder::Quatf mRotate;
+  
   void initCubes();
   void drawCubes();
 };

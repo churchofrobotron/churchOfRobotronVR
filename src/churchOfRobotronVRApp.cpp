@@ -98,7 +98,7 @@ void churchOfRobotronVRApp::setup()
   // Make the stereo a bit stronger
   mStereoCamera.setEyeSeparation( 0.25f );
   mEnvironment.init();
-  mScreen.init();
+  mScreen.init(&mParams);
   mLeaderboard.init();
   
   CameraPersp cam;
