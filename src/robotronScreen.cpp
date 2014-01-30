@@ -54,7 +54,7 @@ void RobotronScreen::initCubes()
   TriMesh cube = MeshHelper::createCube();
   
   float cellSize = 0.005f;
-  float cubeSize = cellSize * 0.66f;
+  float cubeSize = cellSize * 0.76f;
   float yStart = -(boardHeight / 2.0f) * cellSize;
   float xStart = -(boardWidth / 2.0f) * cellSize;
   float currY = yStart;
@@ -65,7 +65,7 @@ void RobotronScreen::initCubes()
     {
       Vec3f meshOffset(currX, 0.0f, currY);
       Vec2f tcOffset(x, y);
-      cor::appendMeshWithTexCoords(mCubeMesh, cube, cubeSize, meshOffset, 1.0f, tcOffset);
+      cor::appendMeshWithTexCoords(mCubeMesh, cube, cubeSize, meshOffset, 0.0, tcOffset);
       currX += cellSize;
     }
     currY += cellSize;
@@ -91,8 +91,12 @@ void RobotronScreen::drawCubes()
   gl::color(Color::white());
   gl::pushMatrices();
   gl::translate(Vec3f(0.0, 1.0f, -0.50f));
+  
   mClient.bind();
   gl::TextureRef tex = mClient.getTexture();
+  tex->setMinFilter(GL_NEAREST);
+  tex->setMagFilter(GL_NEAREST);
+  
   tex->enableAndBind();
   mCubeShader.bind();
   mCubeShader.uniform("tex0", 0);
