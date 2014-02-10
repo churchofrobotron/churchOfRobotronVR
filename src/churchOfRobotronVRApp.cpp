@@ -3,6 +3,7 @@
 #include "cinder/gl/gl.h"
 #include "cinder/gl/Fbo.h"
 #include "cinder/params/Params.h"
+#include "cinder/Utilities.h"
 
 #include "FPSCamUI.h"
 #include "OculusVR.h"
@@ -14,6 +15,7 @@
 #include "environment.h"
 #include "Grunt.h"
 #include "Enforcer.h"
+#include "MovieCubes.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -58,7 +60,7 @@ private:
   
   Environment mEnvironment;
   RobotronScreen mScreen;
-  MovieObject mSermon;
+  MovieCubes mSermon;
   Leaderboard mLeaderboard;
   MovieObject mRandoms;
   Grunt mModel;
@@ -77,6 +79,8 @@ void churchOfRobotronVRApp::prepareSettings( Settings* settings )
 void churchOfRobotronVRApp::setup()
 {
   oculusInit();
+  
+  gl::disableVerticalSync();
   
   mShowParams = false;
   
@@ -109,17 +113,21 @@ void churchOfRobotronVRApp::setup()
   mCamera.setSpeed(0.001);
   
   const std::string sermonBase = "/Users/bzztbomb/projects/churchOfRobotron/videos/";
+//  std::vector<string> sermons =
+//  {
+//    sermonBase + "church_of_robotron_sermon-__doctrine_of_error_640x472.mp4",
+//    sermonBase + "church_of_robotron_sermon-_doctrine_of_futility_640x472.mp4",
+//    sermonBase + "church_of_robotron_sermon-_eight_ways_640x472.mp4",
+//    sermonBase + "church_of_robotron_sermon-_the_ninth_position_640x472.mp4",
+//    sermonBase + "church_of_robotron_sermon-_what_are_the_robotrons_640x472.mp4"
+//  };
   std::vector<string> sermons =
   {
-    sermonBase + "church_of_robotron_sermon-__doctrine_of_error_640x472.mp4",
-    sermonBase + "church_of_robotron_sermon-_doctrine_of_futility_640x472.mp4",
-    sermonBase + "church_of_robotron_sermon-_eight_ways_640x472.mp4",
-    sermonBase + "church_of_robotron_sermon-_the_ninth_position_640x472.mp4",
-    sermonBase + "church_of_robotron_sermon-_what_are_the_robotrons_640x472.mp4"
+    sermonBase + "rotojames.mov"
   };
-  
   mSermon.setMovieList(sermons);
   mSermon.setMute(true);
+  mSermon.init(&mParams);
   
   std::string downloads = "/Users/bzztbomb/Downloads/";
   std::vector<string> randoms =
@@ -223,6 +231,9 @@ void churchOfRobotronVRApp::draw()
     
     gl::popMatrices();
     mParams.draw();
+    gl::enableAlphaBlending();
+    gl::drawString("FPS:" + cinder::toString(getAverageFps()), Vec2f(10,10));
+    gl::disableAlphaBlending();
   } else {
     // clear out the window with black
     gl::clear( Color( 0, 0, 0 ) );
@@ -261,6 +272,9 @@ void churchOfRobotronVRApp::draw()
     mDistortionHelper->render( mOculusFbo.getTexture(), getWindowBounds() );
     
     // TODO: Draw FPS
+    gl::enableAlphaBlending();
+    gl::drawString("FPS:" + cinder::toString(getAverageFps()), Vec2f(10,10));
+    gl::disableAlphaBlending();
   }
 }
 

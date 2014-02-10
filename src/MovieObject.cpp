@@ -8,6 +8,7 @@
 
 #include "MovieObject.h"
 #include "churchUtil.h"
+#include "LiveAssetManager.h"
 
 using namespace ci;
 
@@ -38,10 +39,24 @@ void MovieObject::update()
 
 void MovieObject::render()
 {
+  if (mMovie.hasAlpha())
+    gl::enableAlphaBlending();
+
+  if (mShader)
+  {
+    mShader.bind();
+    mShader.uniform("tex0", 0);
+  }
+  
   if (mTexture)
     cor::drawTexRectBillboard(&mTexture, mTexture.getWidth(), mTexture.getHeight(),
                               mPosition, mScale, 0.0f,
                               mRight, mUp);
+  
+  if (mShader)
+    mShader.unbind();
+  
+  gl::disableAlphaBlending();
 }
 
 void MovieObject::loadCurrentMovie()
@@ -56,4 +71,20 @@ void MovieObject::loadCurrentMovie()
   if (mMute)
     mMovie.setVolume(0.0);
   mMovie.play();
+}
+
+void MovieObject::setShader(const std::string& vert, const std::string frag)
+{
+  LiveAssetManager::load(vert, frag,
+                         [this](ci::DataSourceRef v,ci::DataSourceRef f)
+                         {
+                           try
+                           {
+                             mShader = gl::GlslProg(v, f);
+                           }
+                           catch (std::exception& e)
+                           {
+                             app::console() << e.what() << std::endl;
+                           }
+                         });
 }

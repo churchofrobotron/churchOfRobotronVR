@@ -56,7 +56,7 @@ void Leaderboard::draw()
 
   gl::pushMatrices();
   gl::translate(Vec3f(-2.5f, 18.0f, -6.0));
-  gl::draw(mMesh);
+  gl::draw(mVbo);
   gl::popMatrices();
   gl::popMatrices();
 }
@@ -109,6 +109,7 @@ void Leaderboard::loadNextScore()
   text.push_back(score.initials);
   text.push_back(score.score);
   mMesh = cor::textToMesh(text);
+  mVbo = cinder::gl::VboMesh::create(mMesh);
   mTexture.reset();
   mMovie = qtime::MovieGl(basePath + score.gif);
   mMovie.setLoop();

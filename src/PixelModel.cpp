@@ -34,7 +34,7 @@ void PixelModel::loadFrames(const std::vector<cinder::Area>& frames)
   for (auto f : frames)
   {
     Surface8u s = allSprites.clone(f);
-    mFrames.push_back(cor::spriteToMesh(s));
+    mFrames.push_back(VboMesh::create(cor::spriteToMesh(s)));
   }
 }
 

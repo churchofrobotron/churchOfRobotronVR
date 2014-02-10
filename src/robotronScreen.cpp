@@ -76,6 +76,8 @@ void RobotronScreen::initCubes()
     currY += cellSize;
   }
   
+  mVboMesh = gl::VboMesh::create(mCubeMesh);
+  
   LiveAssetManager::load("cubeVert.glsl", "cubeFrag.glsl",
                          [this](ci::DataSourceRef vert,ci::DataSourceRef frag)
                          {
@@ -106,7 +108,7 @@ void RobotronScreen::drawCubes()
   tex->enableAndBind();
   mCubeShader.bind();
   mCubeShader.uniform("tex0", 0);
-  gl::draw(mCubeMesh);
+  gl::draw(mVboMesh);
   mCubeShader.unbind();
   tex->unbind();
   tex->disable();

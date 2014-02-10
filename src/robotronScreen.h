@@ -12,6 +12,7 @@
 #include "syphonClient.h"
 #include "cinder/TriMesh.h"
 #include "cinder/gl/GlslProg.h"
+#include "cinder/gl/Vbo.h"
 #include "cinder/params/Params.h"
 #include "cinder/Quaternion.h"
 
@@ -30,6 +31,7 @@ private:
   // Animated cubes
   cinder::gl::GlslProg mCubeShader;
   cinder::TriMesh mCubeMesh;
+  cinder::gl::VboMeshRef mVboMesh;
   cinder::Quatf mRotate;
   
   void initCubes();

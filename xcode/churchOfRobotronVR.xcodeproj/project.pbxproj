@@ -68,6 +68,7 @@
 		C8CEFF9D185E86380021817B /* OVR_ThreadCommandQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8CEFF6A185E86380021817B /* OVR_ThreadCommandQueue.cpp */; };
 		C8CEFFA3185E86380021817B /* Util_LatencyTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8CEFF77185E86380021817B /* Util_LatencyTest.cpp */; };
 		C8CEFFA4185E86380021817B /* Util_Render_Stereo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8CEFF79185E86380021817B /* Util_Render_Stereo.cpp */; };
+		C8FAF09F18A8A7220010174E /* MovieCubes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8FAF09D18A8A7220010174E /* MovieCubes.cpp */; };
 		F581D8F0B3E643C69B14F7A9 /* Syphon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40ED6454F9314346BFB93B51 /* Syphon.framework */; };
 		FC23FACB63774E3BA4D68BB3 /* Syphon.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 40ED6454F9314346BFB93B51 /* Syphon.framework */; };
 /* End PBXBuildFile section */
@@ -227,6 +228,8 @@
 		C8CEFF78185E86380021817B /* Util_LatencyTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util_LatencyTest.h; sourceTree = "<group>"; };
 		C8CEFF79185E86380021817B /* Util_Render_Stereo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Util_Render_Stereo.cpp; sourceTree = "<group>"; };
 		C8CEFF7A185E86380021817B /* Util_Render_Stereo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Util_Render_Stereo.h; sourceTree = "<group>"; };
+		C8FAF09D18A8A7220010174E /* MovieCubes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MovieCubes.cpp; path = ../src/MovieCubes.cpp; sourceTree = "<group>"; };
+		C8FAF09E18A8A7220010174E /* MovieCubes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieCubes.h; path = ../src/MovieCubes.h; sourceTree = "<group>"; };
 		D7166B18371C4A6EABD6FE2B /* syphonServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = syphonServer.h; path = "../../external/Cinder/blocks/Cinder-Syphon/src/syphonServer.h"; sourceTree = "<group>"; };
 		DD6A2C3C88FD49B29F65F5FC /* SyphonNameboundClient.m */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; name = SyphonNameboundClient.m; path = "../../external/Cinder/blocks/Cinder-Syphon/lib/SyphonNameboundClient.m"; sourceTree = "<group>"; };
 		E1659BFF4141408395F42DF4 /* syphonServer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = syphonServer.mm; path = "../../external/Cinder/blocks/Cinder-Syphon/src/syphonServer.mm"; sourceTree = "<group>"; };
@@ -291,6 +294,8 @@
 				C845A6E01890E02400B02812 /* PixelModel.h */,
 				C8182F261898BB10003ACDA3 /* Enforcer.cpp */,
 				C8182F271898BB10003ACDA3 /* Enforcer.h */,
+				C8FAF09D18A8A7220010174E /* MovieCubes.cpp */,
+				C8FAF09E18A8A7220010174E /* MovieCubes.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -659,6 +664,7 @@
 				C3D02ED133594C6E8DFEEFE3 /* syphonServerDirectory.mm in Sources */,
 				C8CEFF7E185E86380021817B /* OVR_File.cpp in Sources */,
 				9D6E446C129E497CA2385A9A /* SyphonNameboundClient.m in Sources */,
+				C8FAF09F18A8A7220010174E /* MovieCubes.cpp in Sources */,
 				C8CEFF98185E86380021817B /* OVR_OSX_SensorDevice.cpp in Sources */,
 				C8CEFF99185E86380021817B /* OVR_Profile.cpp in Sources */,
 				C8CEFF9B185E86380021817B /* OVR_SensorFusion.cpp in Sources */,

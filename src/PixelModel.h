@@ -11,6 +11,7 @@
 
 #include "cinder/TriMesh.h"
 #include "cinder/params/Params.h"
+#include "cinder/gl/Vbo.h"
 
 class PixelModel
 {
@@ -30,7 +31,7 @@ protected:
 
   void loadFrames(const std::vector<cinder::Area>& frames);
 private:
-  std::deque<cinder::TriMesh> mFrames;
+  std::deque<cinder::gl::VboMeshRef> mFrames;
   int mCurrFrame;
   cinder::Timer mTimer;
 };

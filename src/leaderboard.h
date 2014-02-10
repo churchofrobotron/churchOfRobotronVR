@@ -10,6 +10,7 @@
 #define __churchOfRobotronVR__leaderboard__
 
 #include "cinder/gl/Texture.h"
+#include "cinder/gl/Vbo.h"
 #include "cinder/TriMesh.h"
 #include "cinder/Timer.h"
 #include "cinder/qtime/QuickTime.h"
@@ -33,6 +34,7 @@ private:
   cinder::qtime::MovieGl mMovie;
   cinder::Timer mTimer;
   cinder::TriMesh mMesh;
+  cinder::gl::VboMeshRef mVbo;
   
   void loadScores();
   void loadNextScore();
