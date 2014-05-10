@@ -33,6 +33,7 @@ private:
   cinder::TriMesh mCubeMesh;
   cinder::gl::VboMeshRef mVboMesh;
   cinder::Quatf mRotate;
+  cinder::Vec3f mPos;
   
   void initCubes();
   void drawCubes();

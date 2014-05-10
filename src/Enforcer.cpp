@@ -40,9 +40,9 @@ void Enforcer::update()
   Vec3f diff = mTarget - mPosition;
   if (diff.length() <= mSpeed * 2)
   {
-    mTarget.x = randFloat(-10.0f, 10.0f) * 2.0;
-    mTarget.y = randFloat(-14.0f, 14.0f) * 2.0;
-    mTarget.z = randFloat(-1.0f, 2.0f);
+    mTarget.x = randFloat(-13.0f, 13.0f) * 2.0;
+    mTarget.y = randFloat(-24.0f, 5.0f) * 2.0;
+    mTarget.z = randFloat(-0.95f, 0.48f);
   } else {
     diff.normalize();
     diff *= mSpeed;

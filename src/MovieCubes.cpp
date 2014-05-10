@@ -16,17 +16,19 @@ using namespace cinder;
 
 void MovieCubes::init(cinder::params::InterfaceGl* params)
 {
-  MovieObject::init(params);
+//  MovieObject::init(params);
   initCubes();
   
-  mPos = Vec3f(-1.43, 10.0f, 2.98f);
+  mPos = Vec3f(0.0f, 7.0f, 2.98f);
   params->addSeparator("MovieCubes");
   params->addParam("MovieCubes: Position", &mPos);
+  params->addParam("MovieCubes: Render", &mRender);
+  mRender = false;
 }
 
 void MovieCubes::render()
 {
-  if (!mTexture)
+  if (!mTexture || !mRender)
     return;
 
   gl::enable(GL_TEXTURE);

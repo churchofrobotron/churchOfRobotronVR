@@ -28,6 +28,7 @@ private:
   cinder::gl::VboMeshRef mVboMesh;
   cinder::Quatf mRotate;
   cinder::Vec3f mPos;
+  bool mRender;
 
   void initCubes();
 };

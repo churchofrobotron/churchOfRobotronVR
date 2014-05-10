@@ -20,11 +20,18 @@ namespace  {
   const std::string basePath = "/Users/bzztbomb/projects/churchOfRobotron/scores/end/";
 }
 
-void Leaderboard::init()
+void Leaderboard::init(cinder::params::InterfaceGl* params)
 {
   loadScores();
   loadNextScore();
   mTimer.start();
+  mPosition = Vec3f(-5.03f, 7.01f, 0.53f);
+  mScale = Vec3f(2.0f, 2.0f, 0.0f);
+  mTextOffset = Vec3f(-1.78f, -0.250f, 1.21f);
+  params->addSeparator("Leaderboard");
+  params->addParam("Leaderboard: Position", &mPosition);
+  params->addParam("Leaderboard: Scale", &mScale);
+  params->addParam("Leaderboard: Text Offset", &mTextOffset);
 }
 
 void Leaderboard::update()
@@ -44,18 +51,19 @@ void Leaderboard::update()
 void Leaderboard::draw()
 {
   gl::pushMatrices();
-  Quatf rotY(Vec3f(0.0, 0.0, 1.0), M_PI / 6);
-  gl::rotate(rotY);
 
-  gl::translate(Vec3f(-2.0f, 0.0f, 0.0));
+  gl::translate(mPosition);
+
+//  Quatf rotY(Vec3f(0.0, 0.0, 1.0), M_PI / 6);
+//  gl::rotate(rotY);
   
   if (mTexture)
     cor::drawTexRectBillboard(&mTexture, mTexture.getWidth(), mTexture.getHeight(),
-                              Vec3f(0.0, 22.0, 0.0f), Vec2f(5.0f, 5.0f), 0.0f,
+                              Vec3f(0.0, 0.0, 0.0f), mScale.xy(), 0.0f,
                               Vec3f::xAxis(), -Vec3f::zAxis());
 
   gl::pushMatrices();
-  gl::translate(Vec3f(-2.5f, 18.0f, -6.0));
+  gl::translate(mTextOffset);
   gl::draw(mVbo);
   gl::popMatrices();
   gl::popMatrices();
@@ -106,8 +114,8 @@ void Leaderboard::loadNextScore()
   
   const Score& score = mScores[mScoreIndex];
   std::vector<std::string> text;
-  text.push_back(score.initials);
-  text.push_back(score.score);
+  text.push_back(score.initials + " " + score.score);
+//  text.push_back(score.score);
   mMesh = cor::textToMesh(text);
   mVbo = cinder::gl::VboMesh::create(mMesh);
   mTexture.reset();

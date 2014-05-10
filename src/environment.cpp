@@ -8,14 +8,26 @@
 
 #include "environment.h"
 #include "cinder/gl/gl.h"
+#include "cinder/ObjLoader.h"
 
 using namespace ci;
 using namespace ci::gl;
 
-void Environment::init()
+void Environment::init(cinder::params::InterfaceGl* params)
 {
   initGroundMesh();
   initSkyMesh();
+  initStation();
+  
+  params->addSeparator("Station");
+  params->addParam("Station: Render", &mRenderStation);
+  mStationRotate = Quatf(Vec3f(1, 0, 0), M_PI / 2.0f);
+  mStationRotate *= Quatf(Vec3f(0, 0, 1), -M_PI / 2.0f);
+  params->addParam("Station: Rotate", &mStationRotate);
+  mStationPos = Vec3f(0.0f, 5.0f, -1.25f);
+  params->addParam("Station: Position", &mStationPos);
+  mStationScale = Vec3f(2.0f, 1.5f, 1.5f);
+  params->addParam("Station: Scale", &mStationScale);
 }
 
 void Environment::update()
@@ -28,8 +40,28 @@ void Environment::draw()
   gl::disable(GL_TEXTURE);
   gl::disable(GL_TEXTURE_2D);
   gl::color(Color::white());
+  gl::enableDepthRead(false);
+  gl::enableDepthWrite(false);
+  
   gl::draw(mSkyMesh);
   gl::draw(mGroundMesh);
+
+  gl::enableDepthRead();
+  gl::enableDepthWrite();
+  
+  if (mRenderStation)
+  {
+    mStationTexture.enableAndBind();
+    gl::pushMatrices();
+    {
+      gl::translate(mStationPos);
+      gl::rotate(mStationRotate);
+      gl::scale(mStationScale);
+      gl::draw(mStationMesh);
+    }
+    gl::popMatrices();
+    mStationTexture.disable();
+  }
 }
 
 void Environment::initGroundMesh()
@@ -103,4 +135,13 @@ void Environment::initSkyMesh()
   // now create the triangles from the vertices
   mSkyMesh.appendTriangle( vIdx0, vIdx1, vIdx2 );
   mSkyMesh.appendTriangle( vIdx0, vIdx2, vIdx3 );
+}
+
+void Environment::initStation()
+{
+  ObjLoader loader( ci::app::loadAsset("station/gasStation.obj") );
+  cinder::TriMesh mesh;
+	loader.load( &mesh );
+	mStationMesh = gl::VboMesh( mesh );
+  mStationTexture = gl::Texture(loadImage(ci::app::loadAsset("station/gas_station.tga")));
 }

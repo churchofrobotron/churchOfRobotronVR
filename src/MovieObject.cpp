@@ -14,7 +14,7 @@ using namespace ci;
 
 MovieObject::MovieObject()
 : mPosition(0.0f, 32.0f, 0.0f)
-, mScale(20.0f, 20.0f)
+, mScale(20.0f, 20.0f, 0.0f)
 , mRight(Vec3f::xAxis())
 , mUp(Vec3f::zAxis())
 , mCurrentMovie(-1)
@@ -25,6 +25,15 @@ MovieObject::MovieObject()
 void MovieObject::setMovieList(const std::vector<std::string>& movies)
 {
   mMovies = movies;
+}
+
+void MovieObject::init(cinder::params::InterfaceGl* params)
+{
+  mPosition = Vec3f(5.38f, 7.35f, 0.47);
+  mScale = Vec3f(2.6f, 2.6f, 0.0f);
+  params->addSeparator("MovieObject");
+  params->addParam("Randoms:  Position", &mPosition);
+  params->addParam("Randoms: Scale", &mScale);
 }
 
 void MovieObject::update()
@@ -42,6 +51,10 @@ void MovieObject::render()
   if (mMovie.hasAlpha())
     gl::enableAlphaBlending();
 
+  gl::pushMatrices();
+  
+  gl::translate(mPosition);
+  
   if (mShader)
   {
     mShader.bind();
@@ -50,11 +63,13 @@ void MovieObject::render()
   
   if (mTexture)
     cor::drawTexRectBillboard(&mTexture, mTexture.getWidth(), mTexture.getHeight(),
-                              mPosition, mScale, 0.0f,
+                              Vec3f::zero(), mScale.xy(), 0.0f,
                               mRight, mUp);
   
   if (mShader)
     mShader.unbind();
+  
+  gl::popMatrices();
   
   gl::disableAlphaBlending();
 }

@@ -28,15 +28,21 @@ void RobotronScreen::init(cinder::params::InterfaceGl* params)
   
   initCubes();
 
-  mRotate = Quatf(cinder::Vec3f(-1.0f, 0.0f, 0.0f), M_PI / 4.0f);
+//  mRotate = Quatf(cinder::Vec3f(-1.0f, 0.0f, 0.0f), M_PI / 4.0f);
+  mPos = Vec3f(0.0, 1.0f, -0.50f);
+  
+  mRotate = Quatf(cinder::Vec3f(-1.0f, 0.0f, 0.0f), M_PI / 3.0f);
+  mPos = Vec3f(0.0, 0.751f, -0.50f);
   
   params->addSeparator("RobotronScreen");
   params->addParam("RobotronScreen:  Rotate", &mRotate);
+  params->addParam("RobotronScreen:  Pos", &mPos);
 }
 
 void RobotronScreen::draw()
 {
   drawCubes();
+//  drawSimple();
 }
 
 void RobotronScreen::drawSimple()
@@ -58,7 +64,7 @@ void RobotronScreen::initCubes()
 {
   TriMesh cube = MeshHelper::createCube();
   
-  float cellSize = 0.0025f;
+  float cellSize = 0.006f;
   float cubeSize = cellSize * 0.76f;
   float yStart = -(boardHeight / 2.0f) * cellSize;
   float xStart = -(boardWidth / 2.0f) * cellSize;
@@ -97,7 +103,7 @@ void RobotronScreen::drawCubes()
   gl::enable(GL_TEXTURE);
   gl::color(Color::white());
   gl::pushMatrices();
-  gl::translate(Vec3f(0.0, 1.0f, -0.50f));
+  gl::translate(mPos);
   gl::rotate(mRotate);
   
   mClient.bind();

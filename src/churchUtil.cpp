@@ -51,7 +51,7 @@ void drawTexRectBillboard( ci::gl::Texture* tex, GLfloat w, GLfloat h, const Vec
 // Move to churchUtil at some point.
 cinder::TriMesh textToMesh(const std::vector<std::string>& str)
 {
-  const float xSize = 0.0666;
+  const float xSize = 0.0333;
   const float ySize = xSize;
   const float cubeSize = 0.666; // of xSize
   
@@ -73,7 +73,7 @@ cinder::TriMesh textToMesh(const std::vector<std::string>& str)
       if (value)
       {
         Vec3f offset(x * xSize, 0.0, (s.getHeight() - y) * ySize);
-        appendMesh(mesh, cube, xSize * cubeSize, offset, Color::white());
+        appendMesh(mesh, cube, xSize * cubeSize, offset, Color::black());
       }
     }
   }

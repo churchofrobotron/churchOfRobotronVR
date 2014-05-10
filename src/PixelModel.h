@@ -27,6 +27,7 @@ public:
 protected:
   std::string mParamPrefix;
   cinder::Vec3f mPosition;
+  cinder::Vec3f mScale;
   bool mAnimate;
 
   void loadFrames(const std::vector<cinder::Area>& frames);

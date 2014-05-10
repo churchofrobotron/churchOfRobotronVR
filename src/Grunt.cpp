@@ -40,10 +40,10 @@ void Grunt::update()
 
   std::map<MovementState, Vec3f> mapStateToPos =
   {
-    { MovementState::msNorth, Vec3f(-10, 14, mPosition.z) },
-    { MovementState::msEast, Vec3f(10, 14, mPosition.z) },
-    { MovementState::msSouth, Vec3f(10, -14, mPosition.z) },
-    { MovementState::msWest, Vec3f(-10, -14, mPosition.z) },
+    { MovementState::msNorth, Vec3f(-8, 2, mPosition.z) },
+    { MovementState::msEast, Vec3f(8, 2, mPosition.z) },
+    { MovementState::msSouth, Vec3f(8, -24, mPosition.z) },
+    { MovementState::msWest, Vec3f(-8, -24, mPosition.z) },
   };
 
   Vec3f targetPos = mapStateToPos[mState];
@@ -51,7 +51,21 @@ void Grunt::update()
   if (diff.length() <= mSpeed*2)
   {
     mPosition = targetPos;
-    mState++;
+    switch (mState)
+    {
+      case msNorth :
+        mState = msEast;
+        break;
+      case msEast :
+        mState = msSouth;
+        break;
+      case msSouth :
+        mState = msWest;
+        break;
+      case msWest :
+        mState = msNorth;
+        break;
+    };
     if (mState > msWest)
       mState = msNorth;
   } else {

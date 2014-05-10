@@ -97,16 +97,18 @@ void churchOfRobotronVRApp::setup()
   mDistortionHelper   = ovr::DistortionHelper::create();
   // Create Stereo Camera
   mStereoCamera.setFov(mOculusVR ? mOculusVR->getFov() : 125.0f);
-  mStereoCamera.lookAt(Vec3f::zero(), Vec3f::yAxis(), Vec3f::zAxis());
+  mStereoCamera.setEyePoint(Vec3f(0, 12, 0));
+  mStereoCamera.lookAt(Vec3f::zero(), Vec3f::yAxis() + mStereoCamera.getEyePoint(), Vec3f::zAxis());
   
-  // Make the stereo a bit stronger
-  mStereoCamera.setEyeSeparation( 0.25f );
-  mEnvironment.init();
+  // Need to tweak this..
+  mStereoCamera.setEyeSeparation( 0.15f );
+  mEnvironment.init(&mParams);
   mScreen.init(&mParams);
-  mLeaderboard.init();
+  mLeaderboard.init(&mParams);
   
   CameraPersp cam;
   cam.lookAt(Vec3f::zero(), Vec3f::yAxis(), Vec3f::zAxis());
+  cam.setFov(90);
   
   mCamera.setCurrentCam(cam);
   mCamera.registerEvents();
@@ -136,11 +138,12 @@ void churchOfRobotronVRApp::setup()
     sermonBase + "116645203.mp4"
   };
   
-  mRandoms.setPosition(Vec3f(32.0, 24.0, 0.0));
+//  mRandoms.setPosition(Vec3f(32.0, 24.0, 0.0));
   float rot = 2.5; ///1.5;
-  mRandoms.setRightUp(Vec3f(sin(rot), cos(rot), 0), Vec3f(0,0,1));
+//  mRandoms.setRightUp(Vec3f(sin(rot), cos(rot), 0), Vec3f(0,0,1));
   mRandoms.setMovieList(randoms);
   mRandoms.setMute(true);
+  mRandoms.init(&mParams);
   
   mModel.init(&mParams);
   mEnforcer.init(&mParams);
@@ -219,7 +222,8 @@ void churchOfRobotronVRApp::draw()
     // clear out the window with black
     gl::pushMatrices();
     gl::clear( Color( 0, 0, 0 ) );
-    if (mOculusVR)
+//    if (mOculusVR)
+    if (false)
     {
       mStereoCamera.enableStereoLeft();
       gl::setMatrices(mStereoCamera);
@@ -281,16 +285,12 @@ void churchOfRobotronVRApp::draw()
 void churchOfRobotronVRApp::renderScene()
 {
   mEnvironment.draw();
-  gl::enableDepthRead();
-  gl::enableDepthWrite();
   mSermon.render();
   mRandoms.render();
   mScreen.draw();
   mLeaderboard.draw();
   mModel.draw();
   mEnforcer.draw();
-  gl::enableDepthRead(false);
-  gl::enableDepthWrite(false);
 }
 
 void churchOfRobotronVRApp::checkWindows()

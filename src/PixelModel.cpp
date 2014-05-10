@@ -17,10 +17,12 @@ using namespace ci::app;
 
 void PixelModel::init(cinder::params::InterfaceGl* params)
 {
-  mPosition = Vec3f(0.0f, 14.0f, -5.0f);
+  mScale = Vec3f(0.46f, 0.46f, 0.46f);
+  mPosition = Vec3f(0.0f, 14.0f, -1.27f);
   params->addSeparator(mParamPrefix);
   params->addParam(mParamPrefix + ": Position", &mPosition);
   params->addParam(mParamPrefix + ": Animate", &mAnimate);
+  params->addParam(mParamPrefix + ": Scale", &mScale);
 
   mCurrFrame = 0;
   mAnimate = true;
@@ -58,6 +60,7 @@ void PixelModel::draw()
   gl::color(Color::white());
   gl::pushMatrices();
   gl::translate(mPosition);
+  gl::scale(mScale);
   gl::draw(mFrames[mCurrFrame]);
   gl::popMatrices();
 }

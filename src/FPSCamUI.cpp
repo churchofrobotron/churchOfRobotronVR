@@ -163,6 +163,9 @@ bool FpsCamUI::mouseMove( ci::app::MouseEvent event )
 
 bool FpsCamUI::keyDown( KeyEvent event )
 {
+  if (event.isAltDown())
+    return false;
+
   //   console() << "key";
   int code = event.getCode();
   if( code == 'w' || code == KeyEvent::KEY_UP ) mUpIsDown = true;
@@ -176,6 +179,9 @@ bool FpsCamUI::keyDown( KeyEvent event )
 
 bool FpsCamUI::keyUp( KeyEvent event )
 {
+  if (event.isAltDown())
+    return false;
+  
   int code = event.getCode();
   if( code == 'w' || code == KeyEvent::KEY_UP ) mUpIsDown = false;
   else if( code == 's' || code == KeyEvent::KEY_DOWN ) mDownIsDown = false;
