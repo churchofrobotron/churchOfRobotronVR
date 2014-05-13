@@ -112,7 +112,7 @@ void churchOfRobotronVRApp::setup()
   
   mCamera.setCurrentCam(cam);
   mCamera.registerEvents();
-  mCamera.setSpeed(0.001);
+  mCamera.setSpeed(0.01);
   
   const std::string sermonBase = "/Users/bzztbomb/projects/churchOfRobotron/videos/";
 //  std::vector<string> sermons =
@@ -138,9 +138,6 @@ void churchOfRobotronVRApp::setup()
     sermonBase + "116645203.mp4"
   };
   
-//  mRandoms.setPosition(Vec3f(32.0, 24.0, 0.0));
-  float rot = 2.5; ///1.5;
-//  mRandoms.setRightUp(Vec3f(sin(rot), cos(rot), 0), Vec3f(0,0,1));
   mRandoms.setMovieList(randoms);
   mRandoms.setMute(true);
   mRandoms.init(&mParams);
@@ -291,6 +288,7 @@ void churchOfRobotronVRApp::renderScene()
   mLeaderboard.draw();
   mModel.draw();
   mEnforcer.draw();
+  mEnvironment.drawLast();
 }
 
 void churchOfRobotronVRApp::checkWindows()

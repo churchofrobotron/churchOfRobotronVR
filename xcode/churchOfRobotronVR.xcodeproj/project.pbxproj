@@ -29,6 +29,7 @@
 		C81B34EE184EE9FB0021E7E7 /* MovieObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */; };
 		C845A6E11890E02400B02812 /* PixelModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C845A6DF1890E02400B02812 /* PixelModel.cpp */; };
 		C84CE69F188C4A5D00C95CFA /* environment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C84CE69D188C4A5D00C95CFA /* environment.cpp */; };
+		C84D3BBF191E836700B6D5E8 /* CubeMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C84D3BBD191E836700B6D5E8 /* CubeMap.cpp */; };
 		C85695C81886393E001D55C0 /* leaderboard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C85695C61886393E001D55C0 /* leaderboard.cpp */; };
 		C85695CE18865870001D55C0 /* MeshHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C85695CC18865870001D55C0 /* MeshHelper.cpp */; };
 		C88B32831858251E008AFECC /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C88B32821858251E008AFECC /* QuickTime.framework */; };
@@ -141,6 +142,8 @@
 		C845A6E01890E02400B02812 /* PixelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelModel.h; path = ../src/PixelModel.h; sourceTree = "<group>"; };
 		C84CE69D188C4A5D00C95CFA /* environment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = environment.cpp; path = ../src/environment.cpp; sourceTree = "<group>"; };
 		C84CE69E188C4A5D00C95CFA /* environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = environment.h; path = ../src/environment.h; sourceTree = "<group>"; };
+		C84D3BBD191E836700B6D5E8 /* CubeMap.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CubeMap.cpp; path = ../src/CubeMap.cpp; sourceTree = "<group>"; };
+		C84D3BBE191E836700B6D5E8 /* CubeMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CubeMap.h; path = ../src/CubeMap.h; sourceTree = "<group>"; };
 		C85695C61886393E001D55C0 /* leaderboard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = leaderboard.cpp; path = ../src/leaderboard.cpp; sourceTree = "<group>"; };
 		C85695C71886393E001D55C0 /* leaderboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = leaderboard.h; path = ../src/leaderboard.h; sourceTree = "<group>"; };
 		C85695CC18865870001D55C0 /* MeshHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshHelper.cpp; sourceTree = "<group>"; };
@@ -273,6 +276,8 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C84D3BBD191E836700B6D5E8 /* CubeMap.cpp */,
+				C84D3BBE191E836700B6D5E8 /* CubeMap.h */,
 				C8182F2A1898D135003ACDA3 /* LiveAssetManager.cpp */,
 				C8182F2B1898D135003ACDA3 /* LiveAssetManager.h */,
 				C8182F231898BAB4003ACDA3 /* Grunt.cpp */,
@@ -651,6 +656,7 @@
 				C8CEFF95185E86380021817B /* OVR_OSX_DeviceManager.cpp in Sources */,
 				C8CEFF81185E86380021817B /* OVR_Math.cpp in Sources */,
 				C8CEFF8D185E86380021817B /* OVR_DeviceHandle.cpp in Sources */,
+				C84D3BBF191E836700B6D5E8 /* CubeMap.cpp in Sources */,
 				C8CEFF9C185E86380021817B /* OVR_SensorImpl.cpp in Sources */,
 				C8CEFF87185E86380021817B /* OVR_SysFile.cpp in Sources */,
 				C8CEFF7B185E86380021817B /* OVR_Alg.cpp in Sources */,
