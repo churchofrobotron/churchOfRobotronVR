@@ -137,6 +137,7 @@ void Environment::drawLast()
     mRoadTexture.enableAndBind();
     gl::draw(mGroundMesh);
     mRoadTexture.unbind();
+    gl::draw(mGroundMesh2);
   }
   gl::popMatrices();
   
@@ -146,7 +147,41 @@ void Environment::drawLast()
 void Environment::initGroundMesh()
 {
   mGroundMesh.clear();
-  
+
+  {
+    // Ground mesh
+    mGroundMesh2.clear();
+    float minv = -10000.0f;
+    float maxv = 10000.0f;
+    float yVal = -2.1;
+    Color groundColor(0.1, 0.125, 0.1);
+    
+    mGroundMesh2.appendVertex(Vec3f(minv, minv, yVal));
+    mGroundMesh2.appendColorRgb(groundColor);
+    mGroundMesh2.appendTexCoord(Vec2f(0.0f, 0.0f));
+    
+    mGroundMesh2.appendVertex( Vec3f(minv, maxv, yVal) );
+    mGroundMesh2.appendColorRgb(groundColor);
+    mGroundMesh2.appendTexCoord(Vec2f(0.0f, 0.0f));
+    
+    mGroundMesh2.appendVertex( Vec3f(maxv, maxv, yVal) );
+    mGroundMesh2.appendColorRgb(groundColor);
+    mGroundMesh2.appendTexCoord(Vec2f(0.0f, 0.0f));
+    
+    mGroundMesh2.appendVertex( Vec3f(maxv, minv, yVal));
+    mGroundMesh2.appendColorRgb(groundColor);
+    mGroundMesh2.appendTexCoord(Vec2f(0.0f, 0.0f));
+    // Ground mesh
+    
+    // get the index of the vertex. not necessary with this example, but good practice
+    int vIdx0 = mGroundMesh2.getNumVertices() - 4;
+    int vIdx1 = mGroundMesh2.getNumVertices() - 3;
+    int vIdx2 = mGroundMesh2.getNumVertices() - 2;
+    int vIdx3 = mGroundMesh2.getNumVertices() - 1;
+    // now create the triangles from the vertices
+    mGroundMesh2.appendTriangle( vIdx0, vIdx1, vIdx2 );
+    mGroundMesh2.appendTriangle( vIdx0, vIdx2, vIdx3 );
+  }
   // Ground mesh
   
   std::function<void(const Vec3f&)> placeRoad = [&](const Vec3f& offset)
@@ -170,6 +205,7 @@ void Environment::initGroundMesh()
     {
       mGroundMesh.appendVertex(road_verts[j]+offset);
       mGroundMesh.appendTexCoord(tex_verts[j]);
+      mGroundMesh.appendColorRgb(Color::white());
     }
     
     // get the index of the vertex. not necessary with this example, but good practice

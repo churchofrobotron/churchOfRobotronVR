@@ -44,6 +44,7 @@ public:
 private:
   cinder::gl::Texture mRoadTexture;
   cinder::TriMesh mGroundMesh;
+  cinder::TriMesh mGroundMesh2;
   cinder::Vec3f mGroundPos;
   
   cinder::TriMesh mSkyMesh;
