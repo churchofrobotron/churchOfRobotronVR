@@ -31,6 +31,7 @@ struct SimpleModel
   Transform mTransform;
   cinder::gl::VboMesh mMesh;
   cinder::gl::Texture mTexture;
+  cinder::Color mColor = cinder::Color::white();
 };
 
 class Environment
