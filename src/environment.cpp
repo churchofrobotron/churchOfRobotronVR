@@ -23,6 +23,12 @@ void Environment::init(cinder::params::InterfaceGl* params)
   initGroundMesh();
   mGroundPos = Vec3f::zero();
   initSkyMesh();
+
+  for (int i = 0; i < 3; i++)
+  {
+    mBuildings.push_back(SimpleModel());
+  }
+
   initStation();
 
   mRoadTexture = loadImage(loadAsset("road/road.png"));
@@ -39,19 +45,24 @@ void Environment::init(cinder::params::InterfaceGl* params)
   mStationScale = Vec3f(2.0f, 1.5f, 1.5f);
   params->addParam("Station: Scale", &mStationScale);
   params->addParam("Road: Position", &mGroundPos);
-
   
-  mBuilding1.mTransform.mRotate = Quatf(Vec3f(1,0,0), M_PI / 2.0f);
-  mBuilding1.mTransform.mRotate *= Quatf(Vec3f(0, 0, 1), M_PI / 2.0f);
-  mBuilding1.mTransform.mPosition = Vec3f(-23.38f, 12.21f, 3.11f);
-  mBuilding1.mTransform.mScale = Vec3f(0.01f, 0.01f, 0.01f);
-  mBuilding1.mTransform.addParams("Building1", params);
+  mBuildings[0].mTransform.mRotate = Quatf(Vec3f(1,0,0), M_PI / 2.0f);
+  mBuildings[0].mTransform.mRotate *= Quatf(Vec3f(0, 0, 1), M_PI / 2.0f);
+  mBuildings[0].mTransform.mPosition = Vec3f(-23.38f, 12.21f, 3.11f);
+  mBuildings[0].mTransform.mScale = Vec3f(0.01f, 0.01f, 0.01f);
+  mBuildings[0].mTransform.addParams("Building0", params);
   
-  mBuilding2.mTransform.mRotate = Quatf(Vec3f(1,0,0), M_PI / 2.0f);
-  mBuilding2.mTransform.mRotate *= Quatf(Vec3f(0, 0, 1), M_PI / 2.0f);
-  mBuilding2.mTransform.mPosition = Vec3f(45.158f, 14.96f, 4.85f);
-  mBuilding2.mTransform.mScale = Vec3f(0.03f, 0.02f, 0.02f);
-  mBuilding2.mTransform.addParams("Building2", params);
+  mBuildings[1].mTransform.mRotate = Quatf(Vec3f(1,0,0), M_PI / 2.0f);
+  mBuildings[1].mTransform.mRotate *= Quatf(Vec3f(0, 0, 1), M_PI / 2.0f);
+  mBuildings[1].mTransform.mPosition = Vec3f(45.158f, 14.96f, 4.85f);
+  mBuildings[1].mTransform.mScale = Vec3f(0.03f, 0.02f, 0.02f);
+  mBuildings[1].mTransform.addParams("Building1", params);
+  
+  mBuildings[2].mTransform.mRotate = Quatf(Vec3f(1,0,0), M_PI / 2.0f);
+  mBuildings[2].mTransform.mRotate *= Quatf(Vec3f(0, 0, 1), M_PI / 2.0f);
+  mBuildings[2].mTransform.mPosition = Vec3f(72.158f, -35.47f, 4.85f);
+  mBuildings[2].mTransform.mScale = Vec3f(0.02f, 0.01f, 0.02f);
+  mBuildings[2].mTransform.addParams("Building2", params);
   
   vector<string> files = {
     "sky/grimmnight_ft.tga",
@@ -120,14 +131,10 @@ void Environment::draw()
     }
     gl::popMatrices();
     mStationTexture.disable();
-    
-    SimpleModel* models[] = {
-      &mBuilding1,
-      &mBuilding2
-    };
-    for (int i = 0; i < 2; i++)
+
+    for (int i = 0; i < mBuildings.size(); i++)
     {
-      SimpleModel* m = models[i];
+      SimpleModel* m = &mBuildings[i];
       m->mTexture.enableAndBind();
       gl::pushMatrices();
       {
@@ -239,16 +246,24 @@ void Environment::initStation()
     ObjLoader building_loader(ci::app::loadAsset("industrial/industrial_building4.obj"));
     cinder::TriMesh bmesh;
     building_loader.load(&bmesh);
-    mBuilding1.mMesh = gl::VboMesh(bmesh);
-    mBuilding1.mTexture = gl::Texture(loadImage(ci::app::loadAsset("industrial/industrial_building4.jpg")));
+    mBuildings[0].mMesh = gl::VboMesh(bmesh);
+    mBuildings[0].mTexture = gl::Texture(loadImage(ci::app::loadAsset("industrial/industrial_building4.jpg")));
   }
   
   {
     ObjLoader building_loader(ci::app::loadAsset("abandoned/abandoned1.obj"));
     cinder::TriMesh bmesh;
     building_loader.load(&bmesh);
-    mBuilding2.mMesh = gl::VboMesh(bmesh);
-    mBuilding2.mTexture = gl::Texture(loadImage(ci::app::loadAsset("abandoned/abandoned1_texture.jpg")));
+    mBuildings[1].mMesh = gl::VboMesh(bmesh);
+    mBuildings[1].mTexture = gl::Texture(loadImage(ci::app::loadAsset("abandoned/abandoned1_texture.jpg")));
+  }
+  
+  {
+    ObjLoader building_loader(ci::app::loadAsset("building11/building11.obj"));
+    cinder::TriMesh bmesh;
+    building_loader.load(&bmesh);
+    mBuildings[2].mMesh = gl::VboMesh(bmesh);
+    mBuildings[2].mTexture = gl::Texture(loadImage(ci::app::loadAsset("building11/building11_texture.jpg")));
   }
 }
 

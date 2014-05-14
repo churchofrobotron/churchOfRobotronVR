@@ -56,8 +56,10 @@ private:
   cinder::Vec3f mStationPos;
   cinder::Vec3f mStationScale;
 
+  std::vector<SimpleModel> mBuildings;
   SimpleModel mBuilding1;
   SimpleModel mBuilding2;
+  SimpleModel mBuilding3;
   
   void initGroundMesh();
   void initSkyMesh();
