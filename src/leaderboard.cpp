@@ -16,12 +16,15 @@
 using namespace cinder;
 using namespace cinder::app;
 
+extern bool hasOculus;
+
 namespace  {
-  const std::string basePath = "/Users/bzztbomb/projects/churchOfRobotron/scores/end/";
+  const std::string basePath = "/Users/bzztbomb/projects/churchOfRobotron/mcor/leaderboard/data/";
 }
 
 void Leaderboard::init(cinder::params::InterfaceGl* params)
 {
+  mScoreIndex = 0; // Maybe we shouldn't do this?
   loadScores();
   loadNextScore();
   mTimer.start();
@@ -41,11 +44,13 @@ void Leaderboard::update()
     mTimer.stop();
     mTimer.start();
 
+    loadScores();
     loadNextScore();
   }
-  mTexture = mMovie.getTexture();
+  if (mMovie && mMovie.isPlaying())
+    mTexture = mMovie.getTexture();
   if (mTexture)
-    mTexture.setFlipped(true);
+    mTexture.setFlipped(mFlipped);
 }
 
 void Leaderboard::draw()
@@ -64,7 +69,8 @@ void Leaderboard::draw()
 
   gl::pushMatrices();
   gl::translate(mTextOffset);
-  gl::draw(mVbo);
+  if (mVbo)
+    gl::draw(mVbo);
   gl::popMatrices();
   gl::popMatrices();
 }
@@ -72,11 +78,19 @@ void Leaderboard::draw()
 void Leaderboard::loadScores()
 {
   std::ifstream scores(basePath + "leaderboard.txt");
+  if (!scores.good())
+  {
+    std::cout << scores.rdstate() << std::endl;
+    return;
+  }
+  mScores.clear();
   // Oh the slopoverflow!
   std::string line;
   while (!scores.eof())
   {
     std::getline(scores, line);
+    if (line.empty())
+      continue;
     std::stringstream lineStream(line);
     Score score;
     int offset = 0;
@@ -102,12 +116,17 @@ void Leaderboard::loadScores()
       }
     }
   }
-  mScoreIndex = 0; // Maybe we shouldn't do this?
+  std::sort(mScores.begin(), mScores.end(), [](const Score& a, const Score& b)
+            {
+              return std::stoi(a.score) > std::stoi(b.score);
+            });
 }
 
 
 void Leaderboard::loadNextScore()
 {
+  if (mScores.size() == 0)
+    return;
   mScoreIndex++;
   if (mScoreIndex >= mScores.size())
     mScoreIndex = 0;
@@ -119,7 +138,22 @@ void Leaderboard::loadNextScore()
   mMesh = cor::textToMesh(text);
   mVbo = cinder::gl::VboMesh::create(mMesh);
   mTexture.reset();
-  mMovie = qtime::MovieGl(basePath + score.gif);
-  mMovie.setLoop();
-  mMovie.play();
+  fs::path p = basePath + score.gif;
+  if (!fs::exists(p))
+  {
+    p = "/Users/bzztbomb/Downloads/Glitch-logo-02.mp4";
+    mFlipped = hasOculus;
+  } else {
+    mFlipped = hasOculus;
+  }
+  if (fs::exists(p))
+  {
+    mMovie = qtime::MovieGl(p);
+    mMovie.setLoop();
+    mMovie.play();
+  } else {
+    if (mMovie)
+      mMovie.stop();
+    mTexture.reset();
+  }
 }

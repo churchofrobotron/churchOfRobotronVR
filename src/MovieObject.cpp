@@ -12,6 +12,8 @@
 
 using namespace ci;
 
+extern bool hasOculus;
+
 MovieObject::MovieObject()
 : mPosition(0.0f, 32.0f, 0.0f)
 , mScale(20.0f, 20.0f, 0.0f)
@@ -19,6 +21,7 @@ MovieObject::MovieObject()
 , mUp(Vec3f::zAxis())
 , mCurrentMovie(-1)
 , mMute(false)
+, mPrefix("Randoms")
 {
 }
 
@@ -32,8 +35,8 @@ void MovieObject::init(cinder::params::InterfaceGl* params)
   mPosition = Vec3f(5.38f, 7.35f, 0.47);
   mScale = Vec3f(2.6f, 2.6f, 0.0f);
   params->addSeparator("MovieObject");
-  params->addParam("Randoms:  Position", &mPosition);
-  params->addParam("Randoms: Scale", &mScale);
+  params->addParam(mPrefix + ":  Position", &mPosition);
+  params->addParam(mPrefix + ": Scale", &mScale);
 }
 
 void MovieObject::update()
@@ -43,7 +46,7 @@ void MovieObject::update()
 
   mTexture = mMovie.getTexture();
   if (mTexture)
-    mTexture.setFlipped(true);
+    mTexture.setFlipped(!hasOculus); // weird bug
 }
 
 void MovieObject::render()

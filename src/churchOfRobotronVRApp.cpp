@@ -5,6 +5,8 @@
 #include "cinder/params/Params.h"
 #include "cinder/Utilities.h"
 
+#include "boost/asio.hpp"
+
 #include "FPSCamUI.h"
 #include "OculusVR.h"
 #include "CameraStereoHMD.h"
@@ -20,6 +22,8 @@
 using namespace ci;
 using namespace ci::app;
 using namespace std;
+
+bool hasOculus = false;
 
 struct WindowData
 {
@@ -37,8 +41,77 @@ struct WindowData
   RenderType mRenderType;
 };
 
+const short multicast_port = 2084;
+
+class receiver
+{
+public:
+  receiver(boost::asio::io_service& io_service,
+           const boost::asio::ip::address& listen_address,
+           const boost::asio::ip::address& multicast_address)
+  : socket_(io_service)
+  {
+    // Create the socket so that multiple may be bound to the same address.
+    boost::asio::ip::udp::endpoint listen_endpoint(
+                                                   listen_address, multicast_port);
+    socket_.open(listen_endpoint.protocol());
+    socket_.set_option(boost::asio::ip::udp::socket::reuse_address(true));
+//    socket_.bind(listen_endpoint);
+    socket_.bind(boost::asio::ip::udp::endpoint( multicast_address, multicast_port ));
+    
+    // Join the multicast group.
+//    socket_.set_option(
+//                       boost::asio::ip::multicast::join_group(multicast_address));
+    
+    socket_.async_receive_from(
+                               boost::asio::buffer(data_, max_length), sender_endpoint_,
+                               boost::bind(&receiver::handle_receive_from, this,
+                                           boost::asio::placeholders::error,
+                                           boost::asio::placeholders::bytes_transferred));
+  }
+  
+  void handle_receive_from(const boost::system::error_code& error,
+                           size_t bytes_recvd)
+  {
+    if (!error)
+    {
+//      std::cout.write(data_, bytes_recvd);
+//      std::cout << std::endl;
+      
+      std::string val(data_, bytes_recvd);
+      if (val == "PlayerDeath")
+      {
+        mPlayerDeath = true;
+      }
+      
+      socket_.async_receive_from(
+                                 boost::asio::buffer(data_, max_length), sender_endpoint_,
+                                 boost::bind(&receiver::handle_receive_from, this,
+                                             boost::asio::placeholders::error,
+                                             boost::asio::placeholders::bytes_transferred));
+    }
+  }
+  
+  bool getPlayerDeath()
+  {
+    bool ret = mPlayerDeath;
+    mPlayerDeath = false;
+    return ret;
+  }
+  
+private:
+  boost::asio::ip::udp::socket socket_;
+  boost::asio::ip::udp::endpoint sender_endpoint_;
+  enum { max_length = 1024 };
+  char data_[max_length];
+  
+  bool mPlayerDeath;
+};
+
 class churchOfRobotronVRApp : public AppNative {
 public:
+  churchOfRobotronVRApp();
+  
   void prepareSettings( Settings* settings );
 	void setup();
 	void keyDown( KeyEvent event );
@@ -66,10 +139,26 @@ private:
   Grunt mModel;
   Enforcer mEnforcer;
   
+  float mEyeSeparation;
+  
+  float mDeathFlash;
+  
+//  boost::asio::io_service io_service;
+//  receiver mReceiver;
+  
   void oculusInit();
   void renderScene();
   void checkWindows();
+  void initSocket();
 };
+
+churchOfRobotronVRApp::churchOfRobotronVRApp()
+//: mReceiver(io_service, boost::asio::ip::address::from_string("127.0.0.1"),
+//            boost::asio::ip::address::from_string("127.0.0.255"))
+//, mDeathFlash(1.0f)
+{
+  
+}
 
 void churchOfRobotronVRApp::prepareSettings( Settings* settings )
 {
@@ -101,7 +190,11 @@ void churchOfRobotronVRApp::setup()
   mStereoCamera.lookAt(Vec3f::zero(), Vec3f::yAxis() + mStereoCamera.getEyePoint(), Vec3f::zAxis());
   
   // Need to tweak this..
-  mStereoCamera.setEyeSeparation( 0.15f );
+  mEyeSeparation = 0.01f;
+  
+  mParams.addParam("Eye Separation", &mEyeSeparation);
+  
+  mStereoCamera.setEyeSeparation( mEyeSeparation );
   mEnvironment.init(&mParams);
   mScreen.init(&mParams);
   mLeaderboard.init(&mParams);
@@ -125,17 +218,22 @@ void churchOfRobotronVRApp::setup()
 //  };
   std::vector<string> sermons =
   {
-    sermonBase + "rotojames.mov"
+    sermonBase + "rotojames.mov",
   };
   mSermon.setMovieList(sermons);
   mSermon.setMute(true);
+  mSermon.setPrefix("sermons");
   mSermon.init(&mParams);
+  mSermon.setPosition(Vec3f(0.01, 7.74f, 0.47));
+  mSermon.setScale(Vec2f(2.22, 2.84));
   
   std::string downloads = "/Users/bzztbomb/Downloads/";
   std::vector<string> randoms =
   {
     downloads + "Glitch-logo-02.mp4",
-    sermonBase + "116645203.mp4"
+    downloads + "Glitch-text-sprites-05.mp4",
+    sermonBase + "116645203.mp4",
+    downloads + "RobotronTextVideo.mov",
   };
   
   mRandoms.setMovieList(randoms);
@@ -153,6 +251,8 @@ void churchOfRobotronVRApp::oculusInit()
 {  
   // Init OVR
   mOculusVR           = ovr::Device::create();
+  if (mOculusVR)
+    hasOculus = true;
 }
 
 void churchOfRobotronVRApp::keyDown( KeyEvent event )
@@ -205,6 +305,21 @@ void churchOfRobotronVRApp::update()
   mLeaderboard.update();
   mModel.update();
   mEnforcer.update();
+  
+  mStereoCamera.setEyeSeparation( mEyeSeparation );
+  
+//  io_service.poll();
+//  
+//  if (mReceiver.getPlayerDeath())
+//  {
+//    mDeathFlash = 1.0f;
+//  }
+//  if (mDeathFlash > 0.05)
+//  {
+//    mDeathFlash *= 0.96;
+//  } else {
+//    mDeathFlash = 0.0f;
+//  }
 }
 
 void churchOfRobotronVRApp::resize()
@@ -235,6 +350,19 @@ void churchOfRobotronVRApp::draw()
     gl::enableAlphaBlending();
     gl::drawString("FPS:" + cinder::toString(getAverageFps()), Vec2f(10,10));
     gl::disableAlphaBlending();
+    
+    gl::setMatricesWindow( getWindowSize() );
+    gl::setViewport( getWindowBounds() );
+    gl::disableDepthRead();
+    gl::disableDepthWrite();
+    
+    if (mDeathFlash)
+    {
+      gl::enableAlphaBlending();
+      gl::color(ColorA(1.0f, 0.0f, 0.0f, mDeathFlash));
+      gl::drawSolidRect(Rectf(0, 0, getWindowWidth() * 100, getWindowHeight() * 100));
+      gl::disableAlphaBlending();
+    }
   } else {
     // clear out the window with black
     gl::clear( Color( 0, 0, 0 ) );
@@ -265,12 +393,21 @@ void churchOfRobotronVRApp::draw()
     gl::setViewport( getWindowBounds() );
     gl::disableDepthRead();
     gl::disableDepthWrite();
-
+    
     gl::color(Color::white());
     
     // Send the Side by Side texture to our distortion correction shader
     mOculusFbo.getTexture().setFlipped(true);
     mDistortionHelper->render( mOculusFbo.getTexture(), getWindowBounds() );
+
+    if (mDeathFlash)
+    {
+      gl::enableAlphaBlending();
+      gl::color(ColorA(1.0f, 0.0f, 0.0f, mDeathFlash));
+      gl::drawSolidRect(Rectf(0, 0, getWindowWidth() * 100, getWindowHeight() * 100));
+      gl::disableAlphaBlending();
+    }
+
     
     // TODO: Draw FPS
     gl::enableAlphaBlending();

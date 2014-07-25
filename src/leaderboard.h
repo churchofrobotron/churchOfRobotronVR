@@ -39,6 +39,7 @@ private:
   cinder::Vec3f mPosition;
   cinder::Vec3f mScale;
   cinder::Vec3f mTextOffset;
+  bool mFlipped;
   
   void loadScores();
   void loadNextScore();

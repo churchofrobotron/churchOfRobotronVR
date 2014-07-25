@@ -31,6 +31,7 @@ public:
   void setRightUp(const cinder::Vec3f& r, const cinder::Vec3f& u) { mRight = r; mUp = u; }
   void setMute(bool mute) { mMute = mute; }
   void setShader(const std::string& vert, const std::string frag);
+  void setPrefix(const std::string p) { mPrefix = p; }
 protected:
   std::vector<std::string> mMovies;
   int mCurrentMovie;
@@ -44,6 +45,7 @@ protected:
   cinder::Vec3f mUp;
 
   bool mMute;
+  std::string mPrefix;
   
   void loadCurrentMovie();
 };

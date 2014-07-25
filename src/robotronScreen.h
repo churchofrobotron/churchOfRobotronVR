@@ -24,17 +24,27 @@ public:
 private:
   // Common
   syphonClient mClient;
-  
+  cinder::gl::Texture mStart;
+
   // Just draw texture
   void drawSimple();
-  
+
   // Animated cubes
   cinder::gl::GlslProg mCubeShader;
   cinder::TriMesh mCubeMesh;
   cinder::gl::VboMeshRef mVboMesh;
+  cinder::TriMesh mCabinet;
+  
+  cinder::Vec3f mStartPos;
+  cinder::Vec3f mStartScale;
+  cinder::TriMesh mStartMesh;
+  
   cinder::Quatf mRotate;
   cinder::Vec3f mPos;
   
+  float mOffsetRange;
+  float mOffsetBase;
+
   void initCubes();
   void drawCubes();
 };

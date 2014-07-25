@@ -1,4 +1,6 @@
 uniform sampler2DRect tex;
+uniform float offsetRange; // -0.015
+uniform float offsetBase; // -0.04
 
 varying vec4 pixelColor;
 
@@ -13,14 +15,14 @@ void main()
 
   float intensity = dot(pixelColor.xyz, vec3(0.2989, 0.5870, 0.1140));
   //float offset = intensity * -0.05;
-  float offset = intensity > 4.0/255.0 ? ((-0.015 * intensity) + -0.04) : 0.0;
+  float offset = intensity > 4.0/255.0 ? ((offsetRange * intensity) + offsetBase) : 0.0;
 
   pixelColor *= NdotL;
 
   vec4 v = gl_Vertex;
   v.y += v.y < 0.0 ? offset : 0.0;
 
-  gl_Position = gl_ModelViewProjectionMatrix * v;
+  gl_Position = (intensity > 4.0/255.0) ? gl_ModelViewProjectionMatrix * v : vec4(0.0);
   gl_TexCoord[0] = gl_MultiTexCoord0;
   gl_FrontColor = gl_Color;
 }
