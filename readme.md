@@ -9,6 +9,8 @@ Requires the following Cinder Blocks:
 * Occulus: https://github.com/simongeilfus/Cinder-OculusRift
 * Syphon: https://github.com/bzztbomb/Cinder-Syphon.git
 
+* Syphon: https://github.com/Syphon/Syphon-Framework
+
 Also requires this mame:
 * https://github.com/bzztbomb/mame_cor
 
