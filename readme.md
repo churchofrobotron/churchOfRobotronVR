@@ -18,3 +18,9 @@ After building start mame like so:
 
 mame -window robotron (you need robotron ROM)
 
+Keyboard shortcuts:
+
+Alt-W = Create Occulus window if needed
+Alt-T = Switch rendering mode
+Alt-F = Toggle Fullscreen
+Alt-P = Toggle Params
