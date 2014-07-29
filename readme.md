@@ -5,7 +5,7 @@ Built with:
 Commit:  9218757e8a5bcd864a2886bec7212dfee1a00001 (I bet other shit will work)
 
 * Syphon: https://github.com/Syphon/Syphon-Framework
-* Occulus SDK:  Get from the overlords
+* Oculus SDK:  Get from the overlords
 
 Requires the following Cinder Blocks:
 * MeshHelper: https://github.com/BanTheRewind/Cinder-MeshHelper
