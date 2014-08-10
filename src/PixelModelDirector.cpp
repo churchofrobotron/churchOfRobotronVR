@@ -20,18 +20,42 @@ using namespace ci;
 using namespace ci::gl;
 using namespace ci::app;
 
-std::vector<cinder::Area> PixelModelDirector::walkAreas( cinder::Area home, int offsetX, BOOL dipHomeFrame )
+void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 {
-	// Some animations look better if the neutral stance is lowered 1 pixel
-	int dipY = (dipHomeFrame?-1:0);
+	// Prepare the timer
+	mTimer.start();
 	
-	return {
-			Area( home.x1, home.y1+dipY, home.x2, home.y2+dipY ),
-			Area( home.x1 + offsetX, home.y1, home.x2 + offsetX, home.y2),
-			Area( home.x1, home.y1+dipY, home.x2, home.y2+dipY ),
-			Area( home.x1 + offsetX*2, home.y1, home.x2 + offsetX*2, home.y2)
-	};
+	// Prepare animations
+	Surface8u allSprites = loadImage(loadAsset("robotron_sprites_complete.png"));
+	
+	this->cacheAnimation( allSprites, "enforcer", { Area(1, 62, 1+9, 62+11) } );
+	
+	this->cacheAnimation( allSprites, "grunt", PixelModelDirector::walkAreas( Area(76, 118, 76+9, 118+13), (91-76), true ) );
+	
+
+	for( int i=0; i<8; i++ ) {
+		PixelModel* model = new PixelModel("model"+std::to_string(i));
+		model->init(params);
+		mModels.push_back(model);
+		
+		// Give the Models stuff to do
+		for( int m=0; m<999; m++ ) {
+			ModelMovement* move;
+			move->loc = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
+			move->animKey = (randBool() ? "enforcer" : "grunt");
+			move->fps = randFloat(2,6);
+			
+			model->appendMovement( move );
+		}
+		
+		std::string key = (randBool() ? "enforcer" : "grunt");
+		model->setAnimation( mAnimations[key] );
+
+	}
+				
 }
+
+#pragma mark - Animation building
 
 void PixelModelDirector::cacheAnimation( cinder::Surface8u allSprites, std::string key, std::vector<cinder::Area> areas )
 {
@@ -45,31 +69,32 @@ void PixelModelDirector::cacheAnimation( cinder::Surface8u allSprites, std::stri
 	mAnimations[key] = meshVec;
 }
 
-void PixelModelDirector::init( cinder::params::InterfaceGl* params )
+std::vector<cinder::Area> PixelModelDirector::walkAreas( cinder::Area home, int offsetX, BOOL dipHomeFrame )
 {
-	// Prepare animations
-	Surface8u allSprites = loadImage(loadAsset("robotron_sprites_complete.png"));
+	// Some animations look better if the neutral stance is lowered 1 pixel
+	int dipY = (dipHomeFrame?-1:0);
 	
-	this->cacheAnimation( allSprites, "enforcer", { Area(1, 62, 1+9, 62+11) } );
-	
-	this->cacheAnimation( allSprites, "grunt", PixelModelDirector::walkAreas( Area(76, 118, 76+9, 118+13), (91-76), true ) );
-	
-
-						 
-	for( int i=0; i<8; i++ ) {
-		PixelModel* model = new PixelModel("model"+std::to_string(i));
-		model->init(params);
-		std::string key = (randBool() ? "enforcer" : "grunt");
-		model->setAnimation( mAnimations[key] );
-		model->setFPS( 5.0 );
-		mModels.push_back(model);
-	}
+	return {
+		Area( home.x1, home.y1+dipY, home.x2, home.y2+dipY ),
+		Area( home.x1 + offsetX, home.y1, home.x2 + offsetX, home.y2),
+		Area( home.x1, home.y1+dipY, home.x2, home.y2+dipY ),
+		Area( home.x1 + offsetX*2, home.y1, home.x2 + offsetX*2, home.y2)
+	};
 }
+
+std::vector<cinder::gl::VboMeshRef> PixelModelDirector::getMeshesWithAnimKey( std::string key ) {
+	return mAnimations[key];
+}
+
+#pragma mark - per frame
 
 void PixelModelDirector::update()
 {
+	double seconds = mTimer.getSeconds();
+	float elapsed = (float)(seconds - mPrevSeconds);
+	
 	for( auto &model : mModels ) {
-		model->update();
+		model->update( elapsed );
 	}
 }
 

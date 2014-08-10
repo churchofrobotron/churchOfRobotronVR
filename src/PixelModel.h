@@ -12,6 +12,25 @@
 #include "cinder/TriMesh.h"
 #include "cinder/params/Params.h"
 #include "cinder/gl/Vbo.h"
+//#include "PixelModelDirector.h"
+
+struct ModelMovement {
+	// supplied from previous object:
+	cinder::Vec3f prevLoc;
+	float prevRotation;	// in radians
+	//float prevScale;
+	
+	float duration;
+	float elapsed;
+	//enum easing;	// ???
+	std::string animKey;
+	float fps;
+	BOOL alwaysFaceAltar;
+	
+	cinder::Vec3f loc;
+	float rotation;	// in radians
+	//float scale;
+};
 
 class PixelModel
 {
@@ -21,11 +40,15 @@ public:
     mParamPrefix = prefix;
   }
   
-  virtual void init(cinder::params::InterfaceGl* params);
-  virtual void update();
-  virtual void draw();
+	void init(cinder::params::InterfaceGl* params);
+	void update( float elapsed/*, PixelModelDirector* director*/ );
+	void draw();
 
-	void setAnimation( const std::vector<cinder::gl::VboMeshRef>& inFrames );
+	// Movement
+	void clearMovements();
+	void appendMovement( ModelMovement* movement );
+
+	void setAnimation( std::vector<cinder::gl::VboMeshRef> inFrames );
 	void setFPS( float inFPS );
 
 protected:
@@ -33,9 +56,8 @@ protected:
 	cinder::Vec3f mPosition;
 	cinder::Vec3f mScale;
 	float mRotationRads;	// Apparent rotation on Y axis. (It's actually the model's Z axis)
-	BOOL mAlwaysFaceAltar;	// perFrame: mRotation will be set to face the player.
 
-	bool mAnimate;
+	void applyMovementElapsed( float elapsed );
 
 private:
   std::vector<cinder::gl::VboMeshRef> mFrames;
@@ -43,12 +65,11 @@ private:
 
 	// animation timing
 	float mFPS;
-	cinder::Timer mTimer;
-	
-	// temporary behavior, borrowed from Enforcer
-	float mSpeed;
-	cinder::Vec3f mTarget;
+	float mAnimElapsed;
+	std::string mAnimKey;
 
+	// Movement
+	std::deque< ModelMovement* > mMovements;
 };
 
 #endif /* defined(__churchOfRobotronVR__PixelModel__) */

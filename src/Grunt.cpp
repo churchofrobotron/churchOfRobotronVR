@@ -39,7 +39,7 @@ void Grunt::init(cinder::params::InterfaceGl* params)
 
 void Grunt::update()
 {
-  PixelModel::update();
+  //PixelModel::update();
 
   std::map<MovementState, Vec3f> mapStateToPos =
   {

@@ -34,7 +34,7 @@ void Enforcer::init(cinder::params::InterfaceGl* params)
 
 void Enforcer::update()
 {
-  PixelModel::update();
+  //PixelModel::update(0);
 
   Vec3f diff = mTarget - mPosition;
   if (diff.length() <= mSpeed * 2)
