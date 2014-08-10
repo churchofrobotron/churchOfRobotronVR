@@ -141,7 +141,7 @@ private:
 	
   //Grunt mModel;
   //Enforcer mEnforcer;
-	PixelModelDirector mPixelModelDirector;
+  PixelModelDirector& mPixelModelDirector = PixelModelDirector::getInstance();
   
   float mEyeSeparation;
   

@@ -44,25 +44,24 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 		for( int m=0; m<999; m++ ) {
 			ModelMovement move;// = new ModelMovement();
 			move.loc = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
-			//move->animKey = (randBool() ? "enforcer" : "grunt");
+			move.animKey = (randBool() ? "enforcer" : "grunt");
 			move.fps = randFloat(2,6);
 			move.duration = (m==0) ? 0 : 5.0f;
-			move.elapsed = 0.0f;
 			move.alwaysFaceAltar = false;
 			
 			model->appendMovement( move );
 		}
 		
-		std::string key = (randBool() ? "enforcer" : "grunt");
-		key = "grunt";
-		model->setAnimation( mAnimations[key] );
-
 	}
 				
 	mPrevSeconds = 0;
 }
 
 #pragma mark - Animation building
+
+std::vector<cinder::gl::VboMeshRef> PixelModelDirector::animationMeshesForKey( std::string key ) {
+	return mAnimations[key];
+}
 
 void PixelModelDirector::cacheAnimation( cinder::Surface8u allSprites, std::string key, std::vector<cinder::Area> areas )
 {
@@ -87,10 +86,6 @@ std::vector<cinder::Area> PixelModelDirector::walkAreas( cinder::Area home, int 
 		Area( home.x1, home.y1+dipY, home.x2, home.y2+dipY ),
 		Area( home.x1 + offsetX*2, home.y1, home.x2 + offsetX*2, home.y2)
 	};
-}
-
-std::vector<cinder::gl::VboMeshRef> PixelModelDirector::getMeshesWithAnimKey( std::string key ) {
-	return mAnimations[key];
 }
 
 #pragma mark - per frame

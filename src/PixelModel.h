@@ -23,7 +23,7 @@ struct ModelMovement {
 	float duration;
 	float elapsed;
 	//enum easing;	// ???
-	//std::string animKey;
+	std::string animKey;
 	float fps;
 	BOOL alwaysFaceAltar;
 	
@@ -48,7 +48,7 @@ public:
 	void clearMovements();
 	void appendMovement( ModelMovement movement );
 
-	void setAnimation( std::vector<cinder::gl::VboMeshRef> inFrames );
+	void setAnimationKey( std::string key );
 	void setFPS( float inFPS );
 
 	std::deque<ModelMovement> mMovements;
@@ -68,7 +68,7 @@ private:
 	// animation timing
 	float mFPS;
 	float mAnimElapsed;
-	//std::string mAnimKey;
+	std::string mAnimKey;
 };
 
 #endif /* defined(__churchOfRobotronVR__PixelModel__) */

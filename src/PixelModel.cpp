@@ -11,6 +11,7 @@
 #include "cinder/app/App.h"
 #include "churchUtil.h"
 #include "cinder/Rand.h"
+#include "PixelModelDirector.h"
 
 using namespace ci;
 using namespace ci::gl;
@@ -38,23 +39,40 @@ void PixelModel::clearMovements() {
 
 void PixelModel::appendMovement( ModelMovement movement )
 {
+	movement.elapsed = 0;
+	
 	// If this is the first animation, then copy .prevLoc to .loc
 	if( !mMovements.size() ) {
 		movement.prevLoc = movement.loc;
+		
+		// Get FPS and animation
+		this->setFPS( movement.fps );
 		
 	} else {
 		// Close the ending location of the previous animation.
 		ModelMovement &lastMove = mMovements.back();
 		movement.prevLoc = lastMove.loc;
+		
+		// If required stuff is missing (animation key, etc) then
+		// copy it from the previous animation.
+		if( movement.animKey.empty() ) movement.animKey = lastMove.animKey;
+		if( !movement.fps ) movement.fps = lastMove.fps;
 	}
 	
 	mMovements.push_back( movement );
 }
 
-void PixelModel::setAnimation(std::vector<cinder::gl::VboMeshRef> inFrames)
+void PixelModel::setAnimationKey( std::string key )
 {
-	mFrames = inFrames;
+	// ignore redundant changes
+	if( key == mAnimKey ) return;
+	mAnimKey = key;
+	
 	mAnimElapsed = 0;
+	
+	// Get the actual meshes, yarrr
+	// std::vector<cinder::gl::VboMeshRef> inFrames
+	mFrames = PixelModelDirector::getInstance().animationMeshesForKey( key );
 }
 
 void PixelModel::setFPS( float inFPS ) {
@@ -79,8 +97,8 @@ void PixelModel::applyMovementElapsed( float elapsed ) {
 		
 		// Get the new animation & FPS
 		ModelMovement &newMove = mMovements[0];
-		mFPS = newMove.fps;
-		// New animation: TODO
+		this->setFPS( newMove.fps );
+		this->setAnimationKey( newMove.animKey );
 		
 		// The extra time should be applied to the new animation
 		this->applyMovementElapsed( overflow );
@@ -116,19 +134,19 @@ void PixelModel::update( float elapsed/*, PixelModelDirector* director*/ )
 
 void PixelModel::draw()
 {
-	std::cout << "Ready to draw. frames: " << mFrames.size() << " :: movements: " << mMovements.size() << "\n";
+	//std::cout << "Ready to draw. frames: " << mFrames.size() << " :: movements: " << mMovements.size() << "\n";
 	
 	// sanity checks
 	if( !mFrames.size() ) return;
 	if( !mMovements.size() ) return;
 	
-  gl::disable(GL_TEXTURE);
-  gl::disable(GL_TEXTURE_2D);
-  gl::color(Color::white());
-  gl::pushMatrices();
-  gl::translate(mPosition);
-  gl::scale(mScale);
+	gl::disable(GL_TEXTURE);
+	gl::disable(GL_TEXTURE_2D);
+	gl::color(Color::white());
+	gl::pushMatrices();
+	gl::translate(mPosition);
+	gl::scale(mScale);
 	gl::rotate(Vec3f( 0, 0, mRotationRads*(180/M_PI) ));
-  gl::draw(mFrames.at(mCurrFrame));
-  gl::popMatrices();
+	gl::draw(mFrames.at(mCurrFrame));
+	gl::popMatrices();
 }

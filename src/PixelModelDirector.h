@@ -18,21 +18,29 @@ class PixelModelDirector
 {
 
 public:
-	PixelModelDirector(){}
+	static PixelModelDirector& getInstance()
+	{
+		static PixelModelDirector instance;
+		return instance;
+	}
 	
-	static std::vector<cinder::Area> walkAreas( cinder::Area home, int offsetX, BOOL dipHomeFrame );
+	std::vector<cinder::gl::VboMeshRef> animationMeshesForKey( std::string key );
 	
 	void init( cinder::params::InterfaceGl* params );
 	void update();
 	void draw();
 	
-	std::vector<cinder::gl::VboMeshRef> getMeshesWithAnimKey( std::string key );
-
 private:
-	std::vector< PixelModel* > mModels;
-	std::map< std::string, std::vector<cinder::gl::VboMeshRef> > mAnimations;
-	
+	// Singleton pattern
+	PixelModelDirector(){}
+	PixelModelDirector( PixelModelDirector const& );
+	void operator=(PixelModelDirector const& );
+
+	static std::vector<cinder::Area> walkAreas( cinder::Area home, int offsetX, BOOL dipHomeFrame );
+
 	void cacheAnimation( cinder::Surface8u allSprites, std::string key, std::vector<cinder::Area> areas );
+	std::map< std::string, std::vector<cinder::gl::VboMeshRef> > mAnimations;
+	std::vector<PixelModel*> mModels;
 	
 	cinder::Timer mTimer;
 	double mPrevSeconds;
