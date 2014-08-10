@@ -33,7 +33,7 @@ void Grunt::init(cinder::params::InterfaceGl* params)
 	  Area(76, y-1, 76+w, y-1+h),
 	  Area(106, y, 106+w, y+h),
   };
-  loadFrames(grunts);
+  //loadFrames(grunts);
 	setFPS(6.0);
 }
 

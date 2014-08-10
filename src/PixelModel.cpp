@@ -10,6 +10,7 @@
 #include "cinder/gl/gl.h"
 #include "cinder/app/App.h"
 #include "churchUtil.h"
+#include "cinder/Rand.h"
 
 using namespace ci;
 using namespace ci::gl;
@@ -29,17 +30,13 @@ void PixelModel::init(cinder::params::InterfaceGl* params)
   mAnimate = true;
 	
 	mAlwaysFaceAltar = true;
+	
+	mTarget = mPosition;
 }
 
-void PixelModel::loadFrames( const std::vector<cinder::Area>& frames )
+void PixelModel::setAnimation(const std::vector<cinder::gl::VboMeshRef>& inFrames)
 {
-  Surface8u allSprites = loadImage(loadAsset("robotron_sprites_complete.png"));
-	
-  for (auto f : frames)
-  {
-    Surface8u s = allSprites.clone(f);
-    mFrames.push_back(VboMesh::create(cor::spriteToMesh(s)));
-  }
+	mFrames = inFrames;
 	
 	// Reset mTimer
 	mTimer = new Timer(true);	// new Timer object, and start automatically.
@@ -57,6 +54,24 @@ void PixelModel::update()
   
   int totalFrames = mTimer.getSeconds() * mFPS;
   mCurrFrame = totalFrames % mFrames.size();
+	
+	//
+	// Temporary behavior, borrowed from Enforcer
+	//
+	mSpeed = 0.2f;
+
+	Vec3f diff = mTarget - mPosition;
+	if (diff.length() <= mSpeed * 2)
+	{
+		mTarget.x = randFloat(-13.0f, 13.0f) * 2.0;
+		mTarget.y = randFloat(-24.0f, 5.0f) * 2.0;
+		mTarget.z = randFloat(-0.95f, 0.48f);
+	} else {
+		diff.normalize();
+		diff *= mSpeed;
+		mPosition += diff;
+	}
+
 }
 
 void PixelModel::draw()

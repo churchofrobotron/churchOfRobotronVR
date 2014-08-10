@@ -20,12 +20,18 @@ class PixelModelDirector
 public:
 	PixelModelDirector(){}
 	
+	static std::vector<cinder::Area> walkAreas( cinder::Area home, int offsetX, BOOL dipHomeFrame );
+
 	void init( cinder::params::InterfaceGl* params );
 	void update();
 	void draw();
 
 private:
-	std::vector<PixelModel*> mModels;
+	std::vector< PixelModel* > mModels;
+	std::map< std::string, std::vector<cinder::gl::VboMeshRef> > mAnimations;
+	
+	void cacheAnimation( cinder::Surface8u allSprites, std::string key, std::vector<cinder::Area> areas );
+
 };
 
 #endif /* defined(__churchOfRobotronVR__PixelModelDirector__) */
