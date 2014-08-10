@@ -15,9 +15,11 @@
 #include "MovieObject.h"
 #include "leaderboard.h"
 #include "environment.h"
-#include "Grunt.h"
-#include "Enforcer.h"
 #include "MovieCubes.h"
+
+//#include "Grunt.h"
+//#include "Enforcer.h"
+#include "PixelModelDirector.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -136,8 +138,10 @@ private:
   MovieCubes mSermon;
   Leaderboard mLeaderboard;
   MovieObject mRandoms;
-  Grunt mModel;
-  Enforcer mEnforcer;
+	
+  //Grunt mModel;
+  //Enforcer mEnforcer;
+	PixelModelDirector mPixelModelDirector;
   
   float mEyeSeparation;
   
@@ -207,7 +211,7 @@ void churchOfRobotronVRApp::setup()
   mCamera.registerEvents();
   mCamera.setSpeed(0.01);
   
-  const std::string sermonBase = "/Users/bzztbomb/projects/churchOfRobotron/videos/";
+  const std::string sermonBase = "/Users/chaz/dev/churchOfRobotronVR/resources/videos/";
 //  std::vector<string> sermons =
 //  {
 //    sermonBase + "church_of_robotron_sermon-__doctrine_of_error_640x472.mp4",
@@ -227,7 +231,7 @@ void churchOfRobotronVRApp::setup()
   mSermon.setPosition(Vec3f(0.01, 7.74f, 0.47));
   mSermon.setScale(Vec2f(2.22, 2.84));
   
-  std::string downloads = "/Users/bzztbomb/Downloads/";
+  std::string downloads = "/Users/chaz/dev/churchOfRobotronVR/resources/videos/";
   std::vector<string> randoms =
   {
     downloads + "Glitch-logo-02.mp4",
@@ -240,8 +244,9 @@ void churchOfRobotronVRApp::setup()
   mRandoms.setMute(true);
   mRandoms.init(&mParams);
   
-  mModel.init(&mParams);
-  mEnforcer.init(&mParams);
+  //mModel.init(&mParams);
+  //mEnforcer.init(&mParams);
+	mPixelModelDirector.init(&mParams);
   
   getWindow()->setUserData( new WindowData );
   
@@ -303,9 +308,10 @@ void churchOfRobotronVRApp::update()
   mSermon.update();
   mRandoms.update();
   mLeaderboard.update();
-  mModel.update();
-  mEnforcer.update();
-  
+  //mModel.update();
+  //mEnforcer.update();
+	mPixelModelDirector.update();
+	
   mStereoCamera.setEyeSeparation( mEyeSeparation );
   
 //  io_service.poll();
@@ -423,8 +429,9 @@ void churchOfRobotronVRApp::renderScene()
   mRandoms.render();
   mScreen.draw();
   mLeaderboard.draw();
-  mModel.draw();
-  mEnforcer.draw();
+  //mModel.draw();
+  //mEnforcer.draw();
+	mPixelModelDirector.draw();
   mEnvironment.drawLast();
 }
 
