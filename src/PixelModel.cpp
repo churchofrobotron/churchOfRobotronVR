@@ -56,13 +56,17 @@ void PixelModel::setFPS( float inFPS ) {
 void PixelModel::applyMovementElapsed( float elapsed ) {
 	if( !mMovements.size() ) return;
 	
-	ModelMovement* thisMove = mMovements.front();
-	thisMove->elapsed += elapsed;
-	if( thisMove->elapsed >= thisMove->duration ) {
-		float overflow = thisMove->elapsed - thisMove->duration;
+	// Advance this movement's time
+	ModelMovement* move = mMovements.front();
+	move->elapsed += elapsed;
+
+	/*
+	if( move->elapsed >= move->duration ) {
+		float overflow = move->elapsed - move->duration;
 		mMovements.pop_front();
 		this->applyMovementElapsed( overflow );
 	}
+	 */
 }
 
 #pragma mark - per frame
@@ -71,12 +75,15 @@ void PixelModel::update( float elapsed/*, PixelModelDirector* director*/ )
 {
 	// self-calling function which might reduce mMovements to 0 items
 	this->applyMovementElapsed( elapsed );
-
+	
 	// sanity checks
 	if( !mFrames.size() ) return;
 	if( !mMovements.size() ) return;
 	
 	ModelMovement* move = mMovements.front();
+	float oldElapsed = move->elapsed;
+	
+	/*
 	float progress = move->elapsed / move->duration;
 	
 	mPosition = lerpVec3( move->prevLoc, move->loc, progress );
@@ -84,46 +91,27 @@ void PixelModel::update( float elapsed/*, PixelModelDirector* director*/ )
 	if( move->alwaysFaceAltar ) {
 		mRotationRads = atan2f( mPosition.y, mPosition.x ) + M_PI*0.5f;
 	}
-	
-	/*
-	//
-	// Temporary behavior, borrowed from Enforcer
-	//
-	mSpeed = 0.2f;
-
-	Vec3f diff = mTarget - mPosition;
-	if (diff.length() <= mSpeed * 2)
-	{
-		mTarget.x = randFloat(-13.0f, 13.0f) * 2.0;
-		mTarget.y = randFloat(-24.0f, 5.0f) * 2.0;
-		mTarget.z = randFloat(-0.95f, 0.48f);
-	} else {
-		diff.normalize();
-		diff *= mSpeed;
-		mPosition += diff;
-	}
 	 */
 	
-	/*
-	// Animation change?
-	if( mAnimKey != move->animKey ) {
-		mAnimKey = move->animKey;
-		mFrames = director->getMeshesWithAnimKey(mAnimKey);
-	}
-	 */
+	// Pretty weird dude
+	mPosition = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
 	
 	// Select the correct animation frame (mesh)
 	int totalFrames = mAnimElapsed * mFPS;
 	mCurrFrame = totalFrames % mFrames.size();
 	mAnimElapsed += elapsed;
+	
+	std::cout << " dorrrrp " << oldElapsed << " -> " << move->elapsed << "\n";
 }
 
 void PixelModel::draw()
 {
 	// sanity checks
 	if( !mFrames.size() ) return;
+	/*
 	if( !mMovements.size() ) return;
-		
+	*/
+	
   gl::disable(GL_TEXTURE);
   gl::disable(GL_TEXTURE_2D);
   gl::color(Color::white());

@@ -69,7 +69,7 @@ private:
 	std::string mAnimKey;
 
 	// Movement
-	std::deque< ModelMovement* > mMovements;
+	std::deque<ModelMovement*> mMovements;
 };
 
 #endif /* defined(__churchOfRobotronVR__PixelModel__) */

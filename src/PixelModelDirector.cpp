@@ -33,7 +33,7 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 	this->cacheAnimation( allSprites, "grunt", PixelModelDirector::walkAreas( Area(76, 118, 76+9, 118+13), (91-76), true ) );
 	
 
-	for( int i=0; i<8; i++ ) {
+	for( int i=0; i<1; i++ ) {
 		PixelModel* model = new PixelModel("model"+std::to_string(i));
 		model->init(params);
 		mModels.push_back(model);
@@ -45,16 +45,19 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 			move->loc = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
 			move->animKey = (randBool() ? "enforcer" : "grunt");
 			move->fps = randFloat(2,6);
+			move->duration = 10.0f;
+			move->elapsed = 0.0f;
 			
 			model->appendMovement( move );
 		}
 		
 		std::string key = (randBool() ? "enforcer" : "grunt");
-		key = "enforcer";
+		key = "grunt";
 		model->setAnimation( mAnimations[key] );
 
 	}
 				
+	mPrevSeconds = 0;
 }
 
 #pragma mark - Animation building
@@ -63,8 +66,7 @@ void PixelModelDirector::cacheAnimation( cinder::Surface8u allSprites, std::stri
 {
 	std::vector<cinder::gl::VboMeshRef> meshVec;
 	
-	int derp = 0;
-	for( auto &area : areas ) {
+	for( auto area : areas ) {
 		Surface8u s = allSprites.clone(area);
 		meshVec.push_back( VboMesh::create(cor::spriteToMesh(s)));
 	}
@@ -95,6 +97,7 @@ void PixelModelDirector::update()
 {
 	double seconds = mTimer.getSeconds();
 	float elapsed = (float)(seconds - mPrevSeconds);
+	mPrevSeconds = seconds;
 	
 	for( auto &model : mModels ) {
 		model->update( elapsed );
