@@ -38,6 +38,16 @@ void PixelModel::clearMovements() {
 
 void PixelModel::appendMovement( ModelMovement movement )
 {
+	// If this is the first animation, then copy .prevLoc to .loc
+	if( !mMovements.size() ) {
+		movement.prevLoc = movement.loc;
+		
+	} else {
+		// Close the ending location of the previous animation.
+		ModelMovement &lastMove = mMovements.back();
+		movement.prevLoc = lastMove.loc;
+	}
+	
 	mMovements.push_back( movement );
 }
 
@@ -66,6 +76,13 @@ void PixelModel::applyMovementElapsed( float elapsed ) {
 	if( move.elapsed >= move.duration ) {
 		float overflow = move.elapsed - move.duration;
 		mMovements.pop_front();
+		
+		// Get the new animation & FPS
+		ModelMovement &newMove = mMovements[0];
+		mFPS = newMove.fps;
+		// New animation: TODO
+		
+		// The extra time should be applied to the new animation
 		this->applyMovementElapsed( overflow );
 	}
 }
@@ -90,9 +107,6 @@ void PixelModel::update( float elapsed/*, PixelModelDirector* director*/ )
 	if( move.alwaysFaceAltar ) {
 		mRotationRads = atan2f( mPosition.y, mPosition.x ) + M_PI*0.5f;
 	}
-	
-	// Pretty weird dude
-	//mPosition = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
 	
 	// Select the correct animation frame (mesh)
 	int totalFrames = mAnimElapsed * mFPS;

@@ -33,7 +33,7 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 	this->cacheAnimation( allSprites, "grunt", PixelModelDirector::walkAreas( Area(76, 118, 76+9, 118+13), (91-76), true ) );
 	
 
-	for( int i=0; i<1; i++ ) {
+	for( int i=0; i<10; i++ ) {
 		PixelModel* model = new PixelModel("model"+std::to_string(i));
 		model->init(params);
 		mModels.push_back(model);
@@ -43,11 +43,10 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 		
 		for( int m=0; m<999; m++ ) {
 			ModelMovement move;// = new ModelMovement();
-			move.prevLoc = Vec3f(0,0,0);
 			move.loc = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
 			//move->animKey = (randBool() ? "enforcer" : "grunt");
 			move.fps = randFloat(2,6);
-			move.duration = 5.0f;
+			move.duration = (m==0) ? 0 : 5.0f;
 			move.elapsed = 0.0f;
 			move.alwaysFaceAltar = false;
 			
