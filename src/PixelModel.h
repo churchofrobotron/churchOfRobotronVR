@@ -24,11 +24,15 @@ public:
   virtual void init(cinder::params::InterfaceGl* params);
   virtual void update();
   virtual void draw();
+
 protected:
-  std::string mParamPrefix;
-  cinder::Vec3f mPosition;
-  cinder::Vec3f mScale;
-  bool mAnimate;
+	std::string mParamPrefix;
+	cinder::Vec3f mPosition;
+	cinder::Vec3f mScale;
+	float mRotationRads;	// Apparent rotation on Y axis. (It's actually the model's Z axis)
+	BOOL mAlwaysFaceAltar;	// perFrame: mRotation will be set to face the player.
+
+	bool mAnimate;
 
   void loadFrames(const std::vector<cinder::Area>& frames);
 private:
