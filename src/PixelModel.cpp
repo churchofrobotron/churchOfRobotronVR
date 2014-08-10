@@ -36,7 +36,7 @@ void PixelModel::clearMovements() {
 	mMovements.resize( 0 );
 }
 
-void PixelModel::appendMovement( ModelMovement* movement )
+void PixelModel::appendMovement( ModelMovement movement )
 {
 	mMovements.push_back( movement );
 }
@@ -57,16 +57,17 @@ void PixelModel::applyMovementElapsed( float elapsed ) {
 	if( !mMovements.size() ) return;
 	
 	// Advance this movement's time
-	ModelMovement* move = mMovements.front();
-	move->elapsed += elapsed;
-
-	/*
-	if( move->elapsed >= move->duration ) {
-		float overflow = move->elapsed - move->duration;
+	ModelMovement &move = mMovements[0];
+	move.elapsed += elapsed;
+	
+	// Debugging working with deque of structs
+	//std::cout << " elapsed: " << move.elapsed << " :: duration: " << move.duration << "\n";
+	
+	if( move.elapsed >= move.duration ) {
+		float overflow = move.elapsed - move.duration;
 		mMovements.pop_front();
 		this->applyMovementElapsed( overflow );
 	}
-	 */
 }
 
 #pragma mark - per frame
@@ -80,37 +81,32 @@ void PixelModel::update( float elapsed/*, PixelModelDirector* director*/ )
 	if( !mFrames.size() ) return;
 	if( !mMovements.size() ) return;
 	
-	ModelMovement* move = mMovements.front();
-	float oldElapsed = move->elapsed;
+	ModelMovement &move = mMovements[0];
 	
-	/*
-	float progress = move->elapsed / move->duration;
+	float progress = move.elapsed / move.duration;
 	
-	mPosition = lerpVec3( move->prevLoc, move->loc, progress );
+	mPosition = lerpVec3( move.prevLoc, move.loc, progress );
 	
-	if( move->alwaysFaceAltar ) {
+	if( move.alwaysFaceAltar ) {
 		mRotationRads = atan2f( mPosition.y, mPosition.x ) + M_PI*0.5f;
 	}
-	 */
 	
 	// Pretty weird dude
-	mPosition = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
+	//mPosition = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
 	
 	// Select the correct animation frame (mesh)
 	int totalFrames = mAnimElapsed * mFPS;
 	mCurrFrame = totalFrames % mFrames.size();
 	mAnimElapsed += elapsed;
-	
-	std::cout << " dorrrrp " << oldElapsed << " -> " << move->elapsed << "\n";
 }
 
 void PixelModel::draw()
 {
+	std::cout << "Ready to draw. frames: " << mFrames.size() << " :: movements: " << mMovements.size() << "\n";
+	
 	// sanity checks
 	if( !mFrames.size() ) return;
-	/*
 	if( !mMovements.size() ) return;
-	*/
 	
   gl::disable(GL_TEXTURE);
   gl::disable(GL_TEXTURE_2D);

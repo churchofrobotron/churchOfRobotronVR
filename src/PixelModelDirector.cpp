@@ -39,14 +39,17 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 		mModels.push_back(model);
 		
 		// Give the Models stuff to do
+		model->clearMovements();
+		
 		for( int m=0; m<999; m++ ) {
-			ModelMovement* move;
-			move->prevLoc = Vec3f(0,0,0);
-			move->loc = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
-			move->animKey = (randBool() ? "enforcer" : "grunt");
-			move->fps = randFloat(2,6);
-			move->duration = 10.0f;
-			move->elapsed = 0.0f;
+			ModelMovement move;// = new ModelMovement();
+			move.prevLoc = Vec3f(0,0,0);
+			move.loc = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
+			//move->animKey = (randBool() ? "enforcer" : "grunt");
+			move.fps = randFloat(2,6);
+			move.duration = 5.0f;
+			move.elapsed = 0.0f;
+			move.alwaysFaceAltar = false;
 			
 			model->appendMovement( move );
 		}
@@ -99,14 +102,14 @@ void PixelModelDirector::update()
 	float elapsed = (float)(seconds - mPrevSeconds);
 	mPrevSeconds = seconds;
 	
-	for( auto &model : mModels ) {
+	for( auto model : mModels ) {
 		model->update( elapsed );
 	}
 }
 
 void PixelModelDirector::draw()
 {
-	for( auto &model : mModels ) {
+	for( auto model : mModels ) {
 		model->draw();
 	}
 }
