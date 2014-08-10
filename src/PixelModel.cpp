@@ -27,20 +27,26 @@ void PixelModel::init(cinder::params::InterfaceGl* params)
 
   mCurrFrame = 0;
   mAnimate = true;
-  mTimer.start();
 	
 	mAlwaysFaceAltar = true;
 }
 
-void PixelModel::loadFrames(const std::vector<cinder::Area>& frames)
+void PixelModel::loadFrames( const std::vector<cinder::Area>& frames )
 {
-  Surface8u allSprites = loadImage(loadAsset("robotron_sprites.png"));
-
+  Surface8u allSprites = loadImage(loadAsset("robotron_sprites_complete.png"));
+	
   for (auto f : frames)
   {
     Surface8u s = allSprites.clone(f);
     mFrames.push_back(VboMesh::create(cor::spriteToMesh(s)));
   }
+	
+	// Reset mTimer
+	mTimer = new Timer(true);	// new Timer object, and start automatically.
+}
+
+void PixelModel::setFPS( float inFPS ) {
+	mFPS = inFPS;
 }
 
 
@@ -49,15 +55,14 @@ void PixelModel::update()
   if (!mFrames.size())
     return;
   
-  const float fps = 4.0f;
-  const float spf = 1.0 / fps;
-
-  int totalFrames = mTimer.getSeconds() / spf;
+  int totalFrames = mTimer.getSeconds() * mFPS;
   mCurrFrame = totalFrames % mFrames.size();
 }
 
 void PixelModel::draw()
 {
+	if( !mAnimate ) return;
+	
 	if( mAlwaysFaceAltar ) {
 		mRotationRads = atan2f( mPosition.y, mPosition.x ) + M_PI*0.5f;
 	}

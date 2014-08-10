@@ -24,9 +24,10 @@ void Enforcer::init(cinder::params::InterfaceGl* params)
   
   std::vector<Area> enforcer =
   {
-    Area(4, 94, 4+9, 94+11)
+    Area(1, 62, 1+9, 62+11)
   };
   loadFrames(enforcer);
+	setFPS(4.0);
   mPosition = Vec3f(0.0f, 14.0f, 2.0f);
   mTarget = mPosition;
 }
@@ -34,8 +35,6 @@ void Enforcer::init(cinder::params::InterfaceGl* params)
 void Enforcer::update()
 {
   PixelModel::update();
-  if (!mAnimate)
-    return;
 
   Vec3f diff = mTarget - mPosition;
   if (diff.length() <= mSpeed * 2)

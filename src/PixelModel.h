@@ -25,6 +25,9 @@ public:
   virtual void update();
   virtual void draw();
 
+	void loadFrames( const std::vector<cinder::Area>& frames );
+	void setFPS( float inFPS );
+
 protected:
 	std::string mParamPrefix;
 	cinder::Vec3f mPosition;
@@ -34,11 +37,13 @@ protected:
 
 	bool mAnimate;
 
-  void loadFrames(const std::vector<cinder::Area>& frames);
 private:
   std::deque<cinder::gl::VboMeshRef> mFrames;
   int mCurrFrame;
-  cinder::Timer mTimer;
+
+	// animation timing
+	float mFPS;
+	cinder::Timer mTimer;
 };
 
 #endif /* defined(__churchOfRobotronVR__PixelModel__) */
