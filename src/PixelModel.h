@@ -48,20 +48,18 @@ public:
 	void clearMovements();
 	void appendMovement( ModelMovement movement );
 
+	std::deque<ModelMovement> mMovements;
+
+private:
+	void applyMovementElapsed( float elapsed );
 	void setAnimationKey( std::string key );
 	void setFPS( float inFPS );
 
-	std::deque<ModelMovement> mMovements;
-
-protected:
 	std::string mParamPrefix;
 	cinder::Vec3f mPosition;
 	cinder::Vec3f mScale;
 	float mRotationRads;	// Apparent rotation on Y axis. (It's actually the model's Z axis)
-
-	void applyMovementElapsed( float elapsed );
-
-private:
+	
 	std::vector<cinder::gl::VboMeshRef> mFrames;
 	int mCurrFrame;
 

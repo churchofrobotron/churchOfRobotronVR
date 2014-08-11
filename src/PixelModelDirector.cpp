@@ -20,6 +20,8 @@ using namespace ci;
 using namespace ci::gl;
 using namespace ci::app;
 
+const int MAX_PIXEL_MODELS = 50;
+
 void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 {
 	// Prepare the timer
@@ -33,28 +35,15 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 	this->cacheAnimation( allSprites, "grunt", PixelModelDirector::walkAreas( Area(76, 118, 76+9, 118+13), (91-76), true ) );
 	
 
-	for( int i=0; i<10; i++ ) {
+	for( int i=0; i<MAX_PIXEL_MODELS; i++ ) {
 		PixelModel* model = new PixelModel("model"+std::to_string(i));
 		model->init(params);
 		mModels.push_back(model);
-		
-		// Give the Models stuff to do
-		model->clearMovements();
-		
-		for( int m=0; m<999; m++ ) {
-			ModelMovement move;// = new ModelMovement();
-			move.loc = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
-			move.animKey = (randBool() ? "enforcer" : "grunt");
-			move.fps = randFloat(2,6);
-			move.duration = (m==0) ? 0 : 5.0f;
-			move.alwaysFaceAltar = false;
-			
-			model->appendMovement( move );
-		}
-		
 	}
 				
 	mPrevSeconds = 0;
+	mModelIdx = 0;
+	mSequenceTimeRemaining = 0;	// This will trigger a new sequence right away
 }
 
 #pragma mark - Animation building
@@ -99,6 +88,11 @@ void PixelModelDirector::update()
 	for( auto model : mModels ) {
 		model->update( elapsed );
 	}
+	
+	mSequenceTimeRemaining -= elapsed;
+	if( mSequenceTimeRemaining <= 0.0f ) {
+		this->startSequenceHerdOfGrunts();
+	}
 }
 
 void PixelModelDirector::draw()
@@ -106,4 +100,37 @@ void PixelModelDirector::draw()
 	for( auto model : mModels ) {
 		model->draw();
 	}
+}
+
+#pragma mark - Animated sequences
+
+// 		move.loc = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
+
+void PixelModelDirector::startSequenceHerdOfGrunts() {
+	int herdCount = (MAX_PIXEL_MODELS-10) + randInt()%10;
+	mSequenceTimeRemaining = 0.0f;
+	
+	for( int m=0; m<herdCount; m++ ) {
+		PixelModel* model = mModels[mModelIdx];
+		mModelIdx = (mModelIdx+1) % mModels.size();
+		
+		model->clearMovements();
+
+		float totalWalkTime = randFloat(10.0,15.0);
+		mSequenceTimeRemaining = MAX( mSequenceTimeRemaining, totalWalkTime );
+		
+		int steps = 3 + randInt()%10;
+		for( int s=0; s<steps; s++ ) {
+			ModelMovement move;// = new ModelMovement();
+			move.loc = Vec3f( randFloat(-26,26), lerp(10,-48,s/(float)steps), -1.27f );
+			move.animKey = "grunt";
+			move.fps = randFloat(2,6);
+			move.duration = (m==0) ? 0 : totalWalkTime/steps;
+			move.alwaysFaceAltar = false;
+			
+			model->appendMovement( move );
+		}
+	}
+	
+
 }

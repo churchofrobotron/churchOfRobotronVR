@@ -94,6 +94,7 @@ void PixelModel::applyMovementElapsed( float elapsed ) {
 	if( move.elapsed >= move.duration ) {
 		float overflow = move.elapsed - move.duration;
 		mMovements.pop_front();
+		if( !mMovements.size() ) return;
 		
 		// Get the new animation & FPS
 		ModelMovement &newMove = mMovements[0];

@@ -44,6 +44,12 @@ private:
 	
 	cinder::Timer mTimer;
 	double mPrevSeconds;
+	
+	// Internal: Choreographed sequence
+	int mModelIdx;
+	float mSequenceTimeRemaining;
+	
+	void startSequenceHerdOfGrunts();
 };
 
 #endif /* defined(__churchOfRobotronVR__PixelModelDirector__) */
