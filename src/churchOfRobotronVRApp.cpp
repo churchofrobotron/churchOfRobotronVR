@@ -143,9 +143,9 @@ private:
   //Enforcer mEnforcer;
   PixelModelDirector& mPixelModelDirector = PixelModelDirector::getInstance();
   
-  float mEyeSeparation;
+  float mEyeSeparation = 0;
   
-  float mDeathFlash;
+  float mDeathFlash = 0;
   
 //  boost::asio::io_service io_service;
 //  receiver mReceiver;

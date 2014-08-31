@@ -37,6 +37,7 @@ private:
 	void operator=(PixelModelDirector const& );
 
 	static std::vector<cinder::Area> walkAreas( cinder::Area home, int offsetX, BOOL dipHomeFrame );
+	static std::vector<cinder::Area> fourFrameAreas( cinder::Area home, int offsetX );
 
 	void cacheAnimation( cinder::Surface8u allSprites, std::string key, std::vector<cinder::Area> areas );
 	std::map< std::string, std::vector<cinder::gl::VboMeshRef> > mAnimations;
@@ -50,6 +51,7 @@ private:
 	float mSequenceTimeRemaining;
 	
 	void startSequenceHerdOfGrunts();
+	void startSequenceTestAllAnims();
 };
 
 #endif /* defined(__churchOfRobotronVR__PixelModelDirector__) */
