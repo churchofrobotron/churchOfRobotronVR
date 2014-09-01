@@ -49,9 +49,18 @@ private:
 	// Internal: Choreographed sequence
 	int mModelIdx;
 	float mSequenceTimeRemaining;
+	int mSeqsSinceRareSeq;
 	
-	void startSequenceHerdOfGrunts();
-	void startSequenceTestAllAnims();
+	PixelModel* getNextModel();
+
+	// Common sequences
+	void startSequence_Enforcer();
+	
+	// Rare sequences
+	
+	// Dev sequences
+	void startSequence_HerdOfGrunts();
+	void startSequence_TestAllAnims();
 };
 
 #endif /* defined(__churchOfRobotronVR__PixelModelDirector__) */

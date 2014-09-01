@@ -22,6 +22,9 @@ using namespace ci::app;
 
 const int MAX_PIXEL_MODELS = 50;
 
+// "Rare" sequences are longer, and happen in front of the altar, where they can distract the player.
+const int MIN_SEQS_BETWEEN_RARE_SEQUENCES = 5;
+
 void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 {
 	// Prepare the timer
@@ -77,6 +80,7 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 	mPrevSeconds = 0;
 	mModelIdx = 0;
 	mSequenceTimeRemaining = 0;	// This will trigger a new sequence right away
+	mSeqsSinceRareSeq = 0;
 }
 
 #pragma mark - Animation building
@@ -133,8 +137,25 @@ void PixelModelDirector::update()
 	
 	mSequenceTimeRemaining -= elapsed;
 	if( mSequenceTimeRemaining <= 0.0f ) {
-		//this->startSequenceHerdOfGrunts();
-		this->startSequenceTestAllAnims();
+		// Choose a new sequence. Yay
+		
+		// Test sequences. Don't use these in production :P
+		//this->startSequence_HerdOfGrunts();
+		//this->startSequence_TestAllAnims();
+		
+		BOOL useRareSeq = FALSE;	// Default: use a non-rare common sequence which occurs off to the side.
+		if( (mSeqsSinceRareSeq > MIN_SEQS_BETWEEN_RARE_SEQUENCES) && (randFloat(1.0)<0.333) ) {
+			useRareSeq = TRUE;
+		}
+		
+		useRareSeq = FALSE;	// FIXME: remove this line duh
+		
+		if( useRareSeq ) {	// Rare sequences
+			
+			
+		} else {	// Common sequences
+			this->startSequence_Enforcer();
+		}
 	}
 }
 
@@ -145,22 +166,52 @@ void PixelModelDirector::draw()
 	}
 }
 
+PixelModel* PixelModelDirector::getNextModel()
+{
+	PixelModel* model = mModels[mModelIdx];
+	mModelIdx = (mModelIdx+1) % mModels.size();
+	model->clearMovements();
+	return model;
+}
+
 #pragma mark - Animated sequences
 
 // 		move.loc = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
 
-void PixelModelDirector::startSequenceHerdOfGrunts() {
+#pragma mark - Animations: Common + short (off-to-the-side)
+// These are the most common animations, and are off to the side (or overhead)
+//   so it's easy for the player to ignore them. (Roomba flies overhead; Grunt walks around; etc.)
+
+void PixelModelDirector::startSequence_Enforcer() {
+	PixelModel* model = this->getNextModel();
+	
+	float angle = randFloat(M_PI*2.0);
+	float radius = 20.0f;
+	float duration = randFloat(7,10);
+	int steps = 1 + randInt()%3;
+	for( int s=0; s<=steps; s++ ) {
+		float jitteryAngle = angle + (M_PI*0.3)*randFloat(-1.0,1.0);
+		float distance = radius * (((float)s/steps)*2.0) - 1.0;
+		model->appendMovementVars("enforcer", 0, (s==0)?0:(duration/steps), Vec3f( cosf(jitteryAngle)*distance, sinf(jitteryAngle)*distance, randFloat(0,2.0f)), 0);
+	}
+}
+
+#pragma mark - Animations: Rare + longer
+// Longer animations that occur in front of the altar, where players will see them more easily.
+// These are longer and more elaborate: A Brain prog's a Human, etc.
+
+#pragma mark - Animations: Cruddy tests (not for production)
+
+// Cruddy test animation where Grunts enter ahead of the altar, and strafe all over while moving towards the exit.
+void PixelModelDirector::startSequence_HerdOfGrunts() {
 	std::cout << "Hello! Here come the grunts...\n";
 	
 	int herdCount = (MAX_PIXEL_MODELS-10) + randInt()%10;
 	mSequenceTimeRemaining = 0.0f;
 	
 	for( int m=0; m<herdCount; m++ ) {
-		PixelModel* model = mModels[mModelIdx];
-		mModelIdx = (mModelIdx+1) % mModels.size();
+		PixelModel* model = this->getNextModel();
 		
-		model->clearMovements();
-
 		float totalWalkTime = randFloat(10.0,15.0);
 		mSequenceTimeRemaining = MAX( mSequenceTimeRemaining, totalWalkTime );
 		
@@ -178,7 +229,9 @@ void PixelModelDirector::startSequenceHerdOfGrunts() {
 	}
 }
 
-void PixelModelDirector::startSequenceTestAllAnims() {
+// Builds a claustrophobic ring around the altar with every animation represented.
+// It is ridiculous but might help debug specific animation frames. Well that's what I'm telling myself anyway.
+void PixelModelDirector::startSequence_TestAllAnims() {
 	std::cout << "Hi! test all anims begins...\n";
 	
 	float time = 5.0;
@@ -189,13 +242,10 @@ void PixelModelDirector::startSequenceTestAllAnims() {
 	for( auto keyValue:mAnimations ) {
 		//std::cout << keyValue.first << "\n";	// Yep, the iteration works
 		
-		PixelModel* model = mModels[mModelIdx];
-		mModelIdx = (mModelIdx+1) % mModels.size();
+		PixelModel* model = this->getNextModel();
 		
-		model->clearMovements();
-
 		float radius = randFloat(4.0,8.0);
-
+		
 		for( int s=0; s<=1; s++ ) {
 			ModelMovement move;
 			move.animKey = keyValue.first;
@@ -211,4 +261,5 @@ void PixelModelDirector::startSequenceTestAllAnims() {
 		angle += (M_PI*2.0) / mAnimations.size();
 	}
 }
+
 

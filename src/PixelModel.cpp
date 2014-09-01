@@ -62,6 +62,33 @@ void PixelModel::appendMovement( ModelMovement movement )
 	mMovements.push_back( movement );
 }
 
+#pragma mark - Build animations by appending ModelMovement structs
+
+// Convenience functions for quickly building animations
+void PixelModel::appendMovementVars( std::string animKey, float fps, float duration, Vec3f loc, float rotation ){
+	ModelMovement move;
+	move.animKey = animKey;
+	move.fps = fps;
+	move.duration = duration;
+	move.loc = loc;
+	move.rotation = rotation;
+	
+	this->appendMovement( move );
+}
+
+void PixelModel::appendMovementVarsFacingAltar( std::string animKey, float fps, float duration, Vec3f loc ) {
+	ModelMovement move;
+	move.animKey = animKey;
+	move.fps = fps;
+	move.duration = duration;
+	move.loc = loc;
+	move.alwaysFaceAltar = TRUE;
+	
+	this->appendMovement( move );
+}
+
+#pragma mark - Animation state
+
 void PixelModel::setAnimationKey( std::string key )
 {
 	// ignore redundant changes
@@ -106,7 +133,7 @@ void PixelModel::applyMovementElapsed( float elapsed ) {
 	}
 }
 
-#pragma mark - per frame
+#pragma mark - Per frame
 
 void PixelModel::update( float elapsed/*, PixelModelDirector* director*/ )
 {

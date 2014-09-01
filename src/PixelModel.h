@@ -46,7 +46,10 @@ public:
 
 	// Movement
 	void clearMovements();
+
 	void appendMovement( ModelMovement movement );
+	void appendMovementVars( std::string animKey, float fps, float duration, cinder::Vec3f loc, float rotation );
+	void appendMovementVarsFacingAltar( std::string animKey, float fps, float duration, cinder::Vec3f loc );
 
 	std::deque<ModelMovement> mMovements;
 
