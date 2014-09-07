@@ -154,13 +154,17 @@ void PixelModelDirector::update()
 			
 			
 		} else {	// Common sequences
-			this->startSequence_Enforcer();
+			this->startSequence_EnforcersFlyOver();
 		}
 	}
 }
 
 void PixelModelDirector::draw()
 {
+	gl::disable(GL_TEXTURE);
+	gl::disable(GL_TEXTURE_2D);
+	gl::color(Color::white());
+
 	for( auto model : mModels ) {
 		model->draw();
 	}
@@ -182,18 +186,32 @@ PixelModel* PixelModelDirector::getNextModel()
 // These are the most common animations, and are off to the side (or overhead)
 //   so it's easy for the player to ignore them. (Roomba flies overhead; Grunt walks around; etc.)
 
-void PixelModelDirector::startSequence_Enforcer() {
-	PixelModel* model = this->getNextModel();
+void PixelModelDirector::startSequence_EnforcersFlyOver() {
+	const float MAX_Z = 1.5f;
 	
-	float angle = randFloat(M_PI*2.0);
-	float radius = 20.0f;
-	float duration = randFloat(7,10);
-	int steps = 1 + randInt()%3;
-	for( int s=0; s<=steps; s++ ) {
-		float jitteryAngle = angle + (M_PI*0.3)*randFloat(-1.0,1.0);
-		float distance = radius * (((float)s/steps)*2.0) - 1.0;
-		model->appendMovementVars("enforcer", 0, (s==0)?0:(duration/steps), Vec3f( cosf(jitteryAngle)*distance, sinf(jitteryAngle)*distance, randFloat(0,2.0f)), 0);
+	// These look better in herds. Do 1-4 or so
+	int count = (arc4random() % 4) + 1;
+	for( int c=0; c<count; c++ ) {
+		PixelModel* model = this->getNextModel();
+				
+		float angle = randFloat(M_PI*2.0);
+		float radius = 20.0f;
+		float duration = randFloat(3.0f,6.0f);
+		int steps = 1 + randInt()%3;
+		
+		// Initial delay, to stagger their entrance
+		model->appendMovementInvisible( mSequenceTimeRemaining, Vec3f( cosf(angle)*(-radius), sinf(angle)*(-radius), randFloat(0,2.0f) ), angle+M_PI*0.5 );
+		
+		for( int s=1; s<=steps; s++ ) {
+			float jitteryAngle = angle + (M_PI*0.3)*randFloat(-1.0,1.0);
+			float distance = radius * ((((float)s/steps)*2.0) - 1.0);	// radius * range(-1..1
+			model->appendMovementVars("enforcer", 0, (s==0)?0:(duration/steps), Vec3f( cosf(jitteryAngle)*distance, sinf(jitteryAngle)*distance, randFloat(0,MAX_Z)), jitteryAngle+M_PI*0.5f);
+		}
+		
+		// Some overlap with the next animation
+		mSequenceTimeRemaining += duration * randFloat( 0.1f, 0.4f );
 	}
+	
 }
 
 #pragma mark - Animations: Rare + longer
@@ -218,10 +236,11 @@ void PixelModelDirector::startSequence_HerdOfGrunts() {
 		int steps = 3 + randInt()%10;
 		for( int s=0; s<steps; s++ ) {
 			ModelMovement move;// = new ModelMovement();
+			move.isVisible = (s>0);
 			move.loc = Vec3f( randFloat(-26,26), lerp(10,-48,s/(float)steps), -1.27f );
 			move.animKey = "grunt";
 			move.fps = randFloat(2,6);
-			move.duration = (m==0) ? 0 : totalWalkTime/steps;
+			move.duration = (s==0) ? 0 : totalWalkTime/steps;
 			move.alwaysFaceAltar = false;
 			
 			model->appendMovement( move );
@@ -248,6 +267,7 @@ void PixelModelDirector::startSequence_TestAllAnims() {
 		
 		for( int s=0; s<=1; s++ ) {
 			ModelMovement move;
+			move.isVisible = true;
 			move.animKey = keyValue.first;
 			move.loc = Vec3f( sinf(angle)*radius, cosf(angle)*radius, -1.27f );
 			//move.loc = Vec3f( randFloat(-26,26), randFloat(10,-48), -1.27f );

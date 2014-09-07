@@ -52,6 +52,7 @@ void PixelModel::appendMovement( ModelMovement movement )
 		// Close the ending location of the previous animation.
 		ModelMovement &lastMove = mMovements.back();
 		movement.prevLoc = lastMove.loc;
+		movement.prevRotation = lastMove.rotation;
 		
 		// If required stuff is missing (animation key, etc) then
 		// copy it from the previous animation.
@@ -62,22 +63,38 @@ void PixelModel::appendMovement( ModelMovement movement )
 	mMovements.push_back( movement );
 }
 
-#pragma mark - Build animations by appending ModelMovement structs
+#pragma mark - Convenience methods for building animations
 
-// Convenience functions for quickly building animations
-void PixelModel::appendMovementVars( std::string animKey, float fps, float duration, Vec3f loc, float rotation ){
+// Default rotation: 0.0
+void PixelModel::appendMovementInvisible( float duration, cinder::Vec3f loc ) {
+	this->appendMovementInvisible( duration, loc, 0.0f );
+}
+
+void PixelModel::appendMovementInvisible( float duration, cinder::Vec3f loc, float rotation ) {
 	ModelMovement move;
-	move.animKey = animKey;
-	move.fps = fps;
-	move.duration = duration;
+	move.isVisible = FALSE;
 	move.loc = loc;
 	move.rotation = rotation;
 	
 	this->appendMovement( move );
 }
 
+void PixelModel::appendMovementVars( std::string animKey, float fps, float duration, Vec3f loc, float rotation ){
+	ModelMovement move;
+	move.isVisible = TRUE;
+	move.animKey = animKey;
+	move.fps = fps;
+	move.duration = duration;
+	move.loc = loc;
+	move.rotation = rotation;
+	move.alwaysFaceAltar = FALSE;
+	
+	this->appendMovement( move );
+}
+
 void PixelModel::appendMovementVarsFacingAltar( std::string animKey, float fps, float duration, Vec3f loc ) {
 	ModelMovement move;
+	move.isVisible = TRUE;
 	move.animKey = animKey;
 	move.fps = fps;
 	move.duration = duration;
@@ -144,14 +161,20 @@ void PixelModel::update( float elapsed/*, PixelModelDirector* director*/ )
 	if( !mFrames.size() ) return;
 	if( !mMovements.size() ) return;
 	
+	// Get the current movement
 	ModelMovement &move = mMovements[0];
+	mIsVisible = move.isVisible;
+
+	float progress = move.elapsed / move.duration;	// Range: 0..1
 	
-	float progress = move.elapsed / move.duration;
-	
+	// Calculate the current position
 	mPosition = lerpVec3( move.prevLoc, move.loc, progress );
 	
+	// Always face the altar?
 	if( move.alwaysFaceAltar ) {
 		mRotationRads = atan2f( mPosition.y, mPosition.x ) + M_PI*0.5f;
+	} else {
+		mRotationRads = lerp( move.prevRotation, move.rotation, progress );
 	}
 	
 	// Select the correct animation frame (mesh)
@@ -168,9 +191,10 @@ void PixelModel::draw()
 	if( !mFrames.size() ) return;
 	if( !mMovements.size() ) return;
 	
-	gl::disable(GL_TEXTURE);
-	gl::disable(GL_TEXTURE_2D);
-	gl::color(Color::white());
+	// Some moves are invisible.
+	// Typically this occurs on the first movement, used to delay the PixelModel's entrance.
+	if( !mIsVisible ) return;
+	
 	gl::pushMatrices();
 	gl::translate(mPosition);
 	gl::scale(mScale);

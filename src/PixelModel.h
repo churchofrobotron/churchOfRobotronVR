@@ -15,11 +15,12 @@
 //#include "PixelModelDirector.h"
 
 struct ModelMovement {
-	// supplied from previous object:
+	// Simple motion tweens. These values are supplied from previous object:
 	cinder::Vec3f prevLoc;
 	float prevRotation;	// in radians
 	//float prevScale;
 	
+	BOOL isVisible;
 	float duration;
 	float elapsed;
 	//enum easing;	// ???
@@ -48,6 +49,8 @@ public:
 	void clearMovements();
 
 	void appendMovement( ModelMovement movement );
+	void appendMovementInvisible( float duration, cinder::Vec3f loc );
+	void appendMovementInvisible( float duration, cinder::Vec3f loc, float rotation );
 	void appendMovementVars( std::string animKey, float fps, float duration, cinder::Vec3f loc, float rotation );
 	void appendMovementVarsFacingAltar( std::string animKey, float fps, float duration, cinder::Vec3f loc );
 
@@ -57,7 +60,8 @@ private:
 	void applyMovementElapsed( float elapsed );
 	void setAnimationKey( std::string key );
 	void setFPS( float inFPS );
-
+	
+	BOOL mIsVisible;
 	std::string mParamPrefix;
 	cinder::Vec3f mPosition;
 	cinder::Vec3f mScale;

@@ -54,7 +54,7 @@ private:
 	PixelModel* getNextModel();
 
 	// Common sequences
-	void startSequence_Enforcer();
+	void startSequence_EnforcersFlyOver();
 	
 	// Rare sequences
 	
