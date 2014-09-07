@@ -55,7 +55,8 @@ private:
 
 	// Common sequences
 	void startSequence_EnforcersFlyOver();
-	
+	void startSequence_Tank();
+
 	// Rare sequences
 	
 	// Dev sequences

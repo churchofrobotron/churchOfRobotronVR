@@ -25,6 +25,14 @@ const int MAX_PIXEL_MODELS = 50;
 // "Rare" sequences are longer, and happen in front of the altar, where they can distract the player.
 const int MIN_SEQS_BETWEEN_RARE_SEQUENCES = 5;
 
+// Scene model layout
+const float ROAD_X = 16.0f;
+const float SIDE_X = 32.0f;	// looking right from altar: buildings start here
+const float FRONT_Y = 10.0f;	// looking forward from altar: buildings start here
+const float BACK_Y = -48.0f;	// looking backward from altar: buildings start here
+const float ALLEY_LEFT_Y = -12.0f;
+const float ALLEY_RIGHT_Y = -7.0f;
+
 void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 {
 	// Prepare the timer
@@ -151,7 +159,8 @@ void PixelModelDirector::update()
 			
 			
 		} else {	// Common sequences
-			this->startSequence_EnforcersFlyOver();
+			//this->startSequence_EnforcersFlyOver();
+			this->startSequence_Tank();
 		}
 	}
 	
@@ -214,7 +223,7 @@ void PixelModelDirector::startSequence_EnforcersFlyOver() {
 			stepStart += (duration/steps);
 			
 			// Fire a bullet when Enforcer reaches this point?
-			if( randFloat() < 0.5 ) {
+			if( randFloat() < 0.5f ) {
 				PixelModel* bullet = this->getNextModel();
 				bullet->appendMovementInvisible( stepStart, loc );
 				float bulletDuration = randFloat( 1.5, 2.0 );
@@ -228,7 +237,44 @@ void PixelModelDirector::startSequence_EnforcersFlyOver() {
 		// Some overlap with the next animation
 		mSequenceTimeRemaining += duration * randFloat( 0.1f, 0.4f );
 	}
+}
+
+// Tank rolls down the road, or across (between the buildings)
+void PixelModelDirector::startSequence_Tank() {
+	const float TANK_Z = -1.3f;
 	
+	PixelModel* model = this->getNextModel();
+	float duration = randFloat(10.0f, 15.0f);
+	Vec3f startLoc, endLoc;
+	float rotation;
+	
+	int path = (arc4random() % 3);
+	if( (path==0) || (path==1) ) {	// Left or Right of altar
+		float offsetX = randFloat(-2.0,2.0);
+		float atX = (ROAD_X+offsetX) * ((path==0) ? -1 : 1);
+		startLoc = Vec3f( atX, FRONT_Y+10.0f, TANK_Z );
+		endLoc = Vec3f( atX, BACK_Y-20.0f, TANK_Z );
+		rotation = M_PI/2 * ((arc4random()%2) ? -1 : 1);
+		
+	} else if( path==2 ) {	// Across the gas station, between the buildings
+		float offsetY = randFloat(-2.0,2.0);
+		startLoc = Vec3f( -SIDE_X-10.0f, ALLEY_LEFT_Y+offsetY, TANK_Z );
+		endLoc = Vec3f( SIDE_X+10.0f, ALLEY_RIGHT_Y+offsetY, TANK_Z );
+		rotation = ((arc4random()%2) ? 0 : M_PI);
+	}
+	
+	// Maybe swap start & end locs, so tanks move in the opposite direction
+	if( arc4random() % 2 ) {	// 50% odds
+		Vec3f tempLoc = startLoc;
+		startLoc = endLoc;
+		endLoc = tempLoc;
+	}
+	
+	model->appendMovementInvisible( 0, startLoc, rotation );
+	model->appendMovementVars( "tank", 0, duration, endLoc, rotation );
+
+	// Some overlap with the next animation
+	mSequenceTimeRemaining = duration * randFloat( 0.1f, 0.3f );
 }
 
 #pragma mark - Animations: Rare + longer

@@ -37,7 +37,7 @@ void PixelModel::clearMovements() {
 
 void PixelModel::appendMovement( ModelMovement movement )
 {
-	movement.elapsed = 0;
+	movement.elapsed = 0.0f;
 	
 	// If this is the first animation, then copy .prevLoc to .loc
 	if( !mMovements.size() ) {
@@ -73,6 +73,7 @@ void PixelModel::appendMovementInvisible( float duration, cinder::Vec3f loc, flo
 	move.isVisible = FALSE;
 	move.loc = loc;
 	move.rotation = rotation;
+	move.duration = 0.0f;
 	
 	this->appendMovement( move );
 }
@@ -163,7 +164,10 @@ void PixelModel::update( float elapsed/*, PixelModelDirector* director*/ )
 	ModelMovement &move = mMovements[0];
 	mIsVisible = move.isVisible;
 
-	float progress = move.elapsed / move.duration;	// Range: 0..1
+	float progress = 0.0f;
+	if( move.duration > 0.0f ) {
+		progress = move.elapsed / move.duration;	// Range: 0..1
+	}
 	
 	// Calculate the current position
 	mPosition = lerpVec3( move.prevLoc, move.loc, progress );
