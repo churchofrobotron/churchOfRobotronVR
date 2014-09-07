@@ -38,6 +38,7 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 	//
 	
 	this->cacheAnimation( allSprites, "enforcer", { Area(1, 62, 1+9, 62+11) } );
+	this->cacheAnimation( allSprites, "enforcer_bullet", PixelModelDirector::fourFrameAreas( Area(91,62,91+7,62+7), 13 ));
 	
 	this->cacheAnimation( allSprites, "grunt", PixelModelDirector::walkAreas( Area(76, 118, 76+9, 118+13), 15, true ) );
 	
@@ -130,11 +131,7 @@ void PixelModelDirector::update()
 	double seconds = mTimer.getSeconds();
 	float elapsed = (float)(seconds - mPrevSeconds);
 	mPrevSeconds = seconds;
-	
-	for( auto model : mModels ) {
-		model->update( elapsed );
-	}
-	
+		
 	mSequenceTimeRemaining -= elapsed;
 	if( mSequenceTimeRemaining <= 0.0f ) {
 		// Choose a new sequence. Yay
@@ -157,6 +154,11 @@ void PixelModelDirector::update()
 			this->startSequence_EnforcersFlyOver();
 		}
 	}
+	
+	for( auto model : mModels ) {
+		model->update( elapsed );
+	}
+
 }
 
 void PixelModelDirector::draw()
@@ -200,12 +202,27 @@ void PixelModelDirector::startSequence_EnforcersFlyOver() {
 		int steps = 1 + randInt()%3;
 		
 		// Initial delay, to stagger their entrance
-		model->appendMovementInvisible( mSequenceTimeRemaining, Vec3f( cosf(angle)*(-radius), sinf(angle)*(-radius), randFloat(0,2.0f) ), angle+M_PI*0.5 );
+		float stepStart = mSequenceTimeRemaining;
+		model->appendMovementInvisible( stepStart, Vec3f( cosf(angle)*(-radius), sinf(angle)*(-radius), randFloat(0,2.0f) ), angle+M_PI*0.5 );
 		
 		for( int s=1; s<=steps; s++ ) {
 			float jitteryAngle = angle + (M_PI*0.3)*randFloat(-1.0,1.0);
-			float distance = radius * ((((float)s/steps)*2.0) - 1.0);	// radius * range(-1..1
-			model->appendMovementVars("enforcer", 0, (s==0)?0:(duration/steps), Vec3f( cosf(jitteryAngle)*distance, sinf(jitteryAngle)*distance, randFloat(0,MAX_Z)), jitteryAngle+M_PI*0.5f);
+			float distance = radius * ((((float)s/steps)*2.0) - 1.0);	// radius * range [-1..1]
+			Vec3f loc = Vec3f( cosf(jitteryAngle)*distance, sinf(jitteryAngle)*distance, randFloat(0,MAX_Z));
+			model->appendMovementVars("enforcer", 0, duration/steps, loc, jitteryAngle+M_PI*0.5f);
+						
+			stepStart += (duration/steps);
+			
+			// Fire a bullet when Enforcer reaches this point?
+			if( randFloat() < 0.5 ) {
+				PixelModel* bullet = this->getNextModel();
+				bullet->appendMovementInvisible( stepStart, loc );
+				float bulletDuration = randFloat( 1.5, 2.0 );
+				float bulletAngle = randFloat( M_PI*2.0 );
+				const float BULLET_DISTANCE = 40.0f;
+				bullet->appendMovementVarsFacingAltar("enforcer_bullet", 8, bulletDuration, Vec3f(loc.x+cosf(bulletAngle)*BULLET_DISTANCE, loc.y+sinf(bulletAngle)*BULLET_DISTANCE, loc.z) );
+			}
+
 		}
 		
 		// Some overlap with the next animation

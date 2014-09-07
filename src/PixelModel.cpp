@@ -29,8 +29,6 @@ void PixelModel::init(cinder::params::InterfaceGl* params)
   params->addSeparator(mParamPrefix);
   params->addParam(mParamPrefix + ": Position", &mPosition);
   params->addParam(mParamPrefix + ": Scale", &mScale);
-
-  mCurrFrame = 0;
 }
 
 void PixelModel::clearMovements() {
@@ -177,9 +175,6 @@ void PixelModel::update( float elapsed/*, PixelModelDirector* director*/ )
 		mRotationRads = lerp( move.prevRotation, move.rotation, progress );
 	}
 	
-	// Select the correct animation frame (mesh)
-	int totalFrames = mAnimElapsed * mFPS;
-	mCurrFrame = totalFrames % mFrames.size();
 	mAnimElapsed += elapsed;
 }
 
@@ -199,6 +194,14 @@ void PixelModel::draw()
 	gl::translate(mPosition);
 	gl::scale(mScale);
 	gl::rotate(Vec3f( 0, 0, mRotationRads*(180/M_PI) ));
-	gl::draw(mFrames.at(mCurrFrame));
+	
+	// Select the correct animation frame (mesh).
+	// Do this here in draw(), for sanity reasons. There was a crash between update() and draw() because
+	//   the model changed to an animation with fewer frames than mCurrFrame (set in update()). The bug has
+	//   probably been fixed, but I still feel safer selecting the correct frame here :P
+	int totalFrames = mAnimElapsed * mFPS;
+	int currentFrame = totalFrames % mFrames.size();
+	gl::draw(mFrames.at(currentFrame));
+	
 	gl::popMatrices();
 }

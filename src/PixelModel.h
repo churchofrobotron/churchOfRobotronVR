@@ -68,7 +68,6 @@ private:
 	float mRotationRads;	// Apparent rotation on Y axis. (It's actually the model's Z axis)
 	
 	std::vector<cinder::gl::VboMeshRef> mFrames;
-	int mCurrFrame;
 
 	// animation timing
 	float mFPS;

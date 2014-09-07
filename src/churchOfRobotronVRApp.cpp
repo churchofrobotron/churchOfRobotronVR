@@ -310,7 +310,7 @@ void churchOfRobotronVRApp::update()
   mLeaderboard.update();
   //mModel.update();
   //mEnforcer.update();
-	mPixelModelDirector.update();
+  mPixelModelDirector.update();
 	
   mStereoCamera.setEyeSeparation( mEyeSeparation );
   
