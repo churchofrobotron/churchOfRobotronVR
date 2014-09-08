@@ -58,7 +58,8 @@ private:
 	void startSequence_Tank();
 
 	// Rare sequences
-	
+	void startSequence_brainProgsHuman();
+
 	// Dev sequences
 	void startSequence_HerdOfGrunts();
 	void startSequence_TestAllAnims();

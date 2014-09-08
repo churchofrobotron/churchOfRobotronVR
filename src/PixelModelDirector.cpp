@@ -28,7 +28,7 @@ const int MIN_SEQS_BETWEEN_RARE_SEQUENCES = 5;
 // Scene model layout
 const float ROAD_X = 16.0f;
 const float SIDE_X = 32.0f;	// looking right from altar: buildings start here
-const float FRONT_Y = 10.0f;	// looking forward from altar: buildings start here
+const float FRONT_Y = 7.0f;	// looking forward from altar: buildings start here
 const float BACK_Y = -48.0f;	// looking backward from altar: buildings start here
 const float ALLEY_LEFT_Y = -12.0f;
 const float ALLEY_RIGHT_Y = -7.0f;
@@ -69,16 +69,22 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 	this->cacheAnimation( allSprites, "mommy_right", PixelModelDirector::walkAreas( Area(143, 1, 143+6, 1+13), 13, false ));
 	this->cacheAnimation( allSprites, "mommy_down", PixelModelDirector::walkAreas( Area(181, 1, 181+7, 1+14), 13, true ));
 	this->cacheAnimation( allSprites, "mommy_up", PixelModelDirector::walkAreas( Area(220, 1, 220+7, 1+14), 13, true ));
+	this->cacheAnimation( allSprites, "mommy_prog_inv", { Area(112,178,112+9,178+15) });
+	this->cacheAnimation( allSprites, "mommy_prog", { Area(121,178,121+9,178+15) });
 	
 	this->cacheAnimation( allSprites, "daddy_left", PixelModelDirector::walkAreas( Area(259, 1, 259+8, 1+12), 15, false ));
 	this->cacheAnimation( allSprites, "daddy_right", PixelModelDirector::walkAreas( Area(1, 20, 1+8, 20+12), 15, false ));
 	this->cacheAnimation( allSprites, "daddy_down", PixelModelDirector::walkAreas( Area(46, 20, 46+8, 20+12), 15, true ));
 	this->cacheAnimation( allSprites, "daddy_up", PixelModelDirector::walkAreas( Area(92, 20, 92+8, 20+12), 15, true ));
+	this->cacheAnimation( allSprites, "daddy_prog_inv", { Area(131,178,131+10,178+15) });
+	this->cacheAnimation( allSprites, "daddy_prog", { Area(141,178,141+10,178+15) });
 
 	this->cacheAnimation( allSprites, "mikey_left", PixelModelDirector::walkAreas( Area(136, 20, 136+5, 20+10), 11, false ));
 	this->cacheAnimation( allSprites, "mikey_right", PixelModelDirector::walkAreas( Area(169, 20, 169+5, 20+10), 11, false ));
 	this->cacheAnimation( allSprites, "mikey_down", PixelModelDirector::walkAreas( Area(202, 20, 202+5, 20+11), 11, true ));
 	this->cacheAnimation( allSprites, "mikey_up", PixelModelDirector::walkAreas( Area(235, 20, 235+5, 20+11), 11, true ));
+	this->cacheAnimation( allSprites, "mikey_prog_inv", { Area(151,178,151+9,178+15) });
+	this->cacheAnimation( allSprites, "mikey_prog", { Area(160,178,160+9,178+15) });
 
 	for( int i=0; i<MAX_PIXEL_MODELS; i++ ) {
 		PixelModel* model = new PixelModel("model"+std::to_string(i));
@@ -153,14 +159,14 @@ void PixelModelDirector::update()
 			useRareSeq = TRUE;
 		}
 		
-		useRareSeq = FALSE;	// FIXME: remove this line duh
+		useRareSeq = TRUE;	// FIXME: remove this line duh
 		
 		if( useRareSeq ) {	// Rare sequences
-			
+			this->startSequence_brainProgsHuman();
 			
 		} else {	// Common sequences
-			//this->startSequence_EnforcersFlyOver();
-			this->startSequence_Tank();
+			this->startSequence_EnforcersFlyOver();
+			//this->startSequence_Tank();
 		}
 	}
 	
@@ -250,8 +256,7 @@ void PixelModelDirector::startSequence_Tank() {
 	
 	int path = (arc4random() % 3);
 	if( (path==0) || (path==1) ) {	// Left or Right of altar
-		float offsetX = randFloat(-2.0,2.0);
-		float atX = (ROAD_X+offsetX) * ((path==0) ? -1 : 1);
+		float atX = (ROAD_X + randFloat(-2.0,2.0)) * ((path==0) ? -1 : 1);
 		startLoc = Vec3f( atX, FRONT_Y+10.0f, TANK_Z );
 		endLoc = Vec3f( atX, BACK_Y-20.0f, TANK_Z );
 		rotation = M_PI/2 * ((arc4random()%2) ? -1 : 1);
@@ -263,7 +268,7 @@ void PixelModelDirector::startSequence_Tank() {
 		rotation = ((arc4random()%2) ? 0 : M_PI);
 	}
 	
-	// Maybe swap start & end locs, so tanks move in the opposite direction
+	// Maybe swap start & end locs, so tanks move in both directions
 	if( arc4random() % 2 ) {	// 50% odds
 		Vec3f tempLoc = startLoc;
 		startLoc = endLoc;
@@ -280,6 +285,79 @@ void PixelModelDirector::startSequence_Tank() {
 #pragma mark - Animations: Rare + longer
 // Longer animations that occur in front of the altar, where players will see them more easily.
 // These are longer and more elaborate: A Brain prog's a Human, etc.
+
+void PixelModelDirector::startSequence_brainProgsHuman() {
+	const float BRAIN_FPS = 6.0f;
+	
+	const float BRAIN_Z = -1.6f;
+	const float HUMAN_Z = -1.4f;
+	
+	const float PROG_X_BRAIN = -1.2f - 1.5f;
+	const float PROG_X_HUMAN = -1.2f + 1.5f;
+	const float PROG_Y = 3.0f;
+	const float BACKSTAGE_Y = FRONT_Y + (FRONT_Y-PROG_Y);
+	
+	PixelModel* brain = this->getNextModel();
+	PixelModel* human = this->getNextModel();
+	
+	int humanType = (arc4random() % 3);
+	std::string humanPrefix;
+	switch( humanType ) {
+		case 0:	humanPrefix = "mommy_"; break;
+		case 1: humanPrefix = "daddy_"; break;
+		case 2: humanPrefix = "mikey_"; break;
+	}
+	
+	// Semi-random walks. Emerge from front left&right streets, and meander towards the altar.
+	const float HUMAN_WALK_DURATION = 10.0f;	// The brain will walk faster than the human.
+	human->appendMovementInvisible( 0, Vec3f(ROAD_X,BACKSTAGE_Y,HUMAN_Z) );
+	human->appendMovementVars( humanPrefix+"down", 4, HUMAN_WALK_DURATION*0.334, Vec3f(ROAD_X,FRONT_Y,HUMAN_Z), 0.0f );
+	human->appendMovementVars( humanPrefix+"left", 4, HUMAN_WALK_DURATION*0.333, Vec3f(PROG_X_HUMAN,FRONT_Y,HUMAN_Z), 0.0f );
+	human->appendMovementVars( humanPrefix+"down", 4, HUMAN_WALK_DURATION*0.333, Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_Z), 0.0f );
+	
+	// Brain should wait before appearing, then walk faster. Walk an 'L' path, so emerge rapidly from the side.
+	const float BRAIN_WALK_DURATION = HUMAN_WALK_DURATION * 0.8f;
+	const float BRAIN_WALK_DELAY = HUMAN_WALK_DURATION - BRAIN_WALK_DURATION;
+	brain->appendMovementInvisible( BRAIN_WALK_DELAY, Vec3f(-ROAD_X,BACKSTAGE_Y,BRAIN_Z) );
+	brain->appendMovementVars( "brain_down", BRAIN_FPS, BRAIN_WALK_DURATION*0.667, Vec3f(-ROAD_X,PROG_Y,BRAIN_Z), 0.0f );
+	brain->appendMovementVars( "brain_right", BRAIN_FPS, BRAIN_WALK_DURATION*0.333, Vec3f(PROG_X_BRAIN,PROG_Y,BRAIN_Z), 0.0f );
+	
+	// GET PROGGED SUCKER
+	const float PROG_DURATION = 1.0f;
+	const float HUMAN_PROG_Z = -0.7f;
+	const float HUMAN_PROG_Z_VIBRATE = -0.7f;
+	brain->appendMovementVars( "brain_right", 0, PROG_DURATION, Vec3f(PROG_X_BRAIN,PROG_Y,BRAIN_Z), 0.0f );
+
+	// Human prog motion is more complicated. Jitter up and down.
+	const int PROG_VIBRATE_STEPS = 20;
+	for( int i=0; i<PROG_VIBRATE_STEPS; i++ ) {
+		human->appendMovementVars( humanPrefix+"prog_inv", 0, (PROG_DURATION/PROG_VIBRATE_STEPS), Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_PROG_Z+HUMAN_PROG_Z_VIBRATE*randFloat(1.0)), 0.0f );
+	}
+	
+	// Brain walks away. Let's try: right (some distance), up to the wall, right to the road, up to backstage.
+	float initialRightRatio = randFloat(1.0f);
+	brain->appendMovementVars( "brain_right", BRAIN_FPS, BRAIN_WALK_DURATION*0.667*(initialRightRatio*0.5), Vec3f(ROAD_X*initialRightRatio,PROG_Y,BRAIN_Z), 0.0f );	// right (some distance)
+	brain->appendMovementVars( "brain_up", BRAIN_FPS, BRAIN_WALK_DURATION*0.667*0.5, Vec3f(ROAD_X*initialRightRatio,FRONT_Y,BRAIN_Z), 0.0f ); // up to the wall
+	brain->appendMovementVars( "brain_right", BRAIN_FPS, BRAIN_WALK_DURATION*0.667*((1.0f-initialRightRatio)*0.5), Vec3f(ROAD_X,PROG_Y,BRAIN_Z), 0.0f );	// right to the road
+	brain->appendMovementVars( "brain_up", BRAIN_FPS, BRAIN_WALK_DURATION*0.333, Vec3f(ROAD_X,BACKSTAGE_Y,BRAIN_Z), 0.0f );
+	
+	// Prog'd human flies away... with afterimages
+	const float PROG_FLY_TIME = 4.0f;
+	float afterImageDelay = HUMAN_WALK_DURATION + PROG_DURATION;
+	Vec3f pt0 = Vec3f(ROAD_X,PROG_Y,HUMAN_PROG_Z);
+	Vec3f pt1 = Vec3f(ROAD_X,BACK_Y-20.0f,HUMAN_PROG_Z);
+	for( int i=0; i<3; i++ ) {
+		PixelModel* image = this->getNextModel();
+		image->appendMovementInvisible( afterImageDelay + i*0.15f, Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_PROG_Z) );
+		image->appendMovementVars( humanPrefix+"prog", 0, PROG_FLY_TIME*0.2, pt0, 0.0f );
+		image->appendMovementVars( humanPrefix+"prog", 0, PROG_FLY_TIME*0.8, pt1, M_PI/2 );
+	}
+	human->appendMovementVars( humanPrefix+"prog_inv", 0, PROG_FLY_TIME*0.2, pt0, 0.0f );
+	human->appendMovementVars( humanPrefix+"prog_inv", 0, PROG_FLY_TIME*0.8, pt1, M_PI/2 );
+	
+	// Phew! That was compicated.
+	mSequenceTimeRemaining = HUMAN_WALK_DURATION + PROG_DURATION;
+}
 
 #pragma mark - Animations: Cruddy tests (not for production)
 

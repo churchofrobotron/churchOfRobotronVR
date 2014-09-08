@@ -73,7 +73,7 @@ void PixelModel::appendMovementInvisible( float duration, cinder::Vec3f loc, flo
 	move.isVisible = FALSE;
 	move.loc = loc;
 	move.rotation = rotation;
-	move.duration = 0.0f;
+	move.duration = duration;
 	
 	this->appendMovement( move );
 }
