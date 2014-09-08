@@ -23,7 +23,7 @@ using namespace ci::app;
 const int MAX_PIXEL_MODELS = 50;
 
 // "Rare" sequences are longer, and happen in front of the altar, where they can distract the player.
-const int MIN_SEQS_BETWEEN_RARE_SEQUENCES = 5;
+const float MIN_TIME_BETWEEN_RARE_SEQUENCES = 25.0f;	// seconds
 
 // Scene model layout
 const float ROAD_X = 16.0f;
@@ -95,7 +95,8 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 	mPrevSeconds = 0;
 	mModelIdx = 0;
 	mSequenceTimeRemaining = 0;	// This will trigger a new sequence right away
-	mSeqsSinceRareSeq = 0;
+	mTimeSinceRareSeq = 0.0f;
+	mRareSeqIndex = 0;
 }
 
 #pragma mark - Animation building
@@ -145,7 +146,12 @@ void PixelModelDirector::update()
 	double seconds = mTimer.getSeconds();
 	float elapsed = (float)(seconds - mPrevSeconds);
 	mPrevSeconds = seconds;
-		
+	
+	mTimeSinceRareSeq += elapsed;
+	
+	// Advance color cycling
+	PixelModel::updateTime(elapsed);
+	
 	mSequenceTimeRemaining -= elapsed;
 	if( mSequenceTimeRemaining <= 0.0f ) {
 		// Choose a new sequence. Yay
@@ -155,18 +161,21 @@ void PixelModelDirector::update()
 		//this->startSequence_TestAllAnims();
 		
 		BOOL useRareSeq = FALSE;	// Default: use a non-rare common sequence which occurs off to the side.
-		if( (mSeqsSinceRareSeq > MIN_SEQS_BETWEEN_RARE_SEQUENCES) && (randFloat(1.0)<0.333) ) {
+		if( (mTimeSinceRareSeq > MIN_TIME_BETWEEN_RARE_SEQUENCES) && (randFloat(1.0)<0.1) ) {
+			mTimeSinceRareSeq = 0.0f;	// reset
 			useRareSeq = TRUE;
 		}
-		
-		useRareSeq = TRUE;	// FIXME: remove this line duh
 		
 		if( useRareSeq ) {	// Rare sequences
 			this->startSequence_brainProgsHuman();
 			
 		} else {	// Common sequences
-			this->startSequence_EnforcersFlyOver();
-			//this->startSequence_Tank();
+			float rand = randFloat(1.0f);
+			if( rand < 0.25f ) {
+				this->startSequence_EnforcersFlyOver();
+			} else {
+				this->startSequence_Tank();
+			}
 		}
 	}
 	
@@ -253,30 +262,31 @@ void PixelModelDirector::startSequence_Tank() {
 	float duration = randFloat(10.0f, 15.0f);
 	Vec3f startLoc, endLoc;
 	float rotation;
+	BOOL doFlip = (arc4random()%2)==1;
 	
 	int path = (arc4random() % 3);
 	if( (path==0) || (path==1) ) {	// Left or Right of altar
 		float atX = (ROAD_X + randFloat(-2.0,2.0)) * ((path==0) ? -1 : 1);
 		startLoc = Vec3f( atX, FRONT_Y+10.0f, TANK_Z );
 		endLoc = Vec3f( atX, BACK_Y-20.0f, TANK_Z );
-		rotation = M_PI/2 * ((arc4random()%2) ? -1 : 1);
+		rotation = M_PI/2 * (doFlip ? 1 : -1);
 		
 	} else if( path==2 ) {	// Across the gas station, between the buildings
 		float offsetY = randFloat(-2.0,2.0);
 		startLoc = Vec3f( -SIDE_X-10.0f, ALLEY_LEFT_Y+offsetY, TANK_Z );
 		endLoc = Vec3f( SIDE_X+10.0f, ALLEY_RIGHT_Y+offsetY, TANK_Z );
-		rotation = ((arc4random()%2) ? 0 : M_PI);
+		rotation = (doFlip ? M_PI : 0);
 	}
 	
 	// Maybe swap start & end locs, so tanks move in both directions
-	if( arc4random() % 2 ) {	// 50% odds
+	if( doFlip ) {
 		Vec3f tempLoc = startLoc;
 		startLoc = endLoc;
 		endLoc = tempLoc;
 	}
 	
 	model->appendMovementInvisible( 0, startLoc, rotation );
-	model->appendMovementVars( "tank", 0, duration, endLoc, rotation );
+	model->appendMovementVars( "tank", 6, duration, endLoc, rotation );
 
 	// Some overlap with the next animation
 	mSequenceTimeRemaining = duration * randFloat( 0.1f, 0.3f );
@@ -289,13 +299,13 @@ void PixelModelDirector::startSequence_Tank() {
 void PixelModelDirector::startSequence_brainProgsHuman() {
 	const float BRAIN_FPS = 6.0f;
 	
-	const float BRAIN_Z = -1.6f;
+	const float BRAIN_Z = -1.1f;
 	const float HUMAN_Z = -1.4f;
 	
 	const float PROG_X_BRAIN = -1.2f - 1.5f;
 	const float PROG_X_HUMAN = -1.2f + 1.5f;
 	const float PROG_Y = 3.0f;
-	const float BACKSTAGE_Y = FRONT_Y + (FRONT_Y-PROG_Y);
+	const float BACKSTAGE_Y = FRONT_Y + 10.0f;
 	
 	PixelModel* brain = this->getNextModel();
 	PixelModel* human = this->getNextModel();
@@ -324,14 +334,15 @@ void PixelModelDirector::startSequence_brainProgsHuman() {
 	
 	// GET PROGGED SUCKER
 	const float PROG_DURATION = 1.0f;
-	const float HUMAN_PROG_Z = -0.7f;
+	const float HUMAN_PROG_Z = -0.3f;
 	const float HUMAN_PROG_Z_VIBRATE = -0.7f;
-	brain->appendMovementVars( "brain_right", 0, PROG_DURATION, Vec3f(PROG_X_BRAIN,PROG_Y,BRAIN_Z), 0.0f );
+	brain->appendMovementVars( "brain_right", 0, PROG_DURATION+0.5f, Vec3f(PROG_X_BRAIN,PROG_Y,BRAIN_Z), 0.0f );
 
 	// Human prog motion is more complicated. Jitter up and down.
+	const int PROG_COLOR_SEQ = 1;
 	const int PROG_VIBRATE_STEPS = 20;
 	for( int i=0; i<PROG_VIBRATE_STEPS; i++ ) {
-		human->appendMovementVars( humanPrefix+"prog_inv", 0, (PROG_DURATION/PROG_VIBRATE_STEPS), Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_PROG_Z+HUMAN_PROG_Z_VIBRATE*randFloat(1.0)), 0.0f );
+		human->appendMovementVars( humanPrefix+"prog_inv", 0, (PROG_DURATION/PROG_VIBRATE_STEPS), Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_PROG_Z+HUMAN_PROG_Z_VIBRATE*randFloat(1.0)), 0.0f, PROG_COLOR_SEQ );
 	}
 	
 	// Brain walks away. Let's try: right (some distance), up to the wall, right to the road, up to backstage.
@@ -346,14 +357,15 @@ void PixelModelDirector::startSequence_brainProgsHuman() {
 	float afterImageDelay = HUMAN_WALK_DURATION + PROG_DURATION;
 	Vec3f pt0 = Vec3f(ROAD_X,PROG_Y,HUMAN_PROG_Z);
 	Vec3f pt1 = Vec3f(ROAD_X,BACK_Y-20.0f,HUMAN_PROG_Z);
+	const int IMAGE_COLOR_SEQ = 4;
 	for( int i=0; i<3; i++ ) {
 		PixelModel* image = this->getNextModel();
-		image->appendMovementInvisible( afterImageDelay + i*0.15f, Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_PROG_Z) );
-		image->appendMovementVars( humanPrefix+"prog", 0, PROG_FLY_TIME*0.2, pt0, 0.0f );
-		image->appendMovementVars( humanPrefix+"prog", 0, PROG_FLY_TIME*0.8, pt1, M_PI/2 );
+		image->appendMovementInvisible( afterImageDelay + i*0.2f, Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_PROG_Z) );
+		image->appendMovementVars( humanPrefix+"prog_inv", 0, PROG_FLY_TIME*0.2, pt0, 0.0f, IMAGE_COLOR_SEQ );
+		image->appendMovementVars( humanPrefix+"prog_inv", 0, PROG_FLY_TIME*0.8, pt1, M_PI/2, IMAGE_COLOR_SEQ );
 	}
-	human->appendMovementVars( humanPrefix+"prog_inv", 0, PROG_FLY_TIME*0.2, pt0, 0.0f );
-	human->appendMovementVars( humanPrefix+"prog_inv", 0, PROG_FLY_TIME*0.8, pt1, M_PI/2 );
+	human->appendMovementVars( humanPrefix+"prog", 0, PROG_FLY_TIME*0.2, pt0, 0.0f, PROG_COLOR_SEQ );
+	human->appendMovementVars( humanPrefix+"prog", 0, PROG_FLY_TIME*0.8, pt1, M_PI/2, PROG_COLOR_SEQ );
 	
 	// Phew! That was compicated.
 	mSequenceTimeRemaining = HUMAN_WALK_DURATION + PROG_DURATION;

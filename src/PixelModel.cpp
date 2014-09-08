@@ -21,6 +21,12 @@ inline cinder::Vec3f lerpVec3( Vec3f a, Vec3f b, float p ) {
 	return Vec3f( lerp(a.x,b.x,p), lerp(a.y,b.y,p), lerp(a.z,b.z,p) );
 }
 
+// Used in color cycling
+static float elapsedTime = 0.0;
+void PixelModel::updateTime( float elapsed ){
+	elapsedTime += elapsed;
+}
+
 void PixelModel::init(cinder::params::InterfaceGl* params)
 {
   mScale = Vec3f(0.46f, 0.46f, 0.46f);
@@ -87,6 +93,21 @@ void PixelModel::appendMovementVars( std::string animKey, float fps, float durat
 	move.loc = loc;
 	move.rotation = rotation;
 	move.alwaysFaceAltar = FALSE;
+	move.colorSequence = 0;
+	
+	this->appendMovement( move );
+}
+
+void PixelModel::appendMovementVars( std::string animKey, float fps, float duration, Vec3f loc, float rotation, int colorSeq ){
+	ModelMovement move;
+	move.isVisible = TRUE;
+	move.animKey = animKey;
+	move.fps = fps;
+	move.duration = duration;
+	move.loc = loc;
+	move.rotation = rotation;
+	move.alwaysFaceAltar = FALSE;
+	move.colorSequence = colorSeq;
 	
 	this->appendMovement( move );
 }
@@ -99,6 +120,7 @@ void PixelModel::appendMovementVarsFacingAltar( std::string animKey, float fps, 
 	move.duration = duration;
 	move.loc = loc;
 	move.alwaysFaceAltar = TRUE;
+	move.colorSequence = 0;
 	
 	this->appendMovement( move );
 }
@@ -179,6 +201,8 @@ void PixelModel::update( float elapsed/*, PixelModelDirector* director*/ )
 		mRotationRads = lerp( move.prevRotation, move.rotation, progress );
 	}
 	
+	mColorSequence = move.colorSequence;
+	
 	mAnimElapsed += elapsed;
 }
 
@@ -199,6 +223,19 @@ void PixelModel::draw()
 	gl::scale(mScale);
 	gl::rotate(Vec3f( 0, 0, mRotationRads*(180/M_PI) ));
 	
+	if( mColorSequence != 0 ) {
+		//printf("color seq %i\n", mColorSequence);
+		/*
+		int clr = ( ((int)(floorf(elapsedTime*7.0))+mColorSequence) % 7) + 1;
+		int red = (clr&0x1) ? 0xff : 0x0;
+		int green = (clr&0x2) ? 0xff : 0x0;
+		int blue = (clr&0x4) ? 0xff : 0x0;
+		gl::color(Color::hex( (red<<16) | (green<<8) | blue ));
+		 */
+		
+		gl::color(Color(1.0f,0,0));
+	}
+	
 	// Select the correct animation frame (mesh).
 	// Do this here in draw(), for sanity reasons. There was a crash between update() and draw() because
 	//   the model changed to an animation with fewer frames than mCurrFrame (set in update()). The bug has
@@ -206,6 +243,11 @@ void PixelModel::draw()
 	int totalFrames = mAnimElapsed * mFPS;
 	int currentFrame = totalFrames % mFrames.size();
 	gl::draw(mFrames.at(currentFrame));
-	
+
+	// Reset color?
+	if( mColorSequence != 0 ) {
+		gl::color(Color::white());
+	}
+
 	gl::popMatrices();
 }

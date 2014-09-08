@@ -31,6 +31,8 @@ struct ModelMovement {
 	cinder::Vec3f loc;
 	float rotation;	// in radians
 	//float scale;
+	
+	int colorSequence;
 };
 
 class PixelModel
@@ -40,7 +42,8 @@ public:
   {
     mParamPrefix = prefix;
   }
-  
+	static void updateTime( float elapsed );
+	
 	void init(cinder::params::InterfaceGl* params);
 	void update( float elapsed/*, PixelModelDirector* director*/ );
 	void draw();
@@ -52,10 +55,11 @@ public:
 	void appendMovementInvisible( float duration, cinder::Vec3f loc );
 	void appendMovementInvisible( float duration, cinder::Vec3f loc, float rotation );
 	void appendMovementVars( std::string animKey, float fps, float duration, cinder::Vec3f loc, float rotation );
+	void appendMovementVars( std::string animKey, float fps, float duration, cinder::Vec3f loc, float rotation, int colorSeq );
 	void appendMovementVarsFacingAltar( std::string animKey, float fps, float duration, cinder::Vec3f loc );
-
+	
 	std::deque<ModelMovement> mMovements;
-
+	
 private:
 	void applyMovementElapsed( float elapsed );
 	void setAnimationKey( std::string key );
@@ -66,9 +70,10 @@ private:
 	cinder::Vec3f mPosition;
 	cinder::Vec3f mScale;
 	float mRotationRads;	// Apparent rotation on Y axis. (It's actually the model's Z axis)
+	int mColorSequence;
 	
 	std::vector<cinder::gl::VboMeshRef> mFrames;
-
+	
 	// animation timing
 	float mFPS;
 	float mAnimElapsed;

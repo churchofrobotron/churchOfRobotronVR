@@ -49,7 +49,8 @@ private:
 	// Internal: Choreographed sequence
 	int mModelIdx;
 	float mSequenceTimeRemaining;
-	int mSeqsSinceRareSeq;
+	float mTimeSinceRareSeq;
+	int mRareSeqIndex;
 	
 	PixelModel* getNextModel();
 
