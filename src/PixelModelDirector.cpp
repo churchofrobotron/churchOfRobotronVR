@@ -103,11 +103,11 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 
 	this->cacheAnimation( allSprites, "brain_left", PixelModelDirector::walkAreas( Area(161, 62, 161+11, 62+15), 19, false ));
 	this->cacheAnimation( allSprites, "brain_right", PixelModelDirector::walkAreas( Area(217, 62, 217+11, 62+15), 19, false ));
-	this->cacheAnimation( allSprites, "brain_down", PixelModelDirector::walkAreas( Area(1, 179, 1+11, 179+15), 19, true ));
+	this->cacheAnimation( allSprites, "brain_down", PixelModelDirector::walkAreas( Area(1, 179, 1+13, 179+15), 19, true ));
 	this->cacheAnimation( allSprites, "brain_up", PixelModelDirector::walkAreas( Area(39, 83, 39+11, 83+15), 19, true ));
 	
 	//
-	// HUMANITY
+	// HUMANITY (rhymes with FUTILITY)
 	//
 	this->cacheAnimation( allSprites, "mommy_left", PixelModelDirector::walkAreas( Area(103, 1, 103+6, 1+13), 13, false ));
 	this->cacheAnimation( allSprites, "mommy_right", PixelModelDirector::walkAreas( Area(143, 1, 143+6, 1+13), 13, false ));
