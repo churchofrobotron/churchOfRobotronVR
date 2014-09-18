@@ -31,6 +31,38 @@ const float BACK_Y = -48.0f;	// looking backward from altar: buildings start her
 const float ALLEY_LEFT_Y = -12.0f;
 const float ALLEY_RIGHT_Y = -7.0f;
 
+// Electrodes, tank fills
+// I don't have verified colors for these, so using COLOR_CYCLE_1 values
+// with swizzled color channels :P
+const float COLOR_CYCLE_0_FPS = 55.0f;
+const int COLOR_CYCLE_0_OFFSET = 17;
+
+// Brains
+const float COLOR_CYCLE_1_FPS = 60.0f;
+const uint COLOR_CYCLE_1_COUNT = 44;
+const uint COLOR_CYCLE_1_AR[] = {
+	0x1A0027, 0x1A0027, 0x0000f0, 0x0000f0, 0x0000f0,
+	0x0000f0, 0x1e48f3, 0x1e48f3, 0x1e48f3, 0x3079ff,//10
+	0x3079ff, 0x4cbdff, 0x59deff, 0x64daff, 0x92e3ff,
+	0x92e3ff, 0x8fe0ff, 0x8fe0ff, 0x8fe0ff, 0x8dddf4,//20
+	0x8dddf4, 0x89d9c5, 0x78e0b0, 0xa1a1a1, 0xa1a1a1,
+	0xa1a1a1, 0xb67d84, 0xb67d84, 0xa85e75, 0xba5d4c,//30
+	0xba5d4c, 0xac373e, 0xac373e, 0x9f1732, 0x9f1732,
+	0x87132e, 0x6b0f2a, 0x6b0f2a, 0x540b26, 0x540b26,//40
+	0x480925, 0x480925, 0x300521, 0x300521
+};
+
+// Prog tail
+const float COLOR_CYCLE_2_FPS = 40.0f;
+const uint COLOR_CYCLE_2_COUNT = 20;
+const uint COLOR_CYCLE_2_AR[] = {
+	0x200A9F, 0x06079B, 0x3A1096, 0x5511A5, 0x6213A7,
+	0x7C16AB, 0x981AAF, 0xB11DB1, 0xAD1B78, 0xAE194F,//10
+	0xA61616, 0xAE194F, 0xAD1B78, 0xB11DB1, 0x981AAF,
+	0x7C16AB, 0x6213A7, 0x5511A5, 0x3A1096, 0x06079B //20
+};
+
+
 void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 {
 	// Prepare the shader
@@ -151,74 +183,11 @@ std::vector<cinder::Area> PixelModelDirector::fourFrameAreas( cinder::Area home,
 	};
 }
 
-#pragma mark - per frame
+#pragma mark - Animated sequences
 
-void PixelModelDirector::update()
-{
-	double seconds = mTimer.getSeconds();
-	float elapsed = (float)(seconds - mPrevSeconds);
-	mPrevSeconds = seconds;
-	
-	mTimeSinceRareSeq += elapsed;
-	
-	// Advance color cycling
-	PixelModel::updateTime(elapsed);
-	
-	mSequenceTimeRemaining -= elapsed;
-	if( mSequenceTimeRemaining <= 0.0f ) {
-		// Choose a new sequence. Yay
-		
-		// Test sequences. Don't use these in production :P
-		//this->startSequence_HerdOfGrunts();
-		//this->startSequence_TestAllAnims();
-		
-		BOOL useRareSeq = FALSE;	// Default: use a non-rare common sequence which occurs off to the side.
-		if( (mTimeSinceRareSeq > MIN_TIME_BETWEEN_RARE_SEQUENCES) && (randFloat(1.0)<0.1) ) {
-			mTimeSinceRareSeq = 0.0f;	// reset
-			useRareSeq = TRUE;
-		}
-		
-		if( useRareSeq ) {	// Rare sequences
-			this->startSequence_brainProgsHuman();
-			
-		} else {	// Common sequences
-			float rand = randFloat(1.0f);
-			if( rand < 0.25f ) {
-				this->startSequence_EnforcersFlyOver();
-			} else {
-				this->startSequence_Tank();
-			}
-		}
-	}
-	
-	for( auto model : mModels ) {
-		model->update( elapsed );
-	}
-
-}
-
-void PixelModelDirector::draw()
-{
-	gl::disable(GL_TEXTURE);
-	gl::disable(GL_TEXTURE_2D);
-	gl::color(Color::white());
-	
-	mPixelModelShader.bind();
-	
-	/*
-	Vec4f cc0( 1.0f, 0.0f, 1.0f, 1.0f );
-	mCubeShader.uniform("cycleColor0",cc0);
-	Vec4f cc1( 1.0f, 1.0f, 0.0f, 1.0f );
-	mCubeShader.uniform("cycleColor1",cc1);
-	 */
-	
-	for( auto model : mModels ) {
-		model->draw();
-	}
-
-	mPixelModelShader.unbind();
-}
-
+// Instead of malloc/dealloc'ing PixelModels, just create a batch
+// on init (~50) and reuse them. getNextModel() returns the next
+// PixelModel in the list, and returns around to [0] at the end.
 PixelModel* PixelModelDirector::getNextModel()
 {
 	PixelModel* model = mModels[mModelIdx];
@@ -226,10 +195,6 @@ PixelModel* PixelModelDirector::getNextModel()
 	model->clearMovements();
 	return model;
 }
-
-#pragma mark - Animated sequences
-
-// 		move.loc = Vec3f( randFloat(-26,26), randFloat(-48,10), randFloat(-0.95,0.48) );
 
 #pragma mark - Animations: Common + short (off-to-the-side)
 // These are the most common animations, and are off to the side (or overhead)
@@ -362,10 +327,9 @@ void PixelModelDirector::startSequence_brainProgsHuman() {
 	brain->appendMovementVars( "brain_right", 0, PROG_DURATION+0.5f, Vec3f(PROG_X_BRAIN,PROG_Y,BRAIN_Z), 0.0f );
 
 	// Human prog motion is more complicated. Jitter up and down.
-	const int PROG_COLOR_SEQ = 1;
 	const int PROG_VIBRATE_STEPS = 20;
 	for( int i=0; i<PROG_VIBRATE_STEPS; i++ ) {
-		human->appendMovementVars( humanPrefix+"prog_inv", 0, (PROG_DURATION/PROG_VIBRATE_STEPS), Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_PROG_Z+HUMAN_PROG_Z_VIBRATE*randFloat(1.0)), 0.0f, PROG_COLOR_SEQ );
+		human->appendMovementVars( humanPrefix+"prog_inv", 0, (PROG_DURATION/PROG_VIBRATE_STEPS), Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_PROG_Z+HUMAN_PROG_Z_VIBRATE*randFloat(1.0)), 0.0f );
 	}
 	
 	// Brain walks away. Let's try: right (some distance), up to the wall, right to the road, up to backstage.
@@ -380,18 +344,17 @@ void PixelModelDirector::startSequence_brainProgsHuman() {
 	float afterImageDelay = HUMAN_WALK_DURATION + PROG_DURATION;
 	Vec3f pt0 = Vec3f(ROAD_X,PROG_Y,HUMAN_PROG_Z);
 	Vec3f pt1 = Vec3f(ROAD_X,BACK_Y-20.0f,HUMAN_PROG_Z);
-	const int IMAGE_COLOR_SEQ = 4;
 	
 	// Create afterimages
 	for( int i=0; i<3; i++ ) {
 		PixelModel* image = this->getNextModel();
 		image->appendMovementInvisible( afterImageDelay + (i+1)*0.2f, Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_PROG_Z) );
-		image->appendMovementVars( humanPrefix+"prog_inv", 0, PROG_FLY_TIME*0.2, pt0, 0.0f, IMAGE_COLOR_SEQ );
-		image->appendMovementVars( humanPrefix+"prog_inv", 0, PROG_FLY_TIME*0.8, pt1, M_PI/2, IMAGE_COLOR_SEQ );
+		image->appendMovementVars( humanPrefix+"prog_inv", 0, PROG_FLY_TIME*0.2, pt0, 0.0f );
+		image->appendMovementVars( humanPrefix+"prog_inv", 0, PROG_FLY_TIME*0.8, pt1, -M_PI/2 );
 	}
 	
-	human->appendMovementVars( humanPrefix+"prog", 0, PROG_FLY_TIME*0.2, pt0, 0.0f, PROG_COLOR_SEQ );
-	human->appendMovementVars( humanPrefix+"prog", 0, PROG_FLY_TIME*0.8, pt1, M_PI/2, PROG_COLOR_SEQ );
+	human->appendMovementVars( humanPrefix+"prog", 0, PROG_FLY_TIME*0.2, pt0, 0.0f );
+	human->appendMovementVars( humanPrefix+"prog", 0, PROG_FLY_TIME*0.8, pt1, -M_PI/2 );
 	
 	// Phew! That was compicated.
 	mSequenceTimeRemaining = HUMAN_WALK_DURATION + PROG_DURATION;
@@ -461,4 +424,87 @@ void PixelModelDirector::startSequence_TestAllAnims() {
 	}
 }
 
+#pragma mark - per frame
 
+inline cinder::Vec4f hexColorToVec4f( uint hex ) {
+	return Vec4f( ((hex&0xff0000)>>16) * (1.0f/0xff),
+				  ((hex&0x00ff00)>> 8) * (1.0f/0xff),
+				  ((hex&0x0000ff)    ) * (1.0f/0xff),
+				 1.0 );
+}
+
+void PixelModelDirector::update()
+{
+	double seconds = mTimer.getSeconds();
+	float elapsed = (float)(seconds - mPrevSeconds);
+	mPrevSeconds = seconds;
+	
+	mTimeSinceRareSeq += elapsed;
+	
+	// Advance color cycling
+	
+	// Color0 (electrodes & tank fills): I don't have the actual values,
+	// so I'm swizzling CC1 with an offset :P
+	uint cc0idx = ((uint)(seconds * COLOR_CYCLE_0_FPS) + COLOR_CYCLE_0_OFFSET) % COLOR_CYCLE_1_COUNT;
+	uint cc0 = COLOR_CYCLE_1_AR[cc0idx];
+	//cc0	= ((cc0&0xffff00)>>8) | ((cc0&0x0000ff)<<16);	// 0xBBRRGG. "Borg" lol, looks too blue/green tho
+	cc0 = ((cc0&0xff0000)>>8) | ((cc0&0x00ff00)<<8) | (cc0&0x0000ff);	// 0xGGRRBB
+	colorCycle0 = hexColorToVec4f( cc0 );
+	
+	uint cc1idx = (uint)(seconds * COLOR_CYCLE_1_FPS) % COLOR_CYCLE_1_COUNT;
+	colorCycle1 = hexColorToVec4f( COLOR_CYCLE_1_AR[cc1idx] );
+	
+	uint cc2idx = (uint)(seconds * COLOR_CYCLE_2_FPS) % COLOR_CYCLE_2_COUNT;
+	colorCycle2 = hexColorToVec4f( COLOR_CYCLE_2_AR[cc2idx] );
+	
+	mSequenceTimeRemaining -= elapsed;
+	if( mSequenceTimeRemaining <= 0.0f ) {
+		// Choose a new sequence. Yay
+		
+		// Test sequences. Don't use these in production :P
+		//this->startSequence_HerdOfGrunts();
+		//this->startSequence_TestAllAnims();
+		
+		BOOL useRareSeq = FALSE;	// Default: use a non-rare common sequence which occurs off to the side.
+		if( (mTimeSinceRareSeq > MIN_TIME_BETWEEN_RARE_SEQUENCES) && (randFloat(1.0)<0.5f) ) {
+			mTimeSinceRareSeq = 0.0f;	// reset
+			useRareSeq = TRUE;
+		}
+		
+		if( useRareSeq ) {	// Rare sequences
+			this->startSequence_brainProgsHuman();
+			
+		} else {	// Common sequences
+			float rand = randFloat(1.0f);
+			if( rand < 0.25f ) {
+				this->startSequence_EnforcersFlyOver();
+			} else {
+				this->startSequence_Tank();
+			}
+		}
+	}
+	
+	for( auto model : mModels ) {
+		model->update( elapsed );
+	}
+	
+}
+
+void PixelModelDirector::draw()
+{
+	gl::disable(GL_TEXTURE);
+	gl::disable(GL_TEXTURE_2D);
+	gl::color(Color::white());
+	
+	mPixelModelShader.bind();
+	
+	mPixelModelShader.uniform("colorCycle0",colorCycle0);
+	mPixelModelShader.uniform("colorCycle1",colorCycle1);
+	mPixelModelShader.uniform("colorCycle2",colorCycle2);
+	
+	for( auto model : mModels ) {
+		model->draw();
+	}
+	
+	mPixelModelShader.unbind();
+}

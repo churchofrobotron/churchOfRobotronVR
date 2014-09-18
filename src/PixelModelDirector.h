@@ -44,8 +44,12 @@ private:
 	std::map< std::string, std::vector<cinder::gl::VboMeshRef> > mAnimations;
 	std::vector<PixelModel*> mModels;
 	
+	// Shader + color cycling
 	cinder::gl::GlslProg mPixelModelShader;
-
+	cinder::Vec4f colorCycle0;
+	cinder::Vec4f colorCycle1;
+	cinder::Vec4f colorCycle2;
+	
 	cinder::Timer mTimer;
 	double mPrevSeconds;
 	

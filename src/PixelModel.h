@@ -31,8 +31,6 @@ struct ModelMovement {
 	cinder::Vec3f loc;
 	float rotation;	// in radians
 	//float scale;
-	
-	int colorSequence;
 };
 
 class PixelModel
@@ -55,7 +53,6 @@ public:
 	void appendMovementInvisible( float duration, cinder::Vec3f loc );
 	void appendMovementInvisible( float duration, cinder::Vec3f loc, float rotation );
 	void appendMovementVars( std::string animKey, float fps, float duration, cinder::Vec3f loc, float rotation );
-	void appendMovementVars( std::string animKey, float fps, float duration, cinder::Vec3f loc, float rotation, int colorSeq );
 	void appendMovementVarsFacingAltar( std::string animKey, float fps, float duration, cinder::Vec3f loc );
 	
 	std::deque<ModelMovement> mMovements;
@@ -70,7 +67,6 @@ private:
 	cinder::Vec3f mPosition;
 	cinder::Vec3f mScale;
 	float mRotationRads;	// Apparent rotation on Y axis. (It's actually the model's Z axis)
-	int mColorSequence;
 	
 	std::vector<cinder::gl::VboMeshRef> mFrames;
 	
