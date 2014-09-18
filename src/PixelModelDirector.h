@@ -10,6 +10,7 @@
 #define __churchOfRobotronVR__PixelModelDirector__
 
 #include "cinder/TriMesh.h"
+#include "cinder/gl/GlslProg.h"
 #include "cinder/params/Params.h"
 #include "cinder/gl/Vbo.h"
 #include "PixelModel.h"
@@ -43,6 +44,8 @@ private:
 	std::map< std::string, std::vector<cinder::gl::VboMeshRef> > mAnimations;
 	std::vector<PixelModel*> mModels;
 	
+	cinder::gl::GlslProg mPixelModelShader;
+
 	cinder::Timer mTimer;
 	double mPrevSeconds;
 	

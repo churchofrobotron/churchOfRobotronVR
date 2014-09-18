@@ -12,9 +12,7 @@
 #include "cinder/app/App.h"
 #include "churchUtil.h"
 #include "cinder/Rand.h"
-
-// tEMP
-#include "Enforcer.h"
+#include "LiveAssetManager.h"
 
 using namespace ci;
 using namespace ci::gl;
@@ -35,6 +33,20 @@ const float ALLEY_RIGHT_Y = -7.0f;
 
 void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 {
+	// Prepare the shader
+	LiveAssetManager::load("pixelModelVert.glsl", "pixelModelFrag.glsl",
+						   [this](ci::DataSourceRef vert,ci::DataSourceRef frag)
+						   {
+							   try
+							   {
+								   mPixelModelShader = gl::GlslProg(vert, frag);
+							   }
+							   catch (std::exception& e)
+							   {
+								   app::console() << e.what() << std::endl;
+							   }
+						   });
+	
 	// Prepare the timer
 	mTimer.start();
 	
@@ -190,10 +202,21 @@ void PixelModelDirector::draw()
 	gl::disable(GL_TEXTURE);
 	gl::disable(GL_TEXTURE_2D);
 	gl::color(Color::white());
-
+	
+	mPixelModelShader.bind();
+	
+	/*
+	Vec4f cc0( 1.0f, 0.0f, 1.0f, 1.0f );
+	mCubeShader.uniform("cycleColor0",cc0);
+	Vec4f cc1( 1.0f, 1.0f, 0.0f, 1.0f );
+	mCubeShader.uniform("cycleColor1",cc1);
+	 */
+	
 	for( auto model : mModels ) {
 		model->draw();
 	}
+
+	mPixelModelShader.unbind();
 }
 
 PixelModel* PixelModelDirector::getNextModel()
@@ -358,12 +381,15 @@ void PixelModelDirector::startSequence_brainProgsHuman() {
 	Vec3f pt0 = Vec3f(ROAD_X,PROG_Y,HUMAN_PROG_Z);
 	Vec3f pt1 = Vec3f(ROAD_X,BACK_Y-20.0f,HUMAN_PROG_Z);
 	const int IMAGE_COLOR_SEQ = 4;
+	
+	// Create afterimages
 	for( int i=0; i<3; i++ ) {
 		PixelModel* image = this->getNextModel();
-		image->appendMovementInvisible( afterImageDelay + i*0.2f, Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_PROG_Z) );
+		image->appendMovementInvisible( afterImageDelay + (i+1)*0.2f, Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_PROG_Z) );
 		image->appendMovementVars( humanPrefix+"prog_inv", 0, PROG_FLY_TIME*0.2, pt0, 0.0f, IMAGE_COLOR_SEQ );
 		image->appendMovementVars( humanPrefix+"prog_inv", 0, PROG_FLY_TIME*0.8, pt1, M_PI/2, IMAGE_COLOR_SEQ );
 	}
+	
 	human->appendMovementVars( humanPrefix+"prog", 0, PROG_FLY_TIME*0.2, pt0, 0.0f, PROG_COLOR_SEQ );
 	human->appendMovementVars( humanPrefix+"prog", 0, PROG_FLY_TIME*0.8, pt1, M_PI/2, PROG_COLOR_SEQ );
 	

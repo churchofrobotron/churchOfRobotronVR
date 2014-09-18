@@ -233,7 +233,7 @@ void PixelModel::draw()
 		gl::color(Color::hex( (red<<16) | (green<<8) | blue ));
 		 */
 		
-		gl::color(Color(1.0f,0,0));
+//		gl::color(Color(1.0f,0,0));
 	}
 	
 	// Select the correct animation frame (mesh).
