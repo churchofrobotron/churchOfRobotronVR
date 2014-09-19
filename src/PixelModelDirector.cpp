@@ -21,7 +21,7 @@ using namespace ci::app;
 const int MAX_PIXEL_MODELS = 50;
 
 // "Rare" sequences are longer, and happen in front of the altar, where they can distract the player.
-const float MIN_TIME_BETWEEN_RARE_SEQUENCES = 10.0f;//25.0f;	// seconds
+const float MIN_TIME_BETWEEN_RARE_SEQUENCES = 25.0f;	// seconds
 
 // Scene model layout
 const float ROAD_X = 16.0f;
@@ -287,7 +287,7 @@ void PixelModelDirector::startSequence_Tank() {
 // Longer animations that occur in front of the altar, where players will see them more easily.
 // These are longer and more elaborate: A Brain prog's a Human, etc.
 
-const float HUMAN_Z = -1.4f;
+const float HUMAN_Z = -1.3f;
 const float HUMAN_FPS = 4.0f;
 const float BACKSTAGE_Y = FRONT_Y + 10.0f;
 
@@ -339,7 +339,7 @@ void PixelModelDirector::startSequence_hulkCrushesPunyHuman() {
 	hulk->appendMovementVars("hulk_down", HULK_FPS, HULK_CHASE_TIME*0.334f, Vec3f(-ROAD_X,FRONT_Y,HULK_Z), 0.0f );
 	
 	downTime = HULK_CHASE_TIME*walkDownRatio;
-	branchAt = randFloat(1.0f);
+	branchAt = randFloat(0.5f);	// branch down more quickly to catch the human
 	right0time = (HULK_CHASE_TIME*0.666 - downTime) * branchAt;
 	right1time = (HULK_CHASE_TIME*0.666 - downTime) * (1.0-branchAt);
 	branchX = lerp( -ROAD_X, HULK_CRUSH_X, branchAt );
@@ -349,7 +349,9 @@ void PixelModelDirector::startSequence_hulkCrushesPunyHuman() {
 	hulk->appendMovementVars("hulk_right", HULK_FPS, right1time, Vec3f(HULK_CRUSH_X,CRUSH_Y,HULK_Z), 0.0f );
 	
 	// GET CRUSHED! oh noes
-	human->appendMovementVars("skull_and_crossbones", 0, 4.0f, Vec3f(FINAL_HUMAN_X,CRUSH_Y,HUMAN_Z), 0.0f );
+	const float SKULL_Z = HUMAN_Z + 0.7f;
+	human->appendMovementVars("skull_and_crossbones", 0, 0, Vec3f(FINAL_HUMAN_X,CRUSH_Y,SKULL_Z), 0.0f );
+	human->appendMovementVars("skull_and_crossbones", 0, 4.0f, Vec3f(FINAL_HUMAN_X,CRUSH_Y,SKULL_Z), 0.0f );
 	
 	// Hulk: Keep moving right, then walk away to the back
 	float timeToEdge = (right0time+right1time) * (fabsf(ROAD_X-HULK_CRUSH_X)/fabsf(HULK_CRUSH_X-ROAD_X));
@@ -537,8 +539,12 @@ void PixelModelDirector::update()
 		}
 		
 		if( useRareSeq ) {	// Rare sequences
-			this->startSequence_brainProgsHuman();
-			//this->startSequence_hulkCrushesPunyHuman();
+			float rand = randFloat(1.0f);
+			if( rand < 0.5f ) {
+				this->startSequence_brainProgsHuman();
+			} else {
+				this->startSequence_hulkCrushesPunyHuman();
+			}
 			
 		} else {	// Common sequences
 			float rand = randFloat(1.0f);
