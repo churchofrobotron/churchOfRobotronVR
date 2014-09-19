@@ -297,10 +297,10 @@ void PixelModelDirector::startSequence_Tank() {
 //      back
 //
 
-const Vec2f PT0 = Vec2f( -ROAD_X, FRONT_Y );
-const Vec2f PT1 = Vec2f( ROAD_X, FRONT_Y );
-const Vec2f PT2 = Vec2f( -SIDE_X, ALLEY_LEFT_Y );
-const Vec2f PT3 = Vec2f( SIDE_X, ALLEY_RIGHT_Y );
+const Vec2f PT0 = Vec2f( -ROAD_X, FRONT_Y-2.0f );
+const Vec2f PT1 = Vec2f( ROAD_X, FRONT_Y-2.0f );
+const Vec2f PT2 = Vec2f( -ROAD_X, ALLEY_LEFT_Y );
+const Vec2f PT3 = Vec2f( ROAD_X, ALLEY_RIGHT_Y );
 const Vec2f PT4 = Vec2f( -ROAD_X, BACK_Y );
 const Vec2f PT5 = Vec2f( ROAD_X, BACK_Y );
 const Vec2f PT_AR[] = {PT0,PT1,PT2,PT3,PT4,PT5};
@@ -321,13 +321,15 @@ inline float distance( Vec2f pt0, Vec2f pt1 ) {
 }
 
 inline Vec2f pointWithRandomness( Vec2f pt ) {
-	return Vec2f( pt.x + randFloat(-1.0f,1.0f), pt.y + randFloat(-1.0f,1.0f) );
+	const float POINT_RAND = 1.5f;
+	return Vec2f( pt.x + randFloat(-POINT_RAND,POINT_RAND), pt.y + randFloat(-POINT_RAND,POINT_RAND) );
 }
 
 void PixelModelDirector::startSequence_GruntsOnAllSides() {
-	const float GRUNT_SPEED = 0.15f;	// smaller => faster :P
+	const float GRUNT_SPEED = 0.2f;	// smaller => faster :P
 	const float GRUNT_Z = -1.3f;
 	const float GRUNT_FPS = 5.0;
+	const float GRUNT_RANDOM_DELAY_BEFORE_ENTER = 3.0f;
 	
 	// Pick an exit. All Grunts will leave here.
 	int exitIdx = arc4random() % 6;
@@ -343,25 +345,61 @@ void PixelModelDirector::startSequence_GruntsOnAllSides() {
 	std::random_shuffle( enterIdx_ar.begin(), enterIdx_ar.end() );
 
 	// How many grunts?
-	int gruntCount = 3 + arc4random() % 3;	// 3-5?
+	int gruntCount = 3 + arc4random() % 8;	// 3-5?
 	for( int g=0; g<gruntCount; g++ ) {
 		PixelModel* grunt = this->getNextModel();
-		int idx = enterIdx_ar.at(g);
+		int idx = enterIdx_ar.at( g % enterIdx_ar.size() );
 		
 		// Grunt should enter from EXIT_n.
 		Vec2f pt = pointWithRandomness( EXIT_AR[idx] );
 		
-		grunt->appendMovementInvisible(randFloat(1.0f), Vec3f(pt.x,pt.y,GRUNT_Z));
+		grunt->appendMovementInvisible(randFloat(GRUNT_RANDOM_DELAY_BEFORE_ENTER), Vec3f(pt.x,pt.y,GRUNT_Z));
 		
 		Vec2f pt2 = pointWithRandomness( PT_AR[idx] );
 		float time = GRUNT_SPEED * distance( pt, pt2 );
 		grunt->appendMovementVars( "grunt", GRUNT_FPS, time, Vec3f(pt2.x,pt2.y,GRUNT_Z), 0.0f );
 		
-		// Lame hack: Go to the exit
-		pt = pt2;
-		pt2 = pointWithRandomness( PT_AR[exitIdx] );
-		time = GRUNT_SPEED * distance( pt, pt2 );
-		grunt->appendMovementVars( "grunt", GRUNT_FPS, time, Vec3f(pt2.x,pt2.y,GRUNT_Z), 0.0f );
+		// Make a path to the exit. Hmm, this is kind of a weird problem!
+		// Given the map coordinates, we can move to different points by
+		// adding specific values to our current index.
+		//   2==back. -1==left. etc.
+		// So let's make an array of steps to get from the entrance index
+		// to the exit, and then shuffle it. HOLY SHIT THE GENIUS IS SO BRIGHT
+		// MY EYES AGULAHULAGAULHAUG
+		std::vector<int> step_ar;
+		
+		// Left-or-right movement is needed?
+		if( (idx%2) != (exitIdx%2) ) {
+			step_ar.push_back( ((idx%2)==1) ? -1 : 1 );
+		}
+		
+		// Up-and-down movement
+		int idx_2 = (int)floorf(idx/2);
+		int exitIdx_2 = (int)floorf(exitIdx/2);
+		for( int y=idx_2; y<exitIdx_2; y++ ) {
+			step_ar.push_back( 2 );
+		}
+		for( int y=exitIdx_2; y<idx_2; y++ ) {
+			step_ar.push_back( -2 );
+		}
+		
+		std::random_shuffle( step_ar.begin(), step_ar.end() );
+		
+		// For each step: Walk to the new location
+		for( int s=0; s<step_ar.size(); s++ ) {
+			idx += step_ar[s];
+			
+			// Sanity check: idx must be in range [0..5] :P
+			if( (idx<0) || (idx>5) ) break;
+			
+			pt = pt2;
+			pt2 = pointWithRandomness( PT_AR[idx] );
+			time = GRUNT_SPEED * distance( pt, pt2 );
+			grunt->appendMovementVars( "grunt", GRUNT_FPS, time, Vec3f(pt2.x,pt2.y,GRUNT_Z), 0.0f );
+			
+			// Add a micro delay
+			grunt->appendMovementVars( "grunt", GRUNT_FPS, randFloat(0.4), Vec3f(pt2.x,pt2.y,GRUNT_Z), 0.0f );
+		}
 		
 		// Exit, and we're done
 		pt = pt2;
@@ -641,16 +679,14 @@ void PixelModelDirector::update()
 			}
 			
 		} else {	// Common sequences
-			/*
 			float rand = randFloat(1.0f);
-			if( rand < 0.25f ) {
+			if( rand < 0.08f ) {
+				this->startSequence_GruntsOnAllSides();
+			} else if( rand < 0.3f ) {
 				this->startSequence_EnforcersFlyOver();
 			} else {
 				this->startSequence_Tank();
 			}
-			 */
-			
-			this->startSequence_GruntsOnAllSides();
 		}
 	}
 	
