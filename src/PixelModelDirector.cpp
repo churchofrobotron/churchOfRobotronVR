@@ -104,7 +104,7 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 	this->cacheAnimation( allSprites, "brain_left", PixelModelDirector::walkAreas( Area(161, 62, 161+11, 62+15), 19, false ));
 	this->cacheAnimation( allSprites, "brain_right", PixelModelDirector::walkAreas( Area(217, 62, 217+11, 62+15), 19, false ));
 	this->cacheAnimation( allSprites, "brain_down", PixelModelDirector::walkAreas( Area(1, 179, 1+13, 179+15), 19, true ));
-	this->cacheAnimation( allSprites, "brain_up", PixelModelDirector::walkAreas( Area(39, 83, 39+11, 83+15), 19, true ));
+	this->cacheAnimation( allSprites, "brain_up", PixelModelDirector::walkAreas( Area(39, 83, 39+13, 83+15), 19, true ));
 	this->cacheAnimation( allSprites, "brain_right_prog", {Area(171,179,171+13,179+16)} );
 	
 	//
@@ -676,13 +676,12 @@ void PixelModelDirector::update()
 		}
 		
 		if( useRareSeq ) {	// Rare sequences
-			int r = arc4random() % 3;
-			r = 0;
-			if( r==0 ) {
+			int r = arc4random() % 4;
+			if( (r==0) || (r==1) ) {	// Grunts are super-good so do them more often
 				this->startSequence_GruntsOnAllSides();
-			} else if( r==1 ) {
-				this->startSequence_brainProgsHuman();
 			} else if( r==2 ) {
+				this->startSequence_brainProgsHuman();
+			} else if( r==3 ) {
 				this->startSequence_hulkCrushesPunyHuman();
 			}
 			
