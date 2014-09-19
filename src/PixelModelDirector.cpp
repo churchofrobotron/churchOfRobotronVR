@@ -105,6 +105,7 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 	this->cacheAnimation( allSprites, "brain_right", PixelModelDirector::walkAreas( Area(217, 62, 217+11, 62+15), 19, false ));
 	this->cacheAnimation( allSprites, "brain_down", PixelModelDirector::walkAreas( Area(1, 179, 1+13, 179+15), 19, true ));
 	this->cacheAnimation( allSprites, "brain_up", PixelModelDirector::walkAreas( Area(39, 83, 39+11, 83+15), 19, true ));
+	this->cacheAnimation( allSprites, "brain_right_prog", {Area(171,179,171+13,179+16)} );
 	
 	//
 	// HUMANITY (rhymes with FUTILITY)
@@ -387,6 +388,7 @@ void PixelModelDirector::startSequence_brainProgsHuman() {
 	const float PROG_DURATION = 1.0f;
 	const float HUMAN_PROG_Z = -0.3f;
 	const float HUMAN_PROG_Z_VIBRATE = -0.7f;
+	// "brain_right_prog" looks like crap here. Can't tell what's going on.
 	brain->appendMovementVars( "brain_right", 0, PROG_DURATION+0.5f, Vec3f(PROG_X_BRAIN,PROG_Y,BRAIN_Z), 0.0f );
 
 	// Human prog motion is more complicated. Jitter up and down.
@@ -535,8 +537,8 @@ void PixelModelDirector::update()
 		}
 		
 		if( useRareSeq ) {	// Rare sequences
-			//this->startSequence_brainProgsHuman();
-			this->startSequence_hulkCrushesPunyHuman();
+			this->startSequence_brainProgsHuman();
+			//this->startSequence_hulkCrushesPunyHuman();
 			
 		} else {	// Common sequences
 			float rand = randFloat(1.0f);
