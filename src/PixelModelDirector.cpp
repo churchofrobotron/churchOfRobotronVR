@@ -283,6 +283,100 @@ void PixelModelDirector::startSequence_Tank() {
 	mSequenceTimeRemaining = duration * randFloat( 0.1f, 0.3f );
 }
 
+// Hmm. Grunts. It will be awesome if 3-5 Grunts can emerge from the different
+// passages, and converge to exit out another passage.
+//
+// Behold this amazing overhead map:
+//
+//     front
+//   0 +---+ 1
+//     | * |   <-- altar
+//   2 +---+ 3
+//     |   |
+//   4 +---+ 5
+//      back
+//
+
+const Vec2f PT0 = Vec2f( -ROAD_X, FRONT_Y );
+const Vec2f PT1 = Vec2f( ROAD_X, FRONT_Y );
+const Vec2f PT2 = Vec2f( -SIDE_X, ALLEY_LEFT_Y );
+const Vec2f PT3 = Vec2f( SIDE_X, ALLEY_RIGHT_Y );
+const Vec2f PT4 = Vec2f( -ROAD_X, BACK_Y );
+const Vec2f PT5 = Vec2f( ROAD_X, BACK_Y );
+const Vec2f PT_AR[] = {PT0,PT1,PT2,PT3,PT4,PT5};
+
+// Exit points are off the sides/top/bottom.
+const float MARGIN = 10.0f;
+const Vec2f EXIT0 = Vec2f( PT0.x, PT0.y+MARGIN );
+const Vec2f EXIT1 = Vec2f( PT1.x, PT1.y+MARGIN );
+const Vec2f EXIT2 = Vec2f( PT2.x-MARGIN, PT2.y );
+const Vec2f EXIT3 = Vec2f( PT3.x+MARGIN, PT3.y );
+const Vec2f EXIT4 = Vec2f( PT4.x, PT4.y-MARGIN );
+const Vec2f EXIT5 = Vec2f( PT5.x, PT5.y-MARGIN );
+const Vec2f EXIT_AR[] = {EXIT0,EXIT1,EXIT2,EXIT3,EXIT4,EXIT5};
+
+inline float distance( Vec2f pt0, Vec2f pt1 ) {
+	Vec2f diff = Vec2f( pt0.x-pt1.x, pt0.y-pt1.y );
+	return sqrtf( diff.x*diff.x + diff.y*diff.y );
+}
+
+inline Vec2f pointWithRandomness( Vec2f pt ) {
+	return Vec2f( pt.x + randFloat(-1.0f,1.0f), pt.y + randFloat(-1.0f,1.0f) );
+}
+
+void PixelModelDirector::startSequence_GruntsOnAllSides() {
+	const float GRUNT_SPEED = 0.15f;	// smaller => faster :P
+	const float GRUNT_Z = -1.3f;
+	const float GRUNT_FPS = 5.0;
+	
+	// Pick an exit. All Grunts will leave here.
+	int exitIdx = arc4random() % 6;
+	// Build an array of exits to enter from. Obviously these should *not*
+	// include the exitIdx.
+	std::vector<int> enterIdx_ar;
+	for( int i=0; i<6; i++ ) {
+		if( i==exitIdx ) continue;
+		enterIdx_ar.push_back(i);
+	}
+
+	// Shuffle the array
+	std::random_shuffle( enterIdx_ar.begin(), enterIdx_ar.end() );
+
+	// How many grunts?
+	int gruntCount = 3 + arc4random() % 3;	// 3-5?
+	for( int g=0; g<gruntCount; g++ ) {
+		PixelModel* grunt = this->getNextModel();
+		int idx = enterIdx_ar.at(g);
+		
+		// Grunt should enter from EXIT_n.
+		Vec2f pt = pointWithRandomness( EXIT_AR[idx] );
+		
+		grunt->appendMovementInvisible(randFloat(1.0f), Vec3f(pt.x,pt.y,GRUNT_Z));
+		
+		Vec2f pt2 = pointWithRandomness( PT_AR[idx] );
+		float time = GRUNT_SPEED * distance( pt, pt2 );
+		grunt->appendMovementVars( "grunt", GRUNT_FPS, time, Vec3f(pt2.x,pt2.y,GRUNT_Z), 0.0f );
+		
+		// Lame hack: Go to the exit
+		pt = pt2;
+		pt2 = pointWithRandomness( PT_AR[exitIdx] );
+		time = GRUNT_SPEED * distance( pt, pt2 );
+		grunt->appendMovementVars( "grunt", GRUNT_FPS, time, Vec3f(pt2.x,pt2.y,GRUNT_Z), 0.0f );
+		
+		// Exit, and we're done
+		pt = pt2;
+		pt2 = pointWithRandomness( EXIT_AR[exitIdx] );
+		time = GRUNT_SPEED * distance( pt, pt2 );
+		grunt->appendMovementVars( "grunt", GRUNT_FPS, time, Vec3f(pt2.x,pt2.y,GRUNT_Z), 0.0f );
+		
+		// And we're done!
+	}
+	
+	// Lazy: Just wait 5 seconds before next anim starts
+	mSequenceTimeRemaining += 5.0f;
+}
+
+
 #pragma mark - Animations: Rare + longer
 // Longer animations that occur in front of the altar, where players will see them more easily.
 // These are longer and more elaborate: A Brain prog's a Human, etc.
@@ -547,12 +641,16 @@ void PixelModelDirector::update()
 			}
 			
 		} else {	// Common sequences
+			/*
 			float rand = randFloat(1.0f);
 			if( rand < 0.25f ) {
 				this->startSequence_EnforcersFlyOver();
 			} else {
 				this->startSequence_Tank();
 			}
+			 */
+			
+			this->startSequence_GruntsOnAllSides();
 		}
 	}
 	

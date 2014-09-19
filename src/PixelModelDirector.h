@@ -64,12 +64,13 @@ private:
 	// Common sequences
 	void startSequence_EnforcersFlyOver();
 	void startSequence_Tank();
+	void startSequence_GruntsOnAllSides();
 
 	// Rare sequences
 	void startSequence_brainProgsHuman();
 	void startSequence_hulkCrushesPunyHuman();
 
-	// Dev sequences
+	// Dev sequences. Don't use these in production :P
 	void startSequence_HerdOfGrunts();
 	void startSequence_TestAllAnims();
 };
