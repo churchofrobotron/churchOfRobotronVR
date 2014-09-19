@@ -21,7 +21,7 @@ using namespace ci::app;
 const int MAX_PIXEL_MODELS = 50;
 
 // "Rare" sequences are longer, and happen in front of the altar, where they can distract the player.
-const float MIN_TIME_BETWEEN_RARE_SEQUENCES = 25.0f;	// seconds
+const float MIN_TIME_BETWEEN_RARE_SEQUENCES = 10.0f;//25.0f;	// seconds
 
 // Scene model layout
 const float ROAD_X = 16.0f;
@@ -130,6 +130,8 @@ void PixelModelDirector::init( cinder::params::InterfaceGl* params )
 	this->cacheAnimation( allSprites, "mikey_prog_inv", { Area(151,178,151+9,178+15) });
 	this->cacheAnimation( allSprites, "mikey_prog", { Area(160,178,160+9,178+15) });
 
+	this->cacheAnimation( allSprites, "skull_and_crossbones", {Area(1,1,12,12) });
+	
 	for( int i=0; i<MAX_PIXEL_MODELS; i++ ) {
 		PixelModel* model = new PixelModel("model"+std::to_string(i));
 		model->init(params);
@@ -284,34 +286,95 @@ void PixelModelDirector::startSequence_Tank() {
 // Longer animations that occur in front of the altar, where players will see them more easily.
 // These are longer and more elaborate: A Brain prog's a Human, etc.
 
+const float HUMAN_Z = -1.4f;
+const float HUMAN_FPS = 4.0f;
+const float BACKSTAGE_Y = FRONT_Y + 10.0f;
+
+std::string randomHumanPrefix() {
+	int humanType = (arc4random() % 3);
+	switch( humanType ) {
+		case 0:	return "mommy_";
+		case 1: return "daddy_";
+		case 2: return "mikey_";
+	}
+	return "";
+}
+
+// Human enters upstage left, being chased by Hulk.
+void PixelModelDirector::startSequence_hulkCrushesPunyHuman() {
+	const float HULK_Z = -1.1f;
+	const float CRUSH_Y = 3.25f;
+	
+	PixelModel* hulk = this->getNextModel();
+	PixelModel* human = this->getNextModel();
+	std::string humanPrefix = randomHumanPrefix();
+	
+	const float HUMAN_CHASE_TIME = 10.0f;
+	const float FINAL_HUMAN_X = 0.5f;
+	human->appendMovementInvisible( 0, Vec3f(-ROAD_X,BACKSTAGE_Y,HUMAN_Z));
+	human->appendMovementVars(humanPrefix+"down", HUMAN_FPS, HUMAN_CHASE_TIME*0.334, Vec3f(-ROAD_X,FRONT_Y,HUMAN_Z), 0.0f );
+	
+	// Do a simple walk across backstage; at a random x, branch down.
+	// So potential paths look like: |__, ^|_, ^^|
+	float walkDownRatio = 0.15;	// multiply by HUMAN_CHASE_TIME for time spent walking down
+	float downTime = HUMAN_CHASE_TIME*walkDownRatio;
+	
+	float branchAt = randFloat(1.0f);
+	float right0time = (HUMAN_CHASE_TIME*0.666 - downTime) * branchAt;
+	float right1time = (HUMAN_CHASE_TIME*0.666 - downTime) * (1.0-branchAt);
+	float branchX = lerp( -ROAD_X, FINAL_HUMAN_X, branchAt );
+	
+	human->appendMovementVars(humanPrefix+"right", HUMAN_FPS, right0time, Vec3f(branchX,FRONT_Y,HUMAN_Z), 0.0f );
+	human->appendMovementVars(humanPrefix+"down", HUMAN_FPS, downTime, Vec3f(branchX,CRUSH_Y,HUMAN_Z), 0.0f );
+	human->appendMovementVars(humanPrefix+"right", HUMAN_FPS, right1time, Vec3f(FINAL_HUMAN_X,CRUSH_Y,HUMAN_Z), 0.0f );
+	
+	// Okay. The Hulk can pretty much do the same thing, but he's faster (duh).
+	const float HULK_FPS = 7.0f;
+	const float HULK_CHASE_TIME = HUMAN_CHASE_TIME * 0.6f;
+	const float HULK_CHASE_DELAY = HUMAN_CHASE_TIME - HULK_CHASE_TIME;
+	const float HULK_CRUSH_X = FINAL_HUMAN_X - 2.0f;
+	
+	hulk->appendMovementInvisible( HULK_CHASE_DELAY, Vec3f(-ROAD_X,BACKSTAGE_Y,HULK_Z), 0.0f );
+	hulk->appendMovementVars("hulk_down", HULK_FPS, HULK_CHASE_TIME*0.334f, Vec3f(-ROAD_X,FRONT_Y,HULK_Z), 0.0f );
+	
+	downTime = HULK_CHASE_TIME*walkDownRatio;
+	branchAt = randFloat(1.0f);
+	right0time = (HULK_CHASE_TIME*0.666 - downTime) * branchAt;
+	right1time = (HULK_CHASE_TIME*0.666 - downTime) * (1.0-branchAt);
+	branchX = lerp( -ROAD_X, HULK_CRUSH_X, branchAt );
+	
+	hulk->appendMovementVars("hulk_right", HULK_FPS, right0time, Vec3f(branchX,FRONT_Y,HULK_Z), 0.0f );
+	hulk->appendMovementVars("hulk_down", HULK_FPS, downTime, Vec3f(branchX,CRUSH_Y,HULK_Z), 0.0f );
+	hulk->appendMovementVars("hulk_right", HULK_FPS, right1time, Vec3f(HULK_CRUSH_X,CRUSH_Y,HULK_Z), 0.0f );
+	
+	// GET CRUSHED! oh noes
+	human->appendMovementVars("skull_and_crossbones", 0, 4.0f, Vec3f(FINAL_HUMAN_X,CRUSH_Y,HUMAN_Z), 0.0f );
+	
+	// Hulk: Keep moving right, then walk away to the back
+	float timeToEdge = (right0time+right1time) * (fabsf(ROAD_X-HULK_CRUSH_X)/fabsf(HULK_CRUSH_X-ROAD_X));
+	hulk->appendMovementVars("hulk_right", HULK_FPS, timeToEdge, Vec3f(ROAD_X,CRUSH_Y,HULK_Z), 0.0f );
+	hulk->appendMovementVars("hulk_up", HULK_FPS, timeToEdge*4.0f, Vec3f(ROAD_X,BACK_Y-20.0f,HULK_Z), 0.0f );
+}
+
+// Human enters upstage right. Brain enters upstage left.
 void PixelModelDirector::startSequence_brainProgsHuman() {
 	const float BRAIN_FPS = 6.0f;
-	
 	const float BRAIN_Z = -1.1f;
-	const float HUMAN_Z = -1.4f;
 	
 	const float PROG_X_BRAIN = -1.2f - 1.5f;
 	const float PROG_X_HUMAN = -1.2f + 1.5f;
 	const float PROG_Y = 3.0f;
-	const float BACKSTAGE_Y = FRONT_Y + 10.0f;
 	
 	PixelModel* brain = this->getNextModel();
 	PixelModel* human = this->getNextModel();
-	
-	int humanType = (arc4random() % 3);
-	std::string humanPrefix;
-	switch( humanType ) {
-		case 0:	humanPrefix = "mommy_"; break;
-		case 1: humanPrefix = "daddy_"; break;
-		case 2: humanPrefix = "mikey_"; break;
-	}
+	std::string humanPrefix = randomHumanPrefix();
 	
 	// Semi-random walks. Emerge from front left&right streets, and meander towards the altar.
 	const float HUMAN_WALK_DURATION = 10.0f;	// The brain will walk faster than the human.
 	human->appendMovementInvisible( 0, Vec3f(ROAD_X,BACKSTAGE_Y,HUMAN_Z) );
-	human->appendMovementVars( humanPrefix+"down", 4, HUMAN_WALK_DURATION*0.334, Vec3f(ROAD_X,FRONT_Y,HUMAN_Z), 0.0f );
-	human->appendMovementVars( humanPrefix+"left", 4, HUMAN_WALK_DURATION*0.333, Vec3f(PROG_X_HUMAN,FRONT_Y,HUMAN_Z), 0.0f );
-	human->appendMovementVars( humanPrefix+"down", 4, HUMAN_WALK_DURATION*0.333, Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_Z), 0.0f );
+	human->appendMovementVars( humanPrefix+"down", HUMAN_FPS, HUMAN_WALK_DURATION*0.334, Vec3f(ROAD_X,FRONT_Y,HUMAN_Z), 0.0f );
+	human->appendMovementVars( humanPrefix+"left", HUMAN_FPS, HUMAN_WALK_DURATION*0.333, Vec3f(PROG_X_HUMAN,FRONT_Y,HUMAN_Z), 0.0f );
+	human->appendMovementVars( humanPrefix+"down", HUMAN_FPS, HUMAN_WALK_DURATION*0.333, Vec3f(PROG_X_HUMAN,PROG_Y,HUMAN_Z), 0.0f );
 	
 	// Brain should wait before appearing, then walk faster. Walk an 'L' path, so emerge rapidly from the side.
 	const float BRAIN_WALK_DURATION = HUMAN_WALK_DURATION * 0.8f;
@@ -472,7 +535,8 @@ void PixelModelDirector::update()
 		}
 		
 		if( useRareSeq ) {	// Rare sequences
-			this->startSequence_brainProgsHuman();
+			//this->startSequence_brainProgsHuman();
+			this->startSequence_hulkCrushesPunyHuman();
 			
 		} else {	// Common sequences
 			float rand = randFloat(1.0f);

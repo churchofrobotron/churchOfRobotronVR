@@ -67,6 +67,7 @@ private:
 
 	// Rare sequences
 	void startSequence_brainProgsHuman();
+	void startSequence_hulkCrushesPunyHuman();
 
 	// Dev sequences
 	void startSequence_HerdOfGrunts();
