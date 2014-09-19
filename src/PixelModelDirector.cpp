@@ -283,6 +283,11 @@ void PixelModelDirector::startSequence_Tank() {
 	mSequenceTimeRemaining = duration * randFloat( 0.1f, 0.3f );
 }
 
+#pragma mark - Animations: Rare + longer
+// Longer animations that occur in front of the altar, where players will see them more easily.
+// These are longer and more elaborate: A Brain prog's a Human, etc.
+
+
 // Hmm. Grunts. It will be awesome if 3-5 Grunts can emerge from the different
 // passages, and converge to exit out another passage.
 //
@@ -321,18 +326,23 @@ inline float distance( Vec2f pt0, Vec2f pt1 ) {
 }
 
 inline Vec2f pointWithRandomness( Vec2f pt ) {
-	const float POINT_RAND = 1.5f;
+	const float POINT_RAND = 2.0f;
 	return Vec2f( pt.x + randFloat(-POINT_RAND,POINT_RAND), pt.y + randFloat(-POINT_RAND,POINT_RAND) );
 }
 
 void PixelModelDirector::startSequence_GruntsOnAllSides() {
-	const float GRUNT_SPEED = 0.2f;	// smaller => faster :P
+	const float GRUNT_SPEED = 0.10f;	// smaller => faster :P
 	const float GRUNT_Z = -1.3f;
 	const float GRUNT_FPS = 5.0;
-	const float GRUNT_RANDOM_DELAY_BEFORE_ENTER = 3.0f;
+	const float GRUNT_RANDOM_DELAY_BEFORE_ENTER = 5.0f;
 	
 	// Pick an exit. All Grunts will leave here.
-	int exitIdx = arc4random() % 6;
+	//int exitIdx = arc4random() % 6;
+	
+	// Actually I think this works best if they all converge where the player
+	// can see them, so index 0 or 1
+	int exitIdx = arc4random() % 2;
+	
 	// Build an array of exits to enter from. Obviously these should *not*
 	// include the exitIdx.
 	std::vector<int> enterIdx_ar;
@@ -345,7 +355,7 @@ void PixelModelDirector::startSequence_GruntsOnAllSides() {
 	std::random_shuffle( enterIdx_ar.begin(), enterIdx_ar.end() );
 
 	// How many grunts?
-	int gruntCount = 3 + arc4random() % 8;	// 3-5?
+	int gruntCount = 15 + arc4random() % 24;
 	for( int g=0; g<gruntCount; g++ ) {
 		PixelModel* grunt = this->getNextModel();
 		int idx = enterIdx_ar.at( g % enterIdx_ar.size() );
@@ -410,14 +420,9 @@ void PixelModelDirector::startSequence_GruntsOnAllSides() {
 		// And we're done!
 	}
 	
-	// Lazy: Just wait 5 seconds before next anim starts
-	mSequenceTimeRemaining += 5.0f;
+	// Lazy: Just wait a few seconds before next anim starts
+	mSequenceTimeRemaining += 12.0f;
 }
-
-
-#pragma mark - Animations: Rare + longer
-// Longer animations that occur in front of the altar, where players will see them more easily.
-// These are longer and more elaborate: A Brain prog's a Human, etc.
 
 const float HUMAN_Z = -1.3f;
 const float HUMAN_FPS = 4.0f;
@@ -671,18 +676,19 @@ void PixelModelDirector::update()
 		}
 		
 		if( useRareSeq ) {	// Rare sequences
-			float rand = randFloat(1.0f);
-			if( rand < 0.5f ) {
+			int r = arc4random() % 3;
+			r = 0;
+			if( r==0 ) {
+				this->startSequence_GruntsOnAllSides();
+			} else if( r==1 ) {
 				this->startSequence_brainProgsHuman();
-			} else {
+			} else if( r==2 ) {
 				this->startSequence_hulkCrushesPunyHuman();
 			}
 			
 		} else {	// Common sequences
 			float rand = randFloat(1.0f);
-			if( rand < 0.08f ) {
-				this->startSequence_GruntsOnAllSides();
-			} else if( rand < 0.3f ) {
+			if( rand < 0.25f ) {
 				this->startSequence_EnforcersFlyOver();
 			} else {
 				this->startSequence_Tank();

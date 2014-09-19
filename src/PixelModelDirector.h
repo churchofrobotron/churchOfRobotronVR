@@ -64,9 +64,9 @@ private:
 	// Common sequences
 	void startSequence_EnforcersFlyOver();
 	void startSequence_Tank();
-	void startSequence_GruntsOnAllSides();
 
 	// Rare sequences
+	void startSequence_GruntsOnAllSides();
 	void startSequence_brainProgsHuman();
 	void startSequence_hulkCrushesPunyHuman();
 
