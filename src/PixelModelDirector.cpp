@@ -31,13 +31,16 @@ const float BACK_Y = -48.0f;	// looking backward from altar: buildings start her
 const float ALLEY_LEFT_Y = -12.0f;
 const float ALLEY_RIGHT_Y = -7.0f;
 
-// Electrodes, tank fills
-// I don't have verified colors for these, so using COLOR_CYCLE_1 values
-// with swizzled color channels :P
-const float COLOR_CYCLE_0_FPS = 55.0f;
-const int COLOR_CYCLE_0_OFFSET = 17;
+// 0x888800: Prog shadows, Enforcer eyes
+// These are not the "official" values from the game. Just need a fast sequence here
+const float COLOR_CYCLE_0_FPS = 12.0f;
+const uint COLOR_CYCLE_0_COUNT = 10;
+const uint COLOR_CYCLE_0_AR[] = {
+	0xff00ff, 0x00ff00, 0xffff00, 0x8800ff, 0xffffff,
+	0x8dddf4, 0xff0000, 0x00ffff, 0xac373e, 0x981AAF //10
+};
 
-// Brains
+// 0x888888: Brains
 const float COLOR_CYCLE_1_FPS = 60.0f;
 const uint COLOR_CYCLE_1_COUNT = 44;
 const uint COLOR_CYCLE_1_AR[] = {
@@ -52,8 +55,8 @@ const uint COLOR_CYCLE_1_AR[] = {
 	0x480925, 0x480925, 0x300521, 0x300521
 };
 
-// Prog tail
-const float COLOR_CYCLE_2_FPS = 40.0f;
+// 0x8888ff: Prog head, hulk arms
+const float COLOR_CYCLE_2_FPS = 14.0f;
 const uint COLOR_CYCLE_2_COUNT = 20;
 const uint COLOR_CYCLE_2_AR[] = {
 	0x200A9F, 0x06079B, 0x3A1096, 0x5511A5, 0x6213A7,
@@ -241,7 +244,7 @@ void PixelModelDirector::startSequence_EnforcersFlyOver() {
 		}
 		
 		// Some overlap with the next animation
-		mSequenceTimeRemaining += duration * randFloat( 0.1f, 0.4f );
+		mSequenceTimeRemaining += randFloat( 0.25f, 1.5f );
 	}
 }
 
@@ -258,7 +261,7 @@ void PixelModelDirector::startSequence_Tank() {
 	int path = (arc4random() % 3);
 	if( (path==0) || (path==1) ) {	// Left or Right of altar
 		float atX = (ROAD_X + randFloat(-2.0,2.0)) * ((path==0) ? -1 : 1);
-		startLoc = Vec3f( atX, FRONT_Y+10.0f, TANK_Z );
+		startLoc = Vec3f( atX, FRONT_Y+13.0f, TANK_Z );
 		endLoc = Vec3f( atX, BACK_Y-20.0f, TANK_Z );
 		rotation = M_PI/2 * (doFlip ? 1 : -1);
 		
@@ -280,13 +283,12 @@ void PixelModelDirector::startSequence_Tank() {
 	model->appendMovementVars( "tank", 6, duration, endLoc, rotation );
 
 	// Some overlap with the next animation
-	mSequenceTimeRemaining = duration * randFloat( 0.1f, 0.3f );
+	mSequenceTimeRemaining += randFloat( 0.5f, 2.0f );
 }
 
 #pragma mark - Animations: Rare + longer
 // Longer animations that occur in front of the altar, where players will see them more easily.
 // These are longer and more elaborate: A Brain prog's a Human, etc.
-
 
 // Hmm. Grunts. It will be awesome if 3-5 Grunts can emerge from the different
 // passages, and converge to exit out another passage.
@@ -457,7 +459,7 @@ void PixelModelDirector::startSequence_hulkCrushesPunyHuman() {
 	float walkDownRatio = 0.15;	// multiply by HUMAN_CHASE_TIME for time spent walking down
 	float downTime = HUMAN_CHASE_TIME*walkDownRatio;
 	
-	float branchAt = randFloat(1.0f);
+	float branchAt = randFloat(0.75f,0.9f);	// Branch closer to the center, so it catches the user's eye
 	float right0time = (HUMAN_CHASE_TIME*0.666 - downTime) * branchAt;
 	float right1time = (HUMAN_CHASE_TIME*0.666 - downTime) * (1.0-branchAt);
 	float branchX = lerp( -ROAD_X, FINAL_HUMAN_X, branchAt );
@@ -467,7 +469,7 @@ void PixelModelDirector::startSequence_hulkCrushesPunyHuman() {
 	human->appendMovementVars(humanPrefix+"right", HUMAN_FPS, right1time, Vec3f(FINAL_HUMAN_X,CRUSH_Y,HUMAN_Z), 0.0f );
 	
 	// Okay. The Hulk can pretty much do the same thing, but he's faster (duh).
-	const float HULK_FPS = 7.0f;
+	const float HULK_FPS = 5.1f;
 	const float HULK_CHASE_TIME = HUMAN_CHASE_TIME * 0.6f;
 	const float HULK_CHASE_DELAY = HUMAN_CHASE_TIME - HULK_CHASE_TIME;
 	const float HULK_CRUSH_X = FINAL_HUMAN_X - 2.0f;
@@ -476,7 +478,7 @@ void PixelModelDirector::startSequence_hulkCrushesPunyHuman() {
 	hulk->appendMovementVars("hulk_down", HULK_FPS, HULK_CHASE_TIME*0.334f, Vec3f(-ROAD_X,FRONT_Y,HULK_Z), 0.0f );
 	
 	downTime = HULK_CHASE_TIME*walkDownRatio;
-	branchAt = randFloat(0.5f);	// branch down more quickly to catch the human
+	branchAt = randFloat(0.6f,0.9f);	// Branch closer to the center, so it catches the user's eye
 	right0time = (HULK_CHASE_TIME*0.666 - downTime) * branchAt;
 	right1time = (HULK_CHASE_TIME*0.666 - downTime) * (1.0-branchAt);
 	branchX = lerp( -ROAD_X, HULK_CRUSH_X, branchAt );
@@ -494,6 +496,8 @@ void PixelModelDirector::startSequence_hulkCrushesPunyHuman() {
 	float timeToEdge = (right0time+right1time) * (fabsf(ROAD_X-HULK_CRUSH_X)/fabsf(HULK_CRUSH_X-ROAD_X));
 	hulk->appendMovementVars("hulk_right", HULK_FPS, timeToEdge, Vec3f(ROAD_X,CRUSH_Y,HULK_Z), 0.0f );
 	hulk->appendMovementVars("hulk_up", HULK_FPS, timeToEdge*4.0f, Vec3f(ROAD_X,BACK_Y-20.0f,HULK_Z), 0.0f );
+
+	mSequenceTimeRemaining += 10.0f;
 }
 
 // Human enters upstage right. Brain enters upstage left.
@@ -647,19 +651,55 @@ void PixelModelDirector::update()
 	
 	// Advance color cycling
 	
-	// Color0 (electrodes & tank fills): I don't have the actual values,
+	// OLD: Color0 (electrodes & tank fills): I don't have the actual values,
 	// so I'm swizzling CC1 with an offset :P
+	/*
 	uint cc0idx = ((uint)(seconds * COLOR_CYCLE_0_FPS) + COLOR_CYCLE_0_OFFSET) % COLOR_CYCLE_1_COUNT;
 	uint cc0 = COLOR_CYCLE_1_AR[cc0idx];
 	//cc0	= ((cc0&0xffff00)>>8) | ((cc0&0x0000ff)<<16);	// 0xBBRRGG. "Borg" lol, looks too blue/green tho
 	cc0 = ((cc0&0xff0000)>>8) | ((cc0&0x00ff00)<<8) | (cc0&0x0000ff);	// 0xGGRRBB
 	colorCycle0 = hexColorToVec4f( cc0 );
+	 */
+	
+	uint cc0idx = (uint)(seconds * COLOR_CYCLE_0_FPS) % COLOR_CYCLE_0_COUNT;
+	colorCycle0 = hexColorToVec4f( COLOR_CYCLE_0_AR[cc0idx] );
 	
 	uint cc1idx = (uint)(seconds * COLOR_CYCLE_1_FPS) % COLOR_CYCLE_1_COUNT;
 	colorCycle1 = hexColorToVec4f( COLOR_CYCLE_1_AR[cc1idx] );
 	
+	// CC2 sucks, it's too dark, so bitwise noodly to make it brighter :P
 	uint cc2idx = (uint)(seconds * COLOR_CYCLE_2_FPS) % COLOR_CYCLE_2_COUNT;
-	colorCycle2 = hexColorToVec4f( COLOR_CYCLE_2_AR[cc2idx] );
+	uint cc2 = COLOR_CYCLE_2_AR[cc2idx] << 3;
+	uint r = (cc2&0xff0000)>>16;
+	uint g = (cc2&0x00ff00)>>8;
+	uint b = (cc2&0x0000ff);
+	
+	// Saturate. Remove dullest channel, and increase the brightest one.
+	if( (r<g) && (r<b) ) {
+		r = 0;
+	} else if( g<b ) {
+		g = 0;
+	} else {
+		b = 0;
+	}
+	
+	if( (r>g) && (r>b) ) {
+		r |= 0xdd;
+	} else if( g>b ) {
+		g |= 0xdd;
+	} else {
+		b |= 0xdd;
+		// Bright blue by itself is a little weak, so boost another channel
+		if( r>g ) {
+			r |= 0xbb;
+		} else {
+			g |= 0xbb;
+		}
+	}
+	
+	cc2 = (r<<16) | (g<<8) | b;
+	
+	colorCycle2 = hexColorToVec4f( cc2 );
 	
 	mSequenceTimeRemaining -= elapsed;
 	if( mSequenceTimeRemaining <= 0.0f ) {
@@ -676,14 +716,17 @@ void PixelModelDirector::update()
 		}
 		
 		if( useRareSeq ) {	// Rare sequences
-			int r = arc4random() % 4;
-			if( (r==0) || (r==1) ) {	// Grunts are super-good so do them more often
+			// Sequence order: Grunts, Brain, Grunts, Hulk, (repeat)
+			int r = mRareSeqIndex % 4;
+			if( (r==0) || (r==2) ) {	// Grunts are super-good so do them more often
 				this->startSequence_GruntsOnAllSides();
-			} else if( r==2 ) {
+			} else if( r==1 ) {
 				this->startSequence_brainProgsHuman();
 			} else if( r==3 ) {
 				this->startSequence_hulkCrushesPunyHuman();
 			}
+			
+			mRareSeqIndex++;
 			
 		} else {	// Common sequences
 			float rand = randFloat(1.0f);
