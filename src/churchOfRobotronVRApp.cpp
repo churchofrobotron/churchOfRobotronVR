@@ -43,6 +43,10 @@ struct WindowData
   RenderType mRenderType;
 };
 
+//const std::string sermonBase = "/Users/chaz/dev/churchOfRobotronVR/resources/videos/";
+const std::string sermonBase = "/Users/bzztbomb/projects/churchOfRobotron/videos/";
+const std::string downloads = sermonBase;
+
 const short multicast_port = 2084;
 
 class receiver
@@ -211,18 +215,13 @@ void churchOfRobotronVRApp::setup()
   mCamera.registerEvents();
   mCamera.setSpeed(0.01);
   
-  const std::string sermonBase = "/Users/chaz/dev/churchOfRobotronVR/resources/videos/";
-//  std::vector<string> sermons =
-//  {
-//    sermonBase + "church_of_robotron_sermon-__doctrine_of_error_640x472.mp4",
-//    sermonBase + "church_of_robotron_sermon-_doctrine_of_futility_640x472.mp4",
-//    sermonBase + "church_of_robotron_sermon-_eight_ways_640x472.mp4",
-//    sermonBase + "church_of_robotron_sermon-_the_ninth_position_640x472.mp4",
-//    sermonBase + "church_of_robotron_sermon-_what_are_the_robotrons_640x472.mp4"
-//  };
   std::vector<string> sermons =
   {
-    sermonBase + "rotojames.mov",
+    sermonBase + "church_of_robotron_sermon-__doctrine_of_error_640x472.mp4",
+    sermonBase + "church_of_robotron_sermon-_doctrine_of_futility_640x472.mp4",
+    sermonBase + "church_of_robotron_sermon-_eight_ways_640x472.mp4",
+    sermonBase + "church_of_robotron_sermon-_the_ninth_position_640x472.mp4",
+    sermonBase + "church_of_robotron_sermon-_what_are_the_robotrons_640x472.mp4"
   };
   mSermon.setMovieList(sermons);
   mSermon.setMute(true);
@@ -231,7 +230,6 @@ void churchOfRobotronVRApp::setup()
   mSermon.setPosition(Vec3f(0.01, 7.74f, 0.47));
   mSermon.setScale(Vec2f(2.22, 2.84));
   
-  std::string downloads = "/Users/chaz/dev/churchOfRobotronVR/resources/videos/";
   std::vector<string> randoms =
   {
     downloads + "Glitch-logo-02.mp4",

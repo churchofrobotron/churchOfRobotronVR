@@ -23,10 +23,9 @@
 		C3D02ED133594C6E8DFEEFE3 /* syphonServerDirectory.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3D2BDA65831143EF826CC36C /* syphonServerDirectory.mm */; };
 		C815BBDB1845A4A3006F1272 /* robotronScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C815BBD91845A4A3006F1272 /* robotronScreen.cpp */; };
 		C815BBDE1845BB53006F1272 /* FPSCamUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C815BBDC1845BB53006F1272 /* FPSCamUI.cpp */; };
-		C8182F251898BAB4003ACDA3 /* Grunt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8182F231898BAB4003ACDA3 /* Grunt.cpp */; };
-		C8182F281898BB10003ACDA3 /* Enforcer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8182F261898BB10003ACDA3 /* Enforcer.cpp */; };
 		C8182F2C1898D135003ACDA3 /* LiveAssetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C8182F2A1898D135003ACDA3 /* LiveAssetManager.cpp */; };
 		C81B34EE184EE9FB0021E7E7 /* MovieObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */; };
+		C82E327219D088F900062FAA /* PixelModelDirector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C82E327019D088F900062FAA /* PixelModelDirector.cpp */; };
 		C845A6E11890E02400B02812 /* PixelModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C845A6DF1890E02400B02812 /* PixelModel.cpp */; };
 		C84CE69F188C4A5D00C95CFA /* environment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C84CE69D188C4A5D00C95CFA /* environment.cpp */; };
 		C84D3BBF191E836700B6D5E8 /* CubeMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C84D3BBD191E836700B6D5E8 /* CubeMap.cpp */; };
@@ -138,6 +137,8 @@
 		C8182F2B1898D135003ACDA3 /* LiveAssetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveAssetManager.h; path = ../src/LiveAssetManager.h; sourceTree = "<group>"; };
 		C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MovieObject.cpp; path = ../src/MovieObject.cpp; sourceTree = "<group>"; };
 		C81B34ED184EE9FB0021E7E7 /* MovieObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MovieObject.h; path = ../src/MovieObject.h; sourceTree = "<group>"; };
+		C82E327019D088F900062FAA /* PixelModelDirector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PixelModelDirector.cpp; path = ../src/PixelModelDirector.cpp; sourceTree = "<group>"; };
+		C82E327119D088F900062FAA /* PixelModelDirector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelModelDirector.h; path = ../src/PixelModelDirector.h; sourceTree = "<group>"; };
 		C845A6DF1890E02400B02812 /* PixelModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PixelModel.cpp; path = ../src/PixelModel.cpp; sourceTree = "<group>"; };
 		C845A6E01890E02400B02812 /* PixelModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PixelModel.h; path = ../src/PixelModel.h; sourceTree = "<group>"; };
 		C84CE69D188C4A5D00C95CFA /* environment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = environment.cpp; path = ../src/environment.cpp; sourceTree = "<group>"; };
@@ -276,6 +277,8 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C82E327019D088F900062FAA /* PixelModelDirector.cpp */,
+				C82E327119D088F900062FAA /* PixelModelDirector.h */,
 				C84D3BBD191E836700B6D5E8 /* CubeMap.cpp */,
 				C84D3BBE191E836700B6D5E8 /* CubeMap.h */,
 				C8182F2A1898D135003ACDA3 /* LiveAssetManager.cpp */,
@@ -632,6 +635,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B5A06177E8CE460ABF56C2C4 /* churchOfRobotronVRApp.cpp in Sources */,
+				C82E327219D088F900062FAA /* PixelModelDirector.cpp in Sources */,
 				C8CEFF80185E86380021817B /* OVR_Log.cpp in Sources */,
 				C8CEFF84185E86380021817B /* OVR_String.cpp in Sources */,
 				C84CE69F188C4A5D00C95CFA /* environment.cpp in Sources */,
@@ -641,10 +645,8 @@
 				C8CEFF0E185E70BC0021817B /* churchUtil.cpp in Sources */,
 				C8CEFF7D185E86380021817B /* OVR_Atomic.cpp in Sources */,
 				C8CEFF89185E86380021817B /* OVR_ThreadsPthread.cpp in Sources */,
-				C8182F251898BAB4003ACDA3 /* Grunt.cpp in Sources */,
 				C8CEFF88185E86380021817B /* OVR_System.cpp in Sources */,
 				C8182F2C1898D135003ACDA3 /* LiveAssetManager.cpp in Sources */,
-				C8182F281898BB10003ACDA3 /* Enforcer.cpp in Sources */,
 				C8CEFF16185E805E0021817B /* CameraStereoHMD.cpp in Sources */,
 				C8CEFFA3185E86380021817B /* Util_LatencyTest.cpp in Sources */,
 				5A6A7C2E58314599BAF21337 /* syphonServer.mm in Sources */,
