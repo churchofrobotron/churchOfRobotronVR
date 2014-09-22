@@ -17,8 +17,6 @@
 #include "environment.h"
 #include "MovieCubes.h"
 
-//#include "Grunt.h"
-//#include "Enforcer.h"
 #include "PixelModelDirector.h"
 
 using namespace ci;

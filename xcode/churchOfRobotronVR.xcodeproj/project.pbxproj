@@ -129,10 +129,6 @@
 		C815BBDA1845A4A3006F1272 /* robotronScreen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = robotronScreen.h; path = ../src/robotronScreen.h; sourceTree = "<group>"; };
 		C815BBDC1845BB53006F1272 /* FPSCamUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FPSCamUI.cpp; path = ../src/FPSCamUI.cpp; sourceTree = "<group>"; };
 		C815BBDD1845BB53006F1272 /* FPSCamUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FPSCamUI.h; path = ../src/FPSCamUI.h; sourceTree = "<group>"; };
-		C8182F231898BAB4003ACDA3 /* Grunt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Grunt.cpp; path = ../src/Grunt.cpp; sourceTree = "<group>"; };
-		C8182F241898BAB4003ACDA3 /* Grunt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Grunt.h; path = ../src/Grunt.h; sourceTree = "<group>"; };
-		C8182F261898BB10003ACDA3 /* Enforcer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Enforcer.cpp; path = ../src/Enforcer.cpp; sourceTree = "<group>"; };
-		C8182F271898BB10003ACDA3 /* Enforcer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Enforcer.h; path = ../src/Enforcer.h; sourceTree = "<group>"; };
 		C8182F2A1898D135003ACDA3 /* LiveAssetManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LiveAssetManager.cpp; path = ../src/LiveAssetManager.cpp; sourceTree = "<group>"; };
 		C8182F2B1898D135003ACDA3 /* LiveAssetManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LiveAssetManager.h; path = ../src/LiveAssetManager.h; sourceTree = "<group>"; };
 		C81B34EC184EE9FB0021E7E7 /* MovieObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MovieObject.cpp; path = ../src/MovieObject.cpp; sourceTree = "<group>"; };
@@ -283,8 +279,6 @@
 				C84D3BBE191E836700B6D5E8 /* CubeMap.h */,
 				C8182F2A1898D135003ACDA3 /* LiveAssetManager.cpp */,
 				C8182F2B1898D135003ACDA3 /* LiveAssetManager.h */,
-				C8182F231898BAB4003ACDA3 /* Grunt.cpp */,
-				C8182F241898BAB4003ACDA3 /* Grunt.h */,
 				26EA8A53E4BA45FEAF93A7D1 /* churchOfRobotronVRApp.cpp */,
 				C815BBD91845A4A3006F1272 /* robotronScreen.cpp */,
 				C815BBDA1845A4A3006F1272 /* robotronScreen.h */,
@@ -300,8 +294,6 @@
 				C84CE69E188C4A5D00C95CFA /* environment.h */,
 				C845A6DF1890E02400B02812 /* PixelModel.cpp */,
 				C845A6E01890E02400B02812 /* PixelModel.h */,
-				C8182F261898BB10003ACDA3 /* Enforcer.cpp */,
-				C8182F271898BB10003ACDA3 /* Enforcer.h */,
 				C8FAF09D18A8A7220010174E /* MovieCubes.cpp */,
 				C8FAF09E18A8A7220010174E /* MovieCubes.h */,
 			);
