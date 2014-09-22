@@ -23,20 +23,23 @@ void Grunt::init(cinder::params::InterfaceGl* params)
   params->addParam(mParamPrefix + ": Speed", &mSpeed);
   mState = msEast;
 
+	const int w = 9;
+	const int h = 13;
+	const int y = 118;
   std::vector<Area> grunts =
   {
-    Area(2, 18, 2+9, 18+13),
-    Area(14, 18, 14+9, 18+12)
+    Area(76, y-1, 76+w, y-1+h),
+    Area(91, y, 91+w, y+h),
+	  Area(76, y-1, 76+w, y-1+h),
+	  Area(106, y, 106+w, y+h),
   };
-  loadFrames(grunts);
+  //loadFrames(grunts);
+	setFPS(6.0);
 }
 
 void Grunt::update()
 {
-  PixelModel::update();
-
-  if (!mAnimate)
-    return;
+  //PixelModel::update();
 
   std::map<MovementState, Vec3f> mapStateToPos =
   {

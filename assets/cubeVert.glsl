@@ -1,3 +1,9 @@
+//
+// cubeVert
+//
+// Used for rendering the MAME screen as pseudo-3D.
+//
+
 uniform sampler2DRect tex;
 uniform float offsetRange; // -0.015
 uniform float offsetBase; // -0.04
@@ -26,4 +32,3 @@ void main()
   gl_TexCoord[0] = gl_MultiTexCoord0;
   gl_FrontColor = gl_Color;
 }
-

@@ -1,0 +1,169 @@
+COLORKEY : 64,64,64
+
+
+
+BRAINS - 0,0,1
+PLAYER EYES - 0,0,2
+WAVE TEXT - 0,0,2
+PLAYER LASER - 0,0,4
+SCORE - 0,0,4
+
+ELECTRODES
+STAR - 
+HATCHED DIAMOND - 0,0,3
+BLOCK - 
+@ SIGN - 0,0,2
+
+
+
+HULKS - 0,0,2 (HEAD) - 0,0,4  (ARMS)
+ENFORCER - 0,0,4 (TOP PART OF EYES)   - 0,0,5 (TRIPOD - THIS COLOUR IS NOT SHARED WITH ELECTRODES, DONT MAKE THAT MISTAKE)
+TANK SHELL - INNER PART 0,0,2 OUTER PART - 0,0,4
+GRUNTS - 0,0,1 (EYES) 
+PLUSES - 0,0,2 AND 0,0,7
+SPHEROIDS - 0,0,7
+PROGS - 0,0,4 (BODY)  AND 0,0,3 (TRAIL)
+HUMAN DEATH - 0,0,3 (EYES) 0,0,4 (REST OF SKULL)
+
+
+
+COLOR CYCLING FOR 0,0,1   
+=======================
+
+1A0027  -dark (2 frames)   
+0000f0  -bright blue (4)
+1e48f3  (3)
+3079ff  (2)
+4cbdff  (1)
+59deff  (1)
+64daff  (1)
+92e3ff  (2)
+8fe0ff  (3)
+8dddf4  (2)
+89d9c5  (1)
+78e0b0  (1)  
+a1a1a1  (3)
+b67d84  (2)
+a85e75  (1)
+ba5d4c  (2)
+ac373e  (2)
+9f1732  (2)
+87132e  (1)
+6b0f2a  (2)
+540b26  (2)
+480925  (2)
+300521  (2)
+	(2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+COLOR CYCLING FOR 0,0,3
+=======================
+
+32,10,159     (200A9F)
+6,7,155       (06079B)  	
+58,16,150     (3A1096)
+85,17,165     (5511A5
+98,19,167     (6213A7)
+124,22,171    (7C16AB)
+152,26,175    (981AAF)
+177,29,177    (B11DB1)
+173,27,120    (AD1B78)
+174,25,79     (AE194F) 	
+170,22,22     (A61616)
+
+THEN GOING BACKWARDS FROM 174,25,79 
+
+
+
+
+
+COLOR CYCLING FOR SPHEROIDS
+===========================
+
+253,0,0 - HOLD FOR 6+ RANDOM(6) FRAMES
+245,174,16  -  HOLD FOR 6 + RANDOM(6) FRAMES
+
+
+
+COLOR CYCLING FOR SCORE  (VERIFIED)
+=======================
+
+255,255,255  - HOLD FOR 2 FRAMES AND THEN PICK ONE OF THE FOLLOWING AT RANDOM:
+
+221,12,220 - HOLD FOR 5 FRAMES, BACK TO WHITE
+
+154,243,51 - HOLD FOR 5 FRAMES
+
+205,15,85 - HOLD FOR 5 FRAMES
+
+220,11,86 - HOLD FOR 5 FRAMES
+
+90,11,220 - HOLD FOR 5 FRAMES
+
+66,246,245 - HOLD FOR 5 FRAMES
+
+218,142,51 - HOLD FOR 5 FRAMES
+
+104,46,205
+
+233,174,46
+
+
+
+
+COLOR CYCLING FOR PLAYER - EVERY 10 FRAMES, ON A 60FPS MACHINE
+==============================================================
+
+R, G, B
+
+3,1,218		(BLUE)
+81,214,33	(GREEN)
+216,10,9	(RED)
+
+
+
+
+
+COLOR CYCLING FOR PROG
+======================
+
+PROG - SAME COLOUR AS SCORE
+
+
+
+
+
+
+
+BORDER COLOR
+============
+
+Border is 6pixels thick and changes every frame (ONLY ON LEVEL 4)
+
+35,2,232
+75,2,234
+110,4,233
+128,4,233
+163,4,235
+201,5,237
+236,6,238
+237,5,149
+236,7,91
+237,5,149 - going backwards this time
+... etc
+... etc

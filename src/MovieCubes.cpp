@@ -75,7 +75,7 @@ void MovieCubes::initCubes()
     }
     currY += cellSize;
   }
-  
+	
   mVboMesh = ci::gl::VboMesh::create(mCubeMesh);
   
   LiveAssetManager::load("movieCubeVert.glsl", "cubeFrag.glsl",

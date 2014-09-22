@@ -97,7 +97,7 @@ cinder::TriMesh spriteToMesh(const cinder::Surface8u& s)
       const uint8_t red = *pixel;
       const uint8_t green = *(pixel+1);
       const uint8_t blue = *(pixel+2);
-      int value = (red+green+blue > 4) ? 1 : 0;
+      int value = (red+green+blue > 1) ? 1 : 0;
       if (value)
       {
         Color8u c(red, green, blue);
