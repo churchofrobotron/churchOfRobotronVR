@@ -139,7 +139,7 @@ private:
   
   Environment mEnvironment;
   RobotronScreen mScreen;
-  MovieCubes mSermon;
+  MovieObject mSermon;
   Leaderboard mLeaderboard;
   MovieObject mRandoms;
 	
