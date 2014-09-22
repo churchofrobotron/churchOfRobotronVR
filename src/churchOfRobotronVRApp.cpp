@@ -45,7 +45,7 @@ struct WindowData
 const std::string sermonBase = "/Users/bzztbomb/projects/churchOfRobotron/videos/";
 const std::string downloads = sermonBase;
 
-const short multicast_port = 2084;
+const short multicast_port = 2085;
 
 class receiver
 {
@@ -60,10 +60,12 @@ public:
                                                    listen_address, multicast_port);
     socket_.open(listen_endpoint.protocol());
     socket_.set_option(boost::asio::ip::udp::socket::reuse_address(true));
-//    socket_.bind(listen_endpoint);
+
+    // UNNEEDED BIND?
+    //    socket_.bind(listen_endpoint);
     socket_.bind(boost::asio::ip::udp::endpoint( multicast_address, multicast_port ));
     
-    // Join the multicast group.
+    // Join the multicast group. DON'T ACTUALLY DO THIS
 //    socket_.set_option(
 //                       boost::asio::ip::multicast::join_group(multicast_address));
     
@@ -149,8 +151,8 @@ private:
   
   float mDeathFlash = 0;
   
-//  boost::asio::io_service io_service;
-//  receiver mReceiver;
+  boost::asio::io_service io_service;
+  std::shared_ptr<receiver> mReceiver;
   
   void oculusInit();
   void renderScene();
@@ -159,11 +161,15 @@ private:
 };
 
 churchOfRobotronVRApp::churchOfRobotronVRApp()
-//: mReceiver(io_service, boost::asio::ip::address::from_string("127.0.0.1"),
-//            boost::asio::ip::address::from_string("127.0.0.255"))
-//, mDeathFlash(1.0f)
+: mDeathFlash(1.0f)
 {
-  
+  try {
+    mReceiver = std::make_shared<receiver>(io_service,
+                                           boost::asio::ip::address::from_string("10.0.150.107"),
+                                           boost::asio::ip::address::from_string("10.0.150.255"));
+  } catch (...) {
+    console() << "Unable to listen for death!" << endl;
+  }
 }
 
 void churchOfRobotronVRApp::prepareSettings( Settings* settings )
@@ -304,24 +310,22 @@ void churchOfRobotronVRApp::update()
   mSermon.update();
   mRandoms.update();
   mLeaderboard.update();
-  //mModel.update();
-  //mEnforcer.update();
   mPixelModelDirector.update();
 	
   mStereoCamera.setEyeSeparation( mEyeSeparation );
   
-//  io_service.poll();
-//  
-//  if (mReceiver.getPlayerDeath())
-//  {
-//    mDeathFlash = 1.0f;
-//  }
-//  if (mDeathFlash > 0.05)
-//  {
-//    mDeathFlash *= 0.96;
-//  } else {
-//    mDeathFlash = 0.0f;
-//  }
+  io_service.poll();
+  
+  if (mReceiver && mReceiver->getPlayerDeath())
+  {
+    mDeathFlash = 1.0f;
+  }
+  if (mDeathFlash > 0.05)
+  {
+    mDeathFlash *= 0.96;
+  } else {
+    mDeathFlash = 0.0f;
+  }
 }
 
 void churchOfRobotronVRApp::resize()
